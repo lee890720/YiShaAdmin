@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">OrderName<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="orderName" col="OrderName" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">HouseNumber<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="houseNumber" col="HouseNumber" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">EndDate<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="endDate" col="EndDate" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">TotalPrice<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="totalPrice" col="TotalPrice" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">IsFinish<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="isFinish" col="IsFinish" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">Remark<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="remark" col="Remark" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">OrderNumber<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="orderNumber" col="OrderNumber" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">StartDate<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="startDate" col="StartDate" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">Commission<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="commission" col="Commission" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">RealPrice<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="realPrice" col="RealPrice" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">IsFinance<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="isFinance" col="IsFinance" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-2 control-label ">BranchId<font class="red"> *</font></label>
+            <div class="col-sm-4">
+                <input id="branchId" col="BranchId" type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    $(function () {
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                orderName: { required: true }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Scalp/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Scalp/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

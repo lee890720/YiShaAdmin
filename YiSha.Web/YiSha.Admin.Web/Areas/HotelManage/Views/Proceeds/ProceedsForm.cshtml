@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header{
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/css/imgup.min.css"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/imageupload/1.0/js/imgup.min.js"))
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">金额<font class="red"> *</font></label>
+            <div class="col-sm-8">
+                <input id="amount" col="Amount" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">
+                <span>缩略图</span><br />
+                <span>(宽高比 1.5：1)</span>
+            </label>
+            <div class="col-sm-10">
+                <div id="payImage" class="img-box ">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">支付方式</label>
+            <div class="col-sm-8" id="payId" col="PayId"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">备注</label>
+            <div class="col-sm-8">
+                <input id="remark" col="Remark" type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var orderId = ys.request("orderId");
+    var branchId = ys.request("branchId");
+
+    //自定义validate验证输入的数字小数点位数不能大于两位
+    jQuery.validator.addMethod("minNumber", function (value, element) {
+        var returnVal = true;
+        inputZ = value;
+        var ArrMen = inputZ.split(".");    //截取字符串
+        if (ArrMen.length == 2) {
+            if (ArrMen[1].length > 2) {    //判断小数点后面的字符串长度
+                returnVal = false;
+                return false;
+            }
+        }
+        return returnVal;
+    }, "小数点后最多为两位"); 
+
+    $(function () {
+
+        $("#payId").ysRadioBox({
+            url: '@Url.Content("~/HotelManage/Pay/GetListJson")',
+            key: "Id",
+            value: "PayName"
+        });
+
+        $("#payImage").imageUpload({ uploadImage: 'uploadPayImage', limit: 5, context: ctx });
+
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                amount: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Proceeds/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                        $("#payImage").imageUpload("setImageUrl", obj.Data.PayImage);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm2(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({
+                Id: id,
+                OrderId: orderId,
+                BranchId:branchId,
+            });
+            postData.PayImage = $("#payImage").imageUpload("getImageUrl");
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Proceeds/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.layer.close(index);
+                        parent.initGrid(orderId);
+                        parent.$('#gridTable').bootstrapTable('refresh');
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+        function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({
+                Id: id,
+                OrderId: orderId
+            });
+            postData.PayImage = $("#payImage").imageUpload("getImageUrl");
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Proceeds/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+    function uploadPayImage(file, callback) {
+        var formdata = new FormData();
+        formdata.append("fileList", file);
+        ys.ajaxUploadFile({
+            url: '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Orders.ParseToInt()',
+            data: formdata,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    if (callback) {
+                        callback('@GlobalContext.SystemConfig.ApiSite' + obj.Data);
+                    }
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        })
+    }
+</script>
+

@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormGray.cshtml";
+}
+
+    <div class="wrapper wrapper-content">
+    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    </div>
+    <script>
+    $(function () {
+
+        @*dd.ready(function () {
+            // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
+
+            dd.runtime.permission.requestAuthCode({
+                corpId: "ding79a8988e26be74d035c2f4657eb6378f",
+                onSuccess: function (result) {
+                    //通过corpId，code获取userid,code为string类型
+                    var code = result.code;
+                    //alert(code)
+
+                    $.ajax({
+                        async: false,
+                        type: 'get',
+                        contentType: "application/json;charset=UTF-8",
+                        datatype: "",
+                        data: { "code": code },
+                        //后端接收code获取userid的方法GetuserInfo
+                        url: '@Url.Content("~/Home/GetUserInfo")',
+                        success: function (ref) {
+                            alert(ref);
+                        },
+                    })
+                },
+
+                onFail: function (err) {
+                    alert(JSON.stringify(err));
+
+                }
+
+            });
+        });*@
+        $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
+            var div_ibox = $(this).closest("div.ibox"),
+                e = $(this).find("i"),
+                i = div_ibox.find("div.ibox-content");
+            i.slideToggle(200),
+                e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"),
+                div_ibox.toggleClass("").toggleClass("border-bottom"),
+                setTimeout(function () {
+                    div_ibox.resize();
+                }, 50);
+        }), $(".close-link").click(function () {
+            var div_ibox = $(this).closest("div.ibox");
+            div_ibox.remove()
+        });
+
+        $('#pay-qrcode').click(function () {
+            var html = $(this).html();
+            ys.openDialogContent({
+                content: html,
+                width: '600px',
+                height: '321px'
+            });
+        });
+
+    });
+
+    </script>

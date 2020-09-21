@@ -1,0 +1,242 @@
+﻿@{
+    Layout = "~/Views/Shared/_Index.cshtml";
+ }
+    <div class="container-div">
+        <div class="row">
+            <div id="searchDiv" class="col-sm-12 search-collapse">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            客人：<input id="orderName" col="OrderName" type="text" />
+                        </li>
+                        <li>
+                            单号：<input id="orderNumber" col="OrderNumber" type="text" />
+                        </li>
+                        <li>
+                            预审：<input id="isFinish" col="IsFinish" type="text" placeholder="0代表未审核，1代表已审核" />
+                        </li>
+                        <li>
+                            财务：<input id="isFinance" col="IsFinance" type="text" placeholder="0代表未审核，1代表已审核" />
+                        </li>
+                        <li>
+                            入住：<input id="startDate" col="StartDate" type="text" placeholder="入住时间" />
+                        </li>
+                        <li>
+                            离店：<input id="endDate" col="EndDate" type="text" placeholder="离店时间" />
+                        </li>
+                        <li>
+                            <a id="btnSearch" class="btn btn-primary btn-sm" onclick="searchGrid()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                        <li style="display:none">
+                            门店：<input id="branchId" col="BranchId" type="text">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="btn-group-sm hidden-xs" id="toolbar">
+                <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
+                <a id="btnCheck" class="btn btn-danger disabled" onclick="checkForm()"> 财务审核</a>
+                <a id="btnExport" class="btn btn-warning" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
+                <a id="btnRepeal" class="btn btn-danger disabled" onclick="repealForm()"> 撤销审核</a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="gridTable" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var _branchId = ys.getCookie("BranchId");
+    var _resourcesData = [];
+    var vStartDate = moment().startOf('month').format("YYYY-MM-DD");
+    var vEndDate = moment().endOf('month').add(1,'days').format("YYYY-MM-DD");
+    $("#branchId").val(_branchId);
+    $(function () {
+        laydate.render({ elem: '#startDate', format: 'yyyy-MM-dd', value: vStartDate });
+        laydate.render({ elem: '#endDate', format: 'yyyy-MM-dd', value: vEndDate });
+        initGrid();
+    });
+
+    function initGrid() {
+        var queryUrl = '@Url.Content("~/HotelManage/Scalp/GetPageListJson2")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            showFooter: true,
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: '订单号', visible: false },
+                {
+                    field: 'BaseModifyTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                { field: 'OrderName', title: '姓名' },
+                { field: 'OrderNumber', title: '订单号' },
+                {
+                    field: 'StartDate', title: '入住日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'EndDate', title: '离店日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'Commission',
+                    title: '佣金',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Commission);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    field: 'TotalPrice',
+                    title: '支付价',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].TotalPrice);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    field: 'RealPrice',
+                    title: '底价',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].RealPrice);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    //field: 'IsFinish',
+                    title: '预审',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if(row.IsFinish==0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinish == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                {
+                    //field: 'IsFinance',
+                    title: '财务审核',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.IsFinance == 0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinance == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                return queryString;
+            }
+        });
+    }
+
+    function searchGrid() {
+        $('#gridTable').ysTable('search');
+        resetToolbarStatus();
+    }
+
+    function checkForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要审核选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Scalp/CheckFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function repealForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要撤销审核选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Scalp/RepealFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function exportForm() {
+    var url = '@Url.Content("~/HotelManage/Scalp/ExportScalpJson")';
+    var postData = $("#searchDiv").getWebControls();
+    ys.exportExcel(url, postData);
+    }
+
+    function deleteForm() {
+    var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+    if (ys.checkRowDelete(selectedRow)) {
+        ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
+            var ids = ys.getIds(selectedRow);
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Scalp/DeleteFormJson")' + '?ids=' + ids,
+                type: 'post',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        searchGrid();
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        });
+    }
+}
+</script>

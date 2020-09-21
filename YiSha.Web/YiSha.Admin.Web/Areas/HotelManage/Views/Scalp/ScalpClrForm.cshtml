@@ -1,0 +1,217 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.table/1.12.0/bootstrap-table.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.table/1.12.0/bootstrap-table.min.js"))
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">姓名</label>
+            <div class="col-sm-5">
+                <input id="orderName" col="OrderName" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">单号</label>
+            <div class="col-sm-5">
+                <input id="orderNumber" col="OrderNumber" type="text" class="form-control is-edit" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">底价</label>
+            <div class="col-sm-5">
+                <input id="realPrice" col="RealPrice" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">渠道</label>
+            <div class="col-sm-5">
+                <div id="channelId" col="ChannelId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">总价</label>
+            <div class="col-sm-5">
+                <input id="totalPrice" col="TotalPrice" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">预审</label>
+            <div class="col-sm-5">
+                <div id="isFinish" col="IsFinish" class="is-edit is-pre"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">佣金</label>
+            <div class="col-sm-5">
+                <input id="commission" col="Commission" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">财务</label>
+            <div class="col-sm-5">
+                <div id="isFinance" col="IsFinance" class="is-edit is-finance"></div>
+            </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <label class="col-sm-1 control-label ">房号</label>
+            <div class="col-sm-5">
+                <input id="houseNumber" col="HouseNumber" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">门店</label>
+            <div class="col-sm-5">
+                <div id="branchId" col="BranchId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <label class="col-sm-1 control-label ">入住日期</label>
+            <div class="col-sm-5">
+                <input id="startDate" col="StartDate" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">离店日期</label>
+            <div class="col-sm-5">
+                <input id="endDate" col="EndDate" type="text" class="form-control is-edit" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">备注</label>
+            <div class="col-sm-11">
+                <textarea id="remark" col="Remark" class="form-control is-edit" style="height:60px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var id = ys.request("id");
+    var branchId = parent._eventData.BranchId;
+
+    //自定义validate验证输入的数字小数点位数不能大于两位
+    jQuery.validator.addMethod("minNumber", function (value, element) {
+        var returnVal = true;
+        inputZ = value;
+        var ArrMen = inputZ.split(".");    //截取字符串
+        if (ArrMen.length == 2) {
+            if (ArrMen[1].length > 2) {    //判断小数点后面的字符串长度
+                returnVal = false;
+                return false;
+            }
+        }
+        return returnVal;
+    }, "小数点后最多为两位");         //验证错误信息
+
+    $(function () {
+        $('#form').validate({
+            rules: {
+                orderName: { required: true },
+                phone: { isPhone: true },
+                totalPrice: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                },
+                realPrice: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                },
+                commission: {
+                    required: true,
+                    number: true,
+                    min: -100,
+                    minNumber: true
+                },
+            }
+        });
+
+        $("#isFinish").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum).EnumToDictionaryString())),
+            class: "form-control",
+        });
+
+        $("#isFinance").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum).EnumToDictionaryString())),
+            class: "form-control",
+        });
+
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Branch/GetFormJson")' + "?id=" + branchId,
+            type: 'get',
+            async: 'false',
+            success: function (obj) {
+                var pids = obj.Data.ChannelIds;
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Channel/GetListJson")',
+                    async: 'false',
+                    success: function (obj) {
+                        var tempList = [];
+                        for (var i = 0; i < obj.Data.length; i++) {
+                            if (pids.indexOf(obj.Data[i].Id) > -1)
+                                tempList.push(obj.Data[i]);
+                        }
+                        $("#channelId").ysComboBox({
+                            data: tempList,
+                            key: "Id",
+                            value: "ChannelName",
+                            class: "form-control"
+                        });
+                        getForm();
+                    }
+                })
+            }
+        });
+
+        $('#realPrice,#totalPrice').keyup(function () {
+            var realPrice = document.getElementById("realPrice").value;
+            var totalPrice = document.getElementById("totalPrice").value;
+            if (ys.isNullOrEmpty(totalPrice) || ys.isNullOrEmpty(realPrice))
+                return;
+            $('#commission').val((parseFloat(totalPrice) - parseFloat(realPrice)).toFixed(2));
+        });
+
+        $('#commission').keyup(function () {
+            var realPrice = document.getElementById("realPrice").value;
+            var totalPrice = document.getElementById("totalPrice").value;
+            var commission = document.getElementById("commission").value
+            if (ys.isNullOrEmpty(totalPrice) && ys.isNullOrEmpty(realPrice))
+                return;
+            if (!ys.isNullOrEmpty(totalPrice))
+                $('#realPrice').val((parseFloat(totalPrice) - parseFloat(commission)).toFixed(2));
+        });
+    });
+
+    function getForm() {
+        $('#form').setWebControls(parent._eventData);
+        $('.select2-container').css("width", "100%");
+        if (parent._eventData.IsFinance == 1||ys.getCookie("IsOrder")==0) {
+            $('input,textarea').attr("disabled", "disabled");
+            $('.select2').attr("disabled", "disabled");
+            $('.btn').css("display", "none");
+        }
+        if (ys.getCookie("IsFinance") == 0)
+            $('.is-finance input').attr("disabled", "disabled");
+        else
+            $('.is-finance input').removeAttr("disabled");
+        if (ys.getCookie("IsPre") == 0)
+            $('.is-pre input').attr("disabled", "disabled");
+        else
+            $('.is-pre input').removeAttr("disabled");
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Scalp/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.calendar.refetchEvents();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

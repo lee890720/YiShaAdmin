@@ -1,0 +1,350 @@
+﻿@{
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+<link href='~/lib/fullcalendar-scheduler/lib/main.css' rel='stylesheet' />
+<div class="container-div">
+    <div class="row">
+        <div id='calendar'></div>
+    </div>
+</div>
+<script src="~/lib/jquery/2.1.4/jquery.js"></script>
+<script src='~/lib/fullcalendar-scheduler/lib/main.js'></script>
+<script src='~/lib/fullcalendar-scheduler/lib/locales/zh-cn.js'></script>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    //#region 初始化参数
+    var _branchId = ys.getCookie("BranchId");
+    var _startdate = moment().add(-3, "days").format("YYYY-MM-DD");
+    var _resourcesData = [];
+    var _eventsData = [];
+    var _eventData = [];
+    var _branchEventsData = [];
+    //#endregion
+
+    document.addEventListener('DOMContentLoaded', function () {
+        calendar.render();
+
+        $(document.getElementById("today")).on('click', function () {
+            calendar.changeView("resourceTimelineThirtyDays", _startdate);
+            $(document.getElementById("startdate")).val(_startdate);
+        });
+
+        $(document.getElementById("prev")).on('click', function () {
+            calendar.prev();
+            var tempdate = moment(calendar.getDate()).format("YYYY-MM-DD");
+            $(document.getElementById("startdate")).val(tempdate);
+        });
+
+        $(document.getElementById("next")).on('click', function () {
+            calendar.next();
+            var tempdate = moment(calendar.getDate()).format("YYYY-MM-DD");
+            $(document.getElementById("startdate")).val(tempdate);
+        });
+
+        laydate.render({
+            elem: document.getElementById("startdate"),
+            format: 'yyyy-MM-dd',
+            value: _startdate,
+            done: function (value, date) {
+                calendar.changeView("resourceTimelineThirtyDays", value);
+            }
+        });
+    });
+
+    //#region 初始化Resource
+    function initResourceList() {
+        _resourcesData = [];
+        for (var i = 101; i < 150; i++) {
+            var temp = {
+                id: i.toString(),
+                title: i.toString(),
+                order: i.toString()
+            }
+            _resourcesData.push(temp);
+        }
+    }
+    //#endregion
+
+    //#region 初始化Event
+    function initEventList(start,end) {
+        var options = {
+            url: '@Url.Content("~/HotelManage/Scalp/GetListJson2")',
+            async: false,
+            data: {
+                BranchId: _branchId,
+                StartDate: start,
+                EndDate:end
+            },
+            success: function (rdata) {
+                _eventsData = [];
+                initResourceList();
+                _eventsData = getJsonEvent(rdata.Data,start,end);
+            }
+        };
+        ys.ajax(options);
+    }
+    var getJsonEvent = function (data, start, end) {
+
+        var itemArr = [];
+
+        for (var i = 0; i < data.length; i++) {
+
+            var event = data[i];
+
+            var newEvent = {};
+
+            newEvent.id = event.Id;
+
+            newEvent.branchId = event.BranchId;
+
+            newEvent.channelId = event.ChannelId;
+
+            newEvent.isFinance = event.IsFinance;
+
+            newEvent.isFinish = event.IsFinish;
+
+            newEvent.orderName = event.OrderName;
+
+            newEvent.orderNumber = event.OrderNumber;
+
+            newEvent.houseNumber = event.HouseNumber;
+
+            newEvent.remark = event.Remark;
+
+            newEvent.commission = event.Commission;
+
+            newEvent.totalPrice = event.TotalPrice;
+
+            newEvent.realPrice = event.RealPrice;
+
+            newEvent.title = event.OrderName;
+
+            newEvent.resourceId = event.HouseNumber;
+
+            newEvent.start = event.StartDate;
+
+            newEvent.end = event.EndDate;
+
+            newEvent.allDay = true;
+
+            newEvent.backgroundColor = event.ChannelColor;
+
+            newEvent.borderColor = event.ChannelColor;
+
+            if (event.IsFinance == 1) {
+                newEvent.editable = false;
+                newEvent.startEditable = false;
+                newEvent.durationEditable = false;
+                newEvent.resourceEditable = false;
+            }
+
+            itemArr.push(newEvent);
+
+        }
+        return itemArr;
+
+    };
+    var setJsonEvent = function (data) {
+
+        var event = {};
+
+        event.Id = data.event._def.publicId;
+
+        event.BranchId = data.event._def.extendedProps.branchId;
+        event.ChannelId = data.event._def.extendedProps.channelId;
+
+        event.HouseNumber = data.newResource == null ? data.event._def.extendedProps.houseNumberId : data.newResource._resource.id;
+
+        event.IsFinance = data.event._def.extendedProps.isFinance;
+
+        event.IsFinish = data.event._def.extendedProps.isFinish;
+
+        event.OrderName = data.event._def.extendedProps.orderName;
+
+        event.OrderNumber = data.event._def.extendedProps.orderNumber;
+
+        event.Remark = data.event._def.extendedProps.remark;
+
+        event.Commission = data.event._def.extendedProps.commission;
+
+        event.TotalPrice = data.event._def.extendedProps.totalPrice;
+
+        event.RealPrice = data.event._def.extendedProps.realPrice;
+
+        event.StartDate = moment(data.event._instance.range.start).format('YYYY-MM-DD');
+
+        event.EndDate = moment(data.event._instance.range.end).format('YYYY-MM-DD');
+
+        return event;
+
+    };
+    //#endregion
+
+    //#region 初始化Calendar
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        locale: 'zh-cn',
+        initialDate: _startdate,
+        nowIndicator: true,
+        initialView: 'resourceTimelineThirtyDays',
+        views: {
+            resourceTimelineThirtyDays: {
+                type: 'resourceTimeline',
+                duration: { days: 31 }
+            }
+        },
+        headerToolbar: false,
+        aspectRatio: 1.8,
+        height: '100%',
+        slotMinWidth: '100',
+        slotLabelFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true },
+        resourceAreaWidth: '155px',
+        scrollTime: "00:00:00",
+        resourceAreaColumns: [
+            {
+                field: 'title',
+                headerDidMount: function (arg) {
+                    hl = '<div id="addbtn">'
+                        + '<button id="prev" class="btn-link" title="向前一个月"><i class="fa fa-chevron-left"></i></button>'
+                        + '<input class="btn-link" type="text" id="startdate" style="width:75px;text-align:center">'
+                        + '<button id="next" class="btn-link" title="向后一个月"><i class="fa fa-chevron-right"></i></button>'
+                        + '<button id="today" class="btn-link" title="跳转至今天"><i class="fa fa-circle-o"></i></button>'
+                        + '</div>';
+                    arg.el.children[0].children[0].innerHTML = "";
+                    arg.el.children[0].children[0].innerHTML = hl;
+                }
+            }
+        ],
+        resourceOrder: 'order',
+        resourceLaneDidMount: function (arg) {
+            arg.el.style.height = "30px";
+        },
+        resourceLabelDidMount: function (arg) {
+            arg.el.style.height = "30px";
+            arg.el.style.lineHeight = "30px";
+            arg.el.style.margin = '0px';
+            arg.el.style.padding = '0px';
+            arg.el.style.textAlign = "center";
+        },
+        resources: function (fetchInfo, successCallback, failureCallback) {
+            initResourceList();
+            successCallback(_resourcesData);
+        },
+        selectable: true,
+        selectOverlap: false,
+        select: function (selectionInfo) {
+            //if (ys.isNullOrEmpty(selectionInfo.resource._resource.parentId))
+            //    return;
+            _eventData = [];
+            _eventData = {
+                StartDate: selectionInfo.startStr,
+                EndDate: selectionInfo.endStr,
+                BranchId: _branchId,
+                HouseNumber: selectionInfo.resource._resource.id,
+                IsFinance: 0,
+                IsFinish: 0
+            };
+            showSaveForm(true);
+        },
+        events: function (fetchInfo, successCallback, failureCallback) {
+            initEventList(moment(fetchInfo.startStr).format("YYYY-MM-DD"), moment(fetchInfo.endStr).format("YYYY-MM-DD"));
+            successCallback(_eventsData);
+        },
+        eventContent: function (arg) {
+            if (arg.event._def.ui.overlap == false)
+                return;
+
+            let italicEl = document.createElement('div');
+            var len = arg.event._def.title.length;
+            var title = arg.event._def.title;
+            if (len > 6)
+                title = title.substring(0, 6);
+            var innerHTML = "<div class='fc-event-main-frame'><div style='width:85%;float:left;font-size:10px;'>&nbsp;" + title + "</div><div style='float:right;color:black'>" ;
+
+            if (arg.event._def.extendedProps.isFinish == 1&&arg.event._def.extendedProps.isFinance == 0) {
+                innerHTML += "<i class='fa fa-check' style='color:white'></i></div></div>";
+            }
+            else if (arg.event._def.extendedProps.isFinance == 1) {
+                innerHTML += "<i class='fa fa-lock' style='color:white'></i></div></div>";
+            }
+
+            italicEl.innerHTML = innerHTML;
+
+            let arrayOfDomNodes = [italicEl];
+
+            return { domNodes: arrayOfDomNodes };
+        },
+        eventDidMount: function (arg) {
+            arg.el.style.height = "30px";
+            arg.el.style.margin = '0px';
+            arg.el.style.padding = '0px';
+        },
+        eventClick: function (eventClickInfo) {
+            if (eventClickInfo.event._def.ui.overlap == false)
+                return;
+            _eventData = [];
+            _eventData = {
+                Id:eventClickInfo.event._def.publicId,
+                StartDate: moment(eventClickInfo.event._instance.range.start).format('YYYY-MM-DD'),
+                EndDate: moment(eventClickInfo.event._instance.range.end).format('YYYY-MM-DD'),
+                BranchId: _branchId,
+                HouseNumber: eventClickInfo.event._def.extendedProps.houseNumber,
+                IsFinance: eventClickInfo.event._def.extendedProps.isFinance,
+                IsFinish: eventClickInfo.event._def.extendedProps.isFinish, 
+                OrderName: eventClickInfo.event._def.extendedProps.orderName,
+                OrderNumber: eventClickInfo.event._def.extendedProps.orderNumber,
+                Commission: eventClickInfo.event._def.extendedProps.commission,
+                TotalPrice: eventClickInfo.event._def.extendedProps.totalPrice,
+                RealPrice: eventClickInfo.event._def.extendedProps.realPrice,
+                Remark: eventClickInfo.event._def.extendedProps.remark,
+                ChannelId: eventClickInfo.event._def.extendedProps.channelId,
+            };
+            showSaveForm(false);
+        },
+        editable: true, // enable draggable events
+        eventOverlap: false,
+        eventDrop: function (info) {
+            saveEvent(info);
+        },
+    });
+    //#endregion
+
+    //#region 定义showSaveForm, deleteForm, showProceedsForm, showProceedsIndex
+    function showSaveForm(bAdd) {
+        var id = 0;
+        if (!bAdd) {
+            id = _eventData.Id;
+        }
+        ys.openDialog({
+            title: id > 0 ? '编辑 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate + ' )' : '添加 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate+ ' )',
+            content: '@Url.Content("~/HotelManage/Scalp/ScalpClrForm")' + '?id=' + id,
+            width: '768px',
+            height: '378px',
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            },
+        });
+    }
+    function saveEvent(info) {
+        var postData = setJsonEvent(info);
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Scalp/SaveFormJson")',
+            type: 'post',
+            data: postData,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    ys.msgSuccess(obj.Message);
+                    calendar.refetchEvents();
+                    //calendar.render();
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+    //#endregion
+</script>

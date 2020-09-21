@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "既见行旅 - 登录";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header{
+    <link href='@Url.Content("~/yisha/css/login.css")' rel="stylesheet" />
+    <script>
+        if (window.top !== window.self) { window.top.location = window.location };
+    </script>
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/jquery.validation/1.14.0/jquery.validate.min.js"))
+}
+<div class="login-panel">
+    <div class="row section">
+        <div class="col-sm-12">
+            <form id="form">
+                <h4 class="no-margin">既见行旅</h4>
+                <p class="m-t-md">偶遇另一种生活，寻觅另一个自己</p>
+                <input id="userName" name="userName" class="form-control uname" col="UserName" type="text" placeholder="用户名"/>
+                <input id="password" name="password" class="form-control pword m-b" col="Password" type="password" placeholder="密码"/>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input id="captchaCode" name="captchaCode" type="text" col="CaptchaCode" class="form-control code" placeholder="验证码" maxlength="3">
+                    </div>
+                    <div class="col-xs-6">
+                        <a href="javascript:void(0);" title="点击更换验证码">
+                            <img id="imgCaptchaCode" src='@Url.Content("~/Home/GetCaptchaImage")' height="34" />
+                        </a>
+                    </div>
+                </div>
+                <div class="checkbox-custom">
+                    <input id="rememberMe" name="rememberMe" type="checkbox"> <label for="rememberMe">记住我</label>
+                </div>
+                <button class="btn btn-success btn-block" onclick="loginForm(); return false;">登录</button>
+            </form>
+        </div>
+    </div>
+    <div class="login-footer">
+        <div style="text-align:center">
+            &copy; 2016-@DateTime.Now.Year <a href="http://www.tinyinn.com" target="_blank" style="color:white">tinyinn.com</a> All Rights Reserved.<br>
+            <a href="https://www.beian88.com/miit/capture?{%22Name%22:%22%E5%8C%97%E4%BA%AC%E7%94%BA%E9%9A%90%E9%85%92%E5%BA%97%E7%AE%A1%E7%90%86%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%22,%22Type%22:%22%E4%BC%81%E4%B8%9A%22,%22License%22:%22%E4%BA%ACICP%E5%A4%8715053271%E5%8F%B7-1%22,%22WebName%22:%22%E5%8C%97%E4%BA%AC%E7%94%BA%E9%9A%90%E9%85%92%E5%BA%97%E7%AE%A1%E7%90%86%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%22,%22Domain%22:%22tinyinn.cn%22,%22DateTime%22:%222015-10-19%22}" target="_blank" rel="nofollow">京ICP备15053271号-1</a><br>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        if ($.cookie('RememberMe') == 1) {
+            $("#rememberMe").prop("checked", true);
+            if ("@GlobalContext.SystemConfig.LoginProvider" == "Cookie") {
+                if (!ys.isNullOrEmpty($.cookie('UserToken'))) {
+                    redirectToIndex();
+                }
+            }
+            else {
+                $.removeCookie("UserToken", { path: '/' });
+            }
+        }
+        $("#rememberMe").click(function () {
+            if ($(this).prop("checked")) {
+                $.cookie('RememberMe', 1, { expires: 30, path: '/' });
+            }
+        });
+
+        $("#imgCaptchaCode").click(function () {
+            $(this).attr("src", '@Url.Content("~/Home/GetCaptchaImage")' + '?t=' + new Date().getTime());
+        });
+
+        $("#form").validate({
+            rules: {
+                userName: { required: true },
+                password: { required: true }
+            }
+        });
+
+        $.validator.setDefaults({
+            submitHandler: function () {
+                loginForm();
+            }
+        });
+    });
+
+    function loginForm() {
+        if ($("#form").validate().form()) {
+            var postData = $("#form").getWebControls();
+            ys.ajax({
+                url: '@Url.Content("~/Home/LoginJson")',
+                type: "post",
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        redirectToIndex();
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+    function redirectToIndex() {
+        location.href = '@Url.Content("~/Home/Index")';
+    }
+</script>
