@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">名称</label>
+            <div class="col-sm-5">
+                <input id="addressName" col="AddressName" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">微信</label>
+            <div class="col-sm-5">
+                <input id="weChat" col="WeChat" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">手机</label>
+            <div class="col-sm-5">
+                <input id="phone" col="Phone" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">用途</label>
+            <div class="col-sm-5">
+                <input id="purpose" col="Purpose" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">备注</label>
+            <div class="col-sm-11">
+                <textarea id="remark" col="Remark" class="form-control" style="height:60px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var branchId = ys.getCookie("BranchId");
+
+    $(function () {
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                addressName: { required: true }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Address/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id,BranchId:branchId });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Address/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

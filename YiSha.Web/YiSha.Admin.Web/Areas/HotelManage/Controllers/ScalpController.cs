@@ -123,7 +123,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<List<ScalpEntity>> scalpObj = await scalpBLL.GetList2(param);
             if (scalpObj.Tag == 1)
             {
-                string file = new ExcelHelper<ScalpEntity>().ExportToExcel("推广列表.xls", "推广列表",scalpObj.Data,new string[] { "BaseModifyTime", "Id","OrderName","OrderNumber","StartDate","EndDate", "Commission", "TotalPrice","RealPrice","IsFinish","IsFinance","BranchName","CreateName","ModifierName" });
+                string file = new ExcelHelper<ScalpEntity>().ExportToExcel("推广列表.xls", "推广列表",scalpObj.Data,new string[] { "Id","OrderName","OrderNumber","StartDate","EndDate", "Commission", "TotalPrice","RealPrice","BranchName","CreateName","ModifierName" });
                 obj.Data = file;
                 obj.Tag = 1;
             }

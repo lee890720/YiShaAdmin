@@ -13,26 +13,30 @@
         </div>
     </div>
 </div>
-
+<script src="~/lib/moment/moment.min.js"></script>
 <script type="text/javascript">
+    var _branchId = ys.getCookie("BranchId");
     $(function () {
         initGrid();
     });
 
     function initGrid() {
-        var queryUrl = '@Url.Content("~/HotelManage/Channel/GetPageListJson")';
+        var queryUrl = '@Url.Content("~/HotelManage/Note/GetPageListJson")';
         $('#gridTable').ysTable({
             url: queryUrl,
             columns: [
                 { checkbox: true, visible: true },
                 { field: 'Id', title: 'Id', visible: false },
-                { field: 'ChannelName', title: '渠道名称' },
-                { field: 'ChannelColor', title: '显示颜色' },
-                { field: 'ChannelSort', title: '显示顺序', sortable: true },
+                { field: 'Account', title: '账号' },
+                { field: 'Password', title: '密码' },
+                { field: 'Phone', title: '手机' },
+                { field: 'Platform', title: '平台' },
+                { field: 'Remark', title: '备注' },
             ],
             queryParams: function (params) {
                 var pagination = $('#gridTable').ysTable('getPagination', params);
                 var queryString = $('#searchDiv').getWebControls(pagination);
+                queryString.BranchId = _branchId;
                 return queryString;
             }
         });
@@ -56,9 +60,9 @@
         }
         ys.openDialog({
             title: id > 0 ? '编辑' : '添加',
-            content: '@Url.Content("~/HotelManage/Channel/ChannelForm")' + '?id=' + id,
+            content: '@Url.Content("~/HotelManage/Note/NoteForm")' + '?id=' + id,
             width: '768px',
-            height: '550px',
+            height: '300px',
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);
@@ -72,7 +76,7 @@
             ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
                 var ids = ys.getIds(selectedRow);
                 ys.ajax({
-                    url: '@Url.Content("~/HotelManage/Channel/DeleteFormJson")' + '?ids=' + ids,
+                    url: '@Url.Content("~/HotelManage/Note/DeleteFormJson")' + '?ids=' + ids,
                     type: 'post',
                     success: function (obj) {
                         if (obj.Tag == 1) {

@@ -4,6 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:5000",
+      //"applicationUrl": "https://tinyinn.cn",
       "sslPort": 0
     }
   },
@@ -22,6 +23,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
+      //"applicationUrl": "https://tinyinn.cn"
     }
   }
 }

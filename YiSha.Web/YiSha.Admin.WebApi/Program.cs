@@ -15,6 +15,7 @@ namespace YiSha.Admin.WebApi
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                    .UseUrls("http://*:5001")
+                   //.UseUrls("https://api.tinyinn.cn")
                    .UseStartup<Startup>()
                    .ConfigureLogging(logging =>
                    {

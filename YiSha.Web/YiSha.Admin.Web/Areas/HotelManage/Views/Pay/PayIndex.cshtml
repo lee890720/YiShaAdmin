@@ -27,7 +27,7 @@
                 { checkbox: true, visible: true },
                 { field: 'Id', title: 'Id', visible: false },
                 { field: 'PayName', title: '支付方式' },
-                { field: 'PaySort', title: '显示顺序' },
+                { field: 'PaySort', title: '显示顺序', sortable: true },
             ],
             queryParams: function (params) {
                 var pagination = $('#gridTable').ysTable('getPagination', params);

@@ -7,6 +7,9 @@
                 <div class="select-list">
                     <ul>
                         <li>
+                            Id号：<input id="id" col="Id" type="text" />
+                        </li>
+                        <li>
                             客人：<input id="orderName" col="OrderName" type="text" />
                         </li>
                         <li>
@@ -17,9 +20,6 @@
                         </li>
                         <li>
                             单号：<input id="orderNumber" col="OrderNumber" type="text" />
-                        </li>
-                        <li>
-                            预审：<input id="isFinish" col="IsFinish" type="text" placeholder="0代表未审核，1代表已审核" />
                         </li>
                         <li>
                             财务：<input id="isFinance" col="IsFinance" type="text" placeholder="0代表未审核，1代表已审核" />
@@ -68,9 +68,14 @@
             url: queryUrl,
             columns: [
                 { checkbox: true, visible: true },
-                { field: 'Id', title: '订单号', visible: false },
+                { field: 'Id', title: 'Id', visible: false },
                 {
-                    field: 'BaseModifyTime', title: '创建时间', formatter: function (value, row, index) {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', formatter: function (value, row, index) {
                         return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
                     }
                 },

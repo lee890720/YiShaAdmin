@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">房型</label>
+            <div class="col-sm-5">
+                <input id="houseName" col="HouseName" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">门店</label>
+            <div class="col-sm-5">
+                <input id="shop" col="Shop" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">线上</label>
+            <div class="col-sm-5">
+                <input id="ota" col="Ota" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">底价</label>
+            <div class="col-sm-5">
+                <input id="otaBase" col="OtaBase" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">现付</label>
+            <div class="col-sm-5">
+                <input id="otaPay" col="OtaPay" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">合作</label>
+            <div class="col-sm-5">
+                <input id="travel" col="Travel" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">团购</label>
+            <div class="col-sm-5">
+                <input id="team" col="Team" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">内部</label>
+            <div class="col-sm-5">
+                <input id="inner" col="Inner" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">旺季</label>
+            <div class="col-sm-5">
+                <input id="peak" col="Peak" type="text" class="form-control" />
+            </div>
+            <label class="col-sm-1 control-label ">顺序</label>
+            <div class="col-sm-5">
+                <input id="sequence" col="Sequence" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">模式</label>
+            <div class="col-sm-5">
+                <div id="mode" col="Mode"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">备注</label>
+            <div class="col-sm-11">
+                <textarea id="remark" col="Remark" class="form-control" style="height:60px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var id = ys.request("id");
+    var branchId = ys.getCookie("BranchId");
+
+    $(function () {
+        $("#mode").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(PricingTypeEnum).EnumToDictionaryString())),
+            class: "form-control",
+        });
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                houseName: { required: true }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Pricing/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id,BranchId:branchId });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Pricing/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

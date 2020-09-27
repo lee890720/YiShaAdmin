@@ -28,7 +28,7 @@ namespace YiSha.Service.HotelManage
         {
             var expression = ListFilter(param);
             var list = await this.BaseRepository().FindList(expression);
-            return list.ToList();
+            return list.OrderBy(p=>p.BranchSort).ToList();
         }
 
         public async Task<List<BranchEntity>> GetPageList(BranchListParam param, Pagination pagination)

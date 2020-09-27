@@ -12,6 +12,7 @@ namespace YiSha.Model.Param.HotelManage
     /// </summary>
     public class OrderListParam
     {
+        public long? Id { get; set; }
         public string OrderName { get; set; }
         public string Nickname { get; set; }
         public string Phone { get; set; }
