@@ -81,10 +81,6 @@
             </div>
         </div>
         <div class="form-group" style="display:none;">
-            @*<label class="col-sm-1 control-label ">总间夜数</label>
-            <div class="col-sm-5">
-                <input id="houseCount" col="HouseCount" type="text" class="form-control is-edit" />
-            </div>*@
             <label class="col-sm-1 control-label ">门店</label>
             <div class="col-sm-5">
                 <div id="branchId" col="BranchId" class="is-edit"></div>
@@ -94,6 +90,11 @@
             <label class="col-sm-1 control-label ">备注</label>
             <div class="col-sm-11">
                 <textarea id="remark" col="Remark" class="form-control is-edit" style="height:60px"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="houseDis" class="col-sm-11 col-sm-push-1" style="display:none;">
+                <div id="houseNumber" col="HouseNumberIds"></div>
             </div>
         </div>
         <div>
@@ -106,6 +107,7 @@
                 <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
                 <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
                 <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
+                <a id="btnDis" class="btn btn-default" onclick="disForm()"><i class="fa fa-diamond"></i> 关联房间</a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="gridTable" data-mobile-responsive="true"></table>
@@ -117,6 +119,7 @@
 <script type="text/javascript">
     var id = ys.request("id");
     var branchId = parent._eventData.BranchId;
+    var houseNumber = parent._houseNumberData;
 
     //自定义validate验证输入的数字小数点位数不能大于两位
     jQuery.validator.addMethod("minNumber", function (value, element) {
@@ -159,6 +162,12 @@
         $("#isFinance").ysRadioBox({
             data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum).EnumToDictionaryString())),
             class: "form-control",
+        });
+
+        $("#houseNumber").ysCheckBox({
+            data: houseNumber,
+            key: "id",
+            value: "title"
         });
 
         ys.ajax({
@@ -212,6 +221,8 @@
             $('.is-pre input').attr("disabled", "disabled");
         else
             $('.is-pre input').removeAttr("disabled");
+        if (id != 0)
+            $('#btnDis').css("display", "none");
     }
 
     function saveForm(index) {
@@ -318,7 +329,7 @@
                 type: 'post',
                 async: false,
                 data: postData,
-                success: function (obj) {  
+                success: function (obj) {
                     if (obj.Tag == 1) {
                         ys.msgSuccess(obj.Message);
                         id = obj.Data;
@@ -372,6 +383,10 @@
                 });
             });
         }
+    }
+
+    function disForm() {
+        $('#houseDis').css("display", "inline");
     }
 </script>
 

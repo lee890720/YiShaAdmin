@@ -1,0 +1,240 @@
+﻿@{
+    Layout = "~/Views/Shared/_Index.cshtml";
+ }
+    <div class="container-div">
+        <div class="row">
+            <div id="searchDiv" class="col-sm-12 search-collapse">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            Id号：<input id="id" col="Id" type="text" />
+                        </li>
+                        <li>
+                            客人：<input id="orderName" col="OrderName" type="text" />
+                        </li>
+                        <li>
+                            昵称：<input id="nickname" col="Nickname" type="text" />
+                        </li>
+                        <li>
+                            手机：<input id="phone" col="Phone" type="text" />
+                        </li>
+                        <li>
+                            单号：<input id="orderNumber" col="OrderNumber" type="text" />
+                        </li>
+                        <li>
+                            财务：<input id="isFinance" col="IsFinance" type="text" placeholder="0代表未审核，1代表已审核" />
+                        </li>
+                        <li>
+                            入住：<input id="startDate" col="StartDate" type="text" placeholder="入住时间" />
+                        </li>
+                        <li>
+                            离店：<input id="endDate" col="EndDate" type="text" placeholder="离店时间" />
+                        </li>
+                        <li>
+                            <a id="btnSearch" class="btn btn-primary btn-sm" onclick="searchGrid()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                        <li style="display:none">
+                            门店：<input id="branchId" col="BranchId" type="text">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="btn-group-sm hidden-xs" id="toolbar">
+                <a id="btnExport" class="btn btn-warning" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="gridTable" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var _branchId = ys.getCookie("BranchId");
+    var _resourcesData = [];
+    var vStartDate = moment().startOf('month').format("YYYY-MM-DD");
+    var vEndDate = moment().endOf('month').add(1,'days').format("YYYY-MM-DD");
+    $("#branchId").val(_branchId);
+    $(function () {
+        laydate.render({ elem: '#startDate', format: 'yyyy-MM-dd', value: vStartDate });
+        laydate.render({ elem: '#endDate', format: 'yyyy-MM-dd', value: vEndDate });
+        initGrid();
+    });
+
+    function initGrid() {
+        var queryUrl = '@Url.Content("~/HotelManage/Order/GetPageListJson3")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                { field: 'OrderName', title: '客人姓名' },
+                { field: 'Nickname', title: '昵称' },
+                { field: 'Phone', title: '手机号' },
+                { field: 'OrderNumber', title: '订单号' },
+                { field: 'HouseType', title: '房型' },
+                { field: 'HouseNumber', title: '房号' },
+                {
+                    field: 'StartDate', title: '入住日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'EndDate', title: '离店日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                { field: 'UnitPrice', title: '单价' },
+                { field: 'TotalPrice', title: '总价' },
+                { field: 'HouseCount', title: '总间夜数' },
+                { field: 'State', title: '订单状态' },
+                {
+                    //field: 'IsFinish',
+                    title: '预审',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if(row.IsFinish==0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinish == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                {
+                    //field: 'IsFinance',
+                    title: '财务审核',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.IsFinance == 0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinance == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                { field: 'StewardName', title: '管家' },
+                { field: 'ChannelName', title: '渠道' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndex(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
+                        return actions.join('');
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                return queryString;
+            }
+        });
+    }
+
+    function searchGrid() {
+        $('#gridTable').ysTable('search');
+        resetToolbarStatus();
+    }
+
+    function checkForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要审核选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Order/CheckFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function repealForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要撤销审核选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Order/RepealFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function deleteForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要审核选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Order/DeleteFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function showProceedsIndex(id) {
+        ys.openDialog({
+            title: "收款明细",
+            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsIndex")' + '?orderId=' + id,
+            width: '768px',
+            height: '650px',
+            btn: ['关闭'],
+            closeBtn: 0,
+            callback: function (index, layero) {
+                layer.close(index);
+            }
+        });
+    }
+
+    function exportForm() {
+    var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson")';
+    var postData = $("#searchDiv").getWebControls();
+    ys.exportExcel(url, postData);
+    }
+</script>

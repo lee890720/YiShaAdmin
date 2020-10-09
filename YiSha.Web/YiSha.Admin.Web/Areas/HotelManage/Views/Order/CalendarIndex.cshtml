@@ -17,6 +17,7 @@
     var _branchId = ys.getCookie("BranchId");
     var _startdate = moment().add(-3, "days").format("YYYY-MM-DD");
     var _resourcesData = [];
+    var _houseNumberData = [];
     var _eventsData = [];
     var _eventData = [];
     var _branchEventsData = [];
@@ -81,12 +82,21 @@
                 };
                 resourcesData.push(newbranch);
                 var dm = ys.getCookie("DisplayMode");
-                if (dm == 0)
+                if (dm == 0) {
                     _resourcesData = resourcesData;
+                    _houseNumberData = [];
+                    for (var i = 0; i < resourcesData.length; i++) {
+                        for (var j = 0; j < resourcesData[i].children.length; j++) {
+                            _houseNumberData.push(resourcesData[i].children[j]);
+                        }
+                    }
+                }
                 else {
                     for (var i = 0; i < resourcesData.length; i++) {
                         for (var j = 0; j < resourcesData[i].children.length; j++) {
                             _resourcesData.push(resourcesData[i].children[j]);
+                            _houseNumberData = [];
+                            _houseNumberData.push(resourcesData[i].children[j]);
                         }
                     }
                     _resourcesData.push(newbranch);
@@ -185,6 +195,8 @@
             newEvent.houseTypeId = event.HouseTypeId;
 
             newEvent.houseNumberId = event.HouseNumberId;
+
+            newEvent.houseNumber = event.HouseNumber;
 
             newEvent.isFinance = event.IsFinance;
 
@@ -508,6 +520,7 @@
         selectable: true,
         selectOverlap: false,
         select: function (selectionInfo) {
+            console.log(selectionInfo);
             if (ys.isNullOrEmpty(selectionInfo.resource._resource.parentId))
                 return;
             _eventData = [];
@@ -517,6 +530,7 @@
                 BranchId: _branchId,
                 HouseTypeId: selectionInfo.resource._resource.parentId,
                 HouseNumberId: selectionInfo.resource._resource.id,
+                HouseNumber: selectionInfo.resource._resource.title,
                 IsFinance: 0,
                 IsFinish: 0,
                 State: 0
@@ -569,6 +583,7 @@
             arg.el.style.padding = '0px';
         },
         eventClick: function (eventClickInfo) {
+            console.log(eventClickInfo);
             if (eventClickInfo.event._def.ui.overlap == false)
                 return;
             _eventData = [];
@@ -579,6 +594,7 @@
                 BranchId: _branchId,
                 HouseTypeId: eventClickInfo.event._def.extendedProps.houseTypeId,
                 HouseNumberId: eventClickInfo.event._def.extendedProps.houseNumberId,
+                HouseNumber: eventClickInfo.event._def.extendedProps.houseNumber,
                 IsFinance: eventClickInfo.event._def.extendedProps.isFinance,
                 IsFinish: eventClickInfo.event._def.extendedProps.isFinish,
                 State: eventClickInfo.event._def.extendedProps.state,
@@ -611,7 +627,7 @@
             id = _eventData.Id;
         }
         ys.openDialog({
-            title: id > 0 ? '编辑 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate + ' )' : '添加 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate+ ' )',
+            title: id > 0 ? '编辑 ' + _eventData.HouseNumber + ' ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate + ' ) ' : '添加 ' + _eventData.HouseNumber + ' ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate+ ' ) ',
             content: '@Url.Content("~/HotelManage/Order/CalendarForm")' + '?id=' + id,
             width: '768px',
             height: '678px',

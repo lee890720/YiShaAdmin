@@ -80,5 +80,19 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             return Json(obj);
         }
         #endregion
+
+        [HttpPost]
+        public async Task<IActionResult> ExportPricingJson(PricingListParam param)
+        {
+            TData<string> obj = new TData<string>();
+            TData<List<PricingEntity>> pricingObj = await pricingBLL.GetList(param);
+            if (pricingObj.Tag == 1)
+            {
+                string file = new ExcelHelper<PricingEntity>().ExportToExcel("定价列表.xls", "定价列表", pricingObj.Data, new string[] { "HouseName", "Shop", "Ota",  "Travel", "Team", "Inner" });
+                obj.Data = file;
+                obj.Tag = 1;
+            }
+            return Json(obj);
+        }
     }
 }

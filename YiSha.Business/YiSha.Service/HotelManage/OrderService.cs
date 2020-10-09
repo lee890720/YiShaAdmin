@@ -52,12 +52,30 @@ namespace YiSha.Service.HotelManage
             return list.ToList();
         }
 
+        public async Task<List<OrderEntity>> GetList3(OrderListParam param)
+        {
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter2(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
+            list = list.Where(p => p.State == OrderTypeEnum.Order4.ParseToInt());
+            return list.ToList();
+        }
+
         public async Task<List<OrderEntity>> GetPageList2(OrderListParam param, Pagination pagination)
         {
             var strSql = new StringBuilder();
             List<DbParameter> filter = ListFilter2(param, strSql);
             var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
             list = list.Where(p => p.State != OrderTypeEnum.Order4.ParseToInt());
+            return list.ToList();
+        }
+
+        public async Task<List<OrderEntity>> GetPageList3(OrderListParam param, Pagination pagination)
+        {
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter2(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
+            list = list.Where(p => p.State == OrderTypeEnum.Order4.ParseToInt());
             return list.ToList();
         }
 
@@ -77,7 +95,21 @@ namespace YiSha.Service.HotelManage
                 var endDate = Convert.ToDateTime(entity.EndDate);
                 entity.HouseCount = endDate.Subtract(startDate).Days;
                 entity.UnitPrice = entity.TotalPrice / entity.HouseCount;
-                await this.BaseRepository().Insert(entity); 
+                await this.BaseRepository().Insert(entity);
+                var tempId = entity.HouseNumberId;
+                if (!string.IsNullOrEmpty(entity.HouseNumberIds))
+                {
+                    foreach (long houseNumberId in TextHelper.SplitToArray<long>(entity.HouseNumberIds, ','))
+                    {
+                        if (tempId == houseNumberId)
+                            continue;
+                        entity.HouseNumberId = houseNumberId;
+                        var temp = await this.BaseRepository().FindEntity<BranchEntity>(houseNumberId);
+                        entity.HouseTypeId = temp.ParentId;
+                        await entity.Create();
+                        await this.BaseRepository().Insert(entity);
+                    }
+                }
             }
             else
             {

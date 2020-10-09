@@ -48,10 +48,28 @@ namespace YiSha.Business.HotelManage
             return obj;
         }
 
+        public async Task<TData<List<OrderEntity>>> GetList3(OrderListParam param)
+        {
+            TData<List<OrderEntity>> obj = new TData<List<OrderEntity>>();
+            obj.Data = await orderService.GetList3(param);
+            obj.Total = obj.Data.Count;
+            obj.Tag = 1;
+            return obj;
+        }
+
         public async Task<TData<List<OrderEntity>>> GetPageList2(OrderListParam param, Pagination pagination)
         {
             TData<List<OrderEntity>> obj = new TData<List<OrderEntity>>();
             obj.Data = await orderService.GetPageList2(param, pagination);
+            obj.Total = pagination.TotalCount;
+            obj.Tag = 1;
+            return obj;
+        }
+
+        public async Task<TData<List<OrderEntity>>> GetPageList3(OrderListParam param, Pagination pagination)
+        {
+            TData<List<OrderEntity>> obj = new TData<List<OrderEntity>>();
+            obj.Data = await orderService.GetPageList3(param, pagination);
             obj.Total = pagination.TotalCount;
             obj.Tag = 1;
             return obj;

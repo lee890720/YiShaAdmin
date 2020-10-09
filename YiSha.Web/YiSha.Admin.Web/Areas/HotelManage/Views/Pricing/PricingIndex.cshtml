@@ -7,7 +7,8 @@
             <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
             <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
             <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
-            <a id="btnMode" class="btn btn-primary" onclick="modeChange()"><i class="fa fa-exchange"></i> 切换</a>
+            <a id="btnExport" class="btn btn-warning" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
+            <a id="btnMode" class="btn btn-primary" onclick="modeChange()"><i class="fa fa-exchange"></i> 淡季</a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="gridTable" data-mobile-responsive="true"></table>
@@ -26,9 +27,9 @@
         var queryUrl = '@Url.Content("~/HotelManage/Pricing/GetPageListJson")';
         $('#gridTable').ysTable({
             url: queryUrl,
-            sortable: true,     
+            sortable: true,
             sortStable: true,
-            sortName: 'Id',  
+            sortName: 'Id',
             sortOrder: "asc",
             columns: [
                 { checkbox: true, visible: true },
@@ -226,5 +227,11 @@
             $("#btnMode").html('<i class="fa fa-exchange"></i> 淡季');
             searchGrid();
         }
+    }
+
+    function exportForm() {
+    var url = '@Url.Content("~/HotelManage/Pricing/ExportPricingJson")';
+        var postData = {BranchId:_branchId};
+    ys.exportExcel(url, postData);
     }
 </script>

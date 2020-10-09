@@ -33,6 +33,11 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             return View();
         }
 
+        public ActionResult OrderDelIndex()
+        {
+            return View();
+        }
+
         public ActionResult OrderForm()
         {
             return View();
@@ -72,6 +77,13 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetListJson3(OrderListParam param)
+        {
+            TData<List<OrderEntity>> obj = await orderBLL.GetList3(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetPageListJson2(OrderListParam param, Pagination pagination)
         {
             TData<List<OrderEntity>> obj = await orderBLL.GetPageList2(param, pagination);
@@ -79,6 +91,13 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             //JsonSerializerSettings settings = new JsonSerializerSettings();
             //settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             //return Json(obj, settings);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPageListJson3(OrderListParam param, Pagination pagination)
+        {
+            TData<List<OrderEntity>> obj = await orderBLL.GetPageList3(param, pagination);
             return Json(obj);
         }
 

@@ -153,5 +153,7 @@ namespace YiSha.Entity.HotelManage
         [NotMapped]
         [Description("管家")]
         public string StewardName { get; set; }
+        [NotMapped]
+        public string HouseNumberIds { get; set; }
     }
 }

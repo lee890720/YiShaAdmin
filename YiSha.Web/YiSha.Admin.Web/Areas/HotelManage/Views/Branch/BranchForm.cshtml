@@ -5,47 +5,53 @@
 <div class="wrapper animated fadeInRight">
     <form id="form" class="form-horizontal m">
         <div class="form-group">
-            <label class="col-sm-3 control-label ">公司选择</label>
+            <label class="col-sm-3 control-label ">隶属选择（所有）</label>
             <div class="col-sm-8">
                 <div id="parentId" col="ParentId"></div>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label ">门店名称</label>
+            <label class="col-sm-3 control-label ">名称（所有）</label>
             <div class="col-sm-8">
                 <input id="branchName" col="BranchName" type="text" class="form-control" />
             </div>
         </div>
         <div id="test1" class="form-group">
-            <label class="col-sm-3 control-label ">门店位置</label>
+            <label class="col-sm-3 control-label ">位置（门店）</label>
             <div class="col-sm-8">
                 <input id="branchArea" col="BranchArea" type="text" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label ">房间数量</label>
+            <label class="col-sm-3 control-label ">房间数量（门店）</label>
             <div class="col-sm-8">
                 <input id="houseCount" col="HouseCount" type="text" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label ">显示顺序</label>
+            <label class="col-sm-3 control-label ">顺序（所有）</label>
             <div class="col-sm-8">
                 <input id="branchSort" col="BranchSort" type="text" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label ">支付方式</label>
+            <label class="col-sm-3 control-label ">层级（所有）</label>
             <div class="col-sm-8">
-                <div id="PayId" col="PayIds"></div>
+                <input id="branchLevel" col="BranchLevel" type="text" placeholder="品牌=1，门店=2，房型=3，房号=4" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">门店渠道</label>
+            <label class="col-sm-3 control-label ">支付方式（门店）</label>
+            <div class="col-sm-8">
+                <div id="payId" col="PayIds"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">门店渠道（门店）</label>
             <div class="col-sm-8" id="channelId" col="ChannelIds"></div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label ">备注</label>
+            <label class="col-sm-3 control-label ">备注（所有）</label>
             <div class="col-sm-8">
                 <textarea id="remark" col="Remark" class="form-control"></textarea>
             </div>
@@ -62,13 +68,18 @@
             value: "ChannelName"
         });
 
-        $("#PayId").ysComboBox({
+        $("#payId").ysCheckBox({
+            url: '@Url.Content("~/HotelManage/Pay/GetListJson")',
+            key: "Id",
+            value: "PayName"
+        });
+        @*$("#payId").ysComboBox({
             url: '@Url.Content("~/HotelManage/Pay/GetListJson")',
             key: "Id",
             value: "PayName",
             class: "form-control",
             multiple: true
-        });
+        });*@
 
         $('#parentId').ysComboBoxTree({ url: '@Url.Content("~/HotelManage/Branch/GetBranchTreeListJson")', async: false });
 
