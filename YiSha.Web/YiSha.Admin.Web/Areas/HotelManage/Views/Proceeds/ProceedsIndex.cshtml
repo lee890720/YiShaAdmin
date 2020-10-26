@@ -105,8 +105,6 @@
         ys.openDialog({
             title: id > 0 ? '编辑' : '添加',
             content: '@Url.Content("~/HotelManage/Proceeds/ProceedsForm")' + '?id=' + id,
-            width: '768px',
-            height: '550px',
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);

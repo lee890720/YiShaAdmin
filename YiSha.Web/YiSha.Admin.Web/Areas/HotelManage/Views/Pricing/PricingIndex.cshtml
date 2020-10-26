@@ -3,12 +3,23 @@
  }
 <div class="container-div">
     <div class="row">
-        <div class="btn-group-sm hidden-xs" id="toolbar">
+        <div class="btn-group hidden-xs" id="toolbar">
             <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
             <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
             <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
             <a id="btnExport" class="btn btn-warning" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
-            <a id="btnMode" class="btn btn-primary" onclick="modeChange()"><i class="fa fa-exchange"></i> 淡季</a>
+            @*<a id="btnMode" class="btn btn-primary" onclick="modeForm()"><i class="fa fa-exchange"></i> 淡季</a>*@
+        <div class="btn-group">
+            <button class="btn btn-white" type="button" onclick="modeForm(0)">淡季</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(2)">+20%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(3)">+30%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(4)">+40%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(5)">+50%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(6)">+60%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(7)">+70%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(8)">+80%</button>
+            <button class="btn btn-white" type="button" onclick="modeForm(1)">旺季</button>
+        </div>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="gridTable" data-mobile-responsive="true"></table>
@@ -41,6 +52,20 @@
                     formatter: function (value, row, index) {
                         if (mode == 0)
                             return value;
+                        else if (mode == 2)
+                            return (value * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return (value * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return (value * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return (value * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return (value * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return (value * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return (value * 1.8).toFixed(0);
                         else if (mode == 1){
                             if (row.Mode == 0)
                                 return value + row.Peak;
@@ -55,6 +80,20 @@
                     formatter: function (value, row, index) {
                         if (mode == 0)
                             return value;
+                        else if (mode == 2)
+                            return (value * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return (value * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return (value * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return (value * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return (value * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return (value * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return (value * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 return (value + row.Peak).toFixed(0);
@@ -69,7 +108,21 @@
                     formatter: function (value, row, index) {
                         var val = 0;
                         if (mode == 0)
-                            val =(row.Ota*value).toFixed(0);
+                            val = (row.Ota * value).toFixed(0);
+                        else if (mode == 2)
+                            val = ((row.Ota * value) * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            val =((row.Ota * value) * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            val = ((row.Ota * value) * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            val = ((row.Ota * value) * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            val = ((row.Ota * value) * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            val =((row.Ota * value) * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            val =((row.Ota * value) * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 val =((row.Ota+row.Peak) * value).toFixed(0);
@@ -86,7 +139,21 @@
                     title: '现付价',
                     formatter: function (value, row, index) {
                         if (mode == 0)
-                            return (row.Ota +value).toFixed(0);
+                            return (row.Ota + value).toFixed(0);
+                        else if (mode == 2)
+                            return ((row.Ota + value) * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return ((row.Ota + value)* 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return ((row.Ota + value)* 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return ((row.Ota + value) * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return ((row.Ota + value) * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return ((row.Ota + value) * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return ((row.Ota + value) * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 return (row.Ota + value + row.Peak).toFixed(0);
@@ -101,6 +168,20 @@
                     formatter: function (value, row, index) {
                         if (mode == 0)
                             return value;
+                        else if (mode == 2)
+                            return (value * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return (value * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return (value * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return (value * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return (value * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return (value * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return (value * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 return (value + row.Peak).toFixed(0);
@@ -115,6 +196,20 @@
                     formatter: function (value, row, index) {
                         if (mode == 0)
                             return value;
+                        else if (mode == 2)
+                            return (value * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return (value * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return (value * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return (value * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return (value * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return (value * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return (value * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 return (value + row.Peak).toFixed(0);
@@ -129,6 +224,20 @@
                     formatter: function (value, row, index) {
                         if (mode == 0)
                             return value;
+                        else if (mode == 2)
+                            return (value * 1.2).toFixed(0);
+                        else if (mode == 3)
+                            return (value * 1.3).toFixed(0);
+                        else if (mode == 4)
+                            return (value * 1.4).toFixed(0);
+                        else if (mode == 5)
+                            return (value * 1.5).toFixed(0);
+                        else if (mode == 6)
+                            return (value * 1.6).toFixed(0);
+                        else if (mode == 7)
+                            return (value * 1.7).toFixed(0);
+                        else if (mode == 8)
+                            return (value * 1.8).toFixed(0);
                         else if (mode == 1) {
                             if (row.Mode == 0)
                                 return (value + row.Peak).toFixed(0);
@@ -181,8 +290,6 @@
         ys.openDialog({
             title: id > 0 ? '编辑' : '添加',
             content: '@Url.Content("~/HotelManage/Pricing/PricingForm")' + '?id=' + id,
-            width: '768px',
-            height: '550px',
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);
@@ -212,21 +319,12 @@
         }
     }
 
-    function modeChange() {
-        if (mode == 0) {
-            mode = 1;
-            $("#btnMode").removeClass("btn-primary");
-            $("#btnMode").addClass("btn-danger");
-            $("#btnMode").html('<i class="fa fa-exchange"></i> 旺季');
-            searchGrid();
-        }
-        else if(mode == 1){
-            mode = 0;
-            $("#btnMode").removeClass("btn-danger");
-            $("#btnMode").addClass("btn-primary");
-            $("#btnMode").html('<i class="fa fa-exchange"></i> 淡季');
-            searchGrid();
-        }
+    function modeForm(mVal) {
+        mode = mVal;
+        //$("#btnMode").removeClass("btn-primary");
+        //$("#btnMode").addClass("btn-danger");
+        //$("#btnMode").html('<i class="fa fa-exchange"></i> 旺季');
+        searchGrid();
     }
 
     function exportForm() {

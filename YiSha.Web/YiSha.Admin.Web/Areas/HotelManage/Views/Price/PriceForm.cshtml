@@ -1,0 +1,115 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+<link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">节假日</label>
+            <div class="col-sm-10">
+                <input id="holidayName" col="HolidayName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">调价开始</label>
+            <div class="col-sm-10">
+                <input id="beginDate" col="BeginDate" type="text" class="form-control datepicker" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">开始日期</label>
+            <div class="col-sm-10">
+                <input id="startDate" col="StartDate" type="text" class="form-control datepicker" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">结束日期</label>
+            <div class="col-sm-10">
+                <input id="endDate" col="EndDate" type="text" class="form-control datepicker" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">调价结束</label>
+            <div class="col-sm-10">
+                <input id="overDate" col="OverDate" type="text" class="form-control datepicker" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">调价策略</label>
+            <div class="col-sm-10">
+                <input id="strategy" col="Strategy" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">备注</label>
+            <div class="col-sm-10">
+                <textarea id="remark" col="Remark" class="form-control" style="height:60px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript">
+    var id = ys.request("id");
+
+    $(".datepicker").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
+        //initialDate:'now',
+    });
+
+    $(function () {
+
+        getForm();
+
+        $('#form').validate({
+            rules: {
+                holidayName: { required: true }
+            }
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Price/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        $('#form').setWebControls(obj.Data);
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {};
+            $('#form').setWebControls(defaultData);
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Price/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

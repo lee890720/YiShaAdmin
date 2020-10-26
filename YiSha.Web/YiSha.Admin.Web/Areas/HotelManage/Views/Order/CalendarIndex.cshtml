@@ -14,7 +14,21 @@
 <script src="~/lib/moment/moment.min.js"></script>
 <script type="text/javascript">
     //#region 初始化参数
+    var system = {};
+    //var isPhone = 0;
+    var p = navigator.platform;
+    system.win = p.indexOf("Win") == 0;
+    system.mac = p.indexOf("Mac") == 0;
+    system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
+    //if (system.win || system.mac || system.xll) {
+    //    isPhone = 0;
+    //}
+    //else {
+    //    isPhone = 1;
+    //}
+
     var _branchId = ys.getCookie("BranchId");
+    //var _startdate = isPhone == 0 ? moment().add(-3, "days").format("YYYY-MM-DD") : moment().add(-1, "days").format("YYYY-MM-DD");
     var _startdate = moment().add(-3, "days").format("YYYY-MM-DD");
     var _resourcesData = [];
     var _houseNumberData = [];
@@ -25,6 +39,8 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         calendar.render();
+        //if(isPhone==1)
+        //    calendar.changeView("resourceTimelineThirtyDays", { resourceAreaWidth: '75px'});
 
         $(document.getElementById("displayMode")).on('click', function () {
             var dm = ys.getCookie("DisplayMode");
@@ -82,6 +98,8 @@
                 };
                 resourcesData.push(newbranch);
                 var dm = ys.getCookie("DisplayMode");
+                //if (isPhone == 1)
+                //    dm = 1;
                 if (dm == 0) {
                     _resourcesData = resourcesData;
                     _houseNumberData = [];
@@ -159,6 +177,9 @@
     var getJsonEvent = function (data, start, end) {
 
         var dm = ys.getCookie("DisplayMode");
+
+        //if (isPhone == 1)
+        //    dm = 1;
 
         var itemArr = [];
 
@@ -440,7 +461,7 @@
         height: '100%',
         slotMinWidth: '100',
         slotLabelFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true },
-        resourceAreaWidth: '175px',
+        resourceAreaWidth: '176px',
         scrollTime: "00:00:00",
         resourceAreaColumns: [
             {
@@ -448,9 +469,11 @@
                 headerDidMount: function (arg) {
                     hl = '<div id="addbtn">'
                         + '<button id="displayMode" class="btn-link" title="切换显示模式"><i class="fa fa-refresh"></i></button>'
-                        + '<button id="prev" class="btn-link" title="向前一个月"><i class="fa fa-chevron-left"></i></button>'
-                        + '<input class="btn-link" type="text" id="startdate" style="width:70px;text-align:center">'
-                        + '<button id="next" class="btn-link" title="向后一个月"><i class="fa fa-chevron-right"></i></button>'
+                        + '<button id="prev" class="btn-link" title="向前一个月"><i class="fa fa-chevron-left"></i></button>';
+                    //if (isPhone == 0)
+                    //    hl += '<input class="btn-link" type="text" id="startdate" style="width:70px;text-align:center">';
+
+                    hl += '<button id="next" class="btn-link" title="向后一个月"><i class="fa fa-chevron-right"></i></button>'
                         + '<button id="today" class="btn-link" title="跳转至今天"><i class="fa fa-circle-o"></i></button>'
                         + '</div>';
                     arg.el.children[0].children[0].innerHTML = "";
@@ -629,8 +652,6 @@
         ys.openDialog({
             title: id > 0 ? '编辑 ' + _eventData.HouseNumber + ' ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate + ' ) ' : '添加 ' + _eventData.HouseNumber + ' ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate+ ' ) ',
             content: '@Url.Content("~/HotelManage/Order/CalendarForm")' + '?id=' + id,
-            width: '768px',
-            height: '678px',
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);

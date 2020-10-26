@@ -13,30 +13,56 @@
         </div>
     </div>
 </div>
-<script src="~/lib/moment/moment.min.js"></script>
+
 <script type="text/javascript">
-    var _branchId = ys.getCookie("BranchId");
     $(function () {
         initGrid();
     });
 
     function initGrid() {
-        var queryUrl = '@Url.Content("~/HotelManage/Address/GetPageListJson")';
+        var queryUrl = '@Url.Content("~/HotelManage/Price/GetPageListJson")';
         $('#gridTable').ysTable({
             url: queryUrl,
+            sortName: 'Id',
+            sortOrder: "asc",   
+            pageSize: 25,      
             columns: [
                 { checkbox: true, visible: true },
                 { field: 'Id', title: 'Id', visible: false },
-                { field: 'AddressName', title: '名称' },
-                { field: 'WeChat', title: '微信' },
-                { field: 'Phone', title: '手机' },
-                { field: 'Purpose', title: '用途' },
-                { field: 'Remark', title: '备注' },
-            ],
+                { field: 'HolidayName', title: '节假日' },
+                {
+                    field: 'BeginDate',
+                    title: '调价开始',
+                    formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    } },
+                {
+                    field: 'StartDate',
+                    title: '开始日期', 
+                    formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'EndDate',
+                    title: '结束日期',
+                    formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'OverDate',
+                    title: '调价结束',
+                    formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                    { field: 'Strategy', title: '调价策略' },
+                    { field: 'Remark', title: '备注' },
+                ],
             queryParams: function (params) {
                 var pagination = $('#gridTable').ysTable('getPagination', params);
                 var queryString = $('#searchDiv').getWebControls(pagination);
-                queryString.BranchId = _branchId;
                 return queryString;
             }
         });
@@ -60,7 +86,7 @@
         }
         ys.openDialog({
             title: id > 0 ? '编辑' : '添加',
-            content: '@Url.Content("~/HotelManage/Address/AddressForm")' + '?id=' + id,
+            content: '@Url.Content("~/HotelManage/Price/PriceForm")' + '?id=' + id,
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);
@@ -74,7 +100,7 @@
             ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
                 var ids = ys.getIds(selectedRow);
                 ys.ajax({
-                    url: '@Url.Content("~/HotelManage/Address/DeleteFormJson")' + '?ids=' + ids,
+                    url: '@Url.Content("~/HotelManage/Price/DeleteFormJson")' + '?ids=' + ids,
                     type: 'post',
                     success: function (obj) {
                         if (obj.Tag == 1) {

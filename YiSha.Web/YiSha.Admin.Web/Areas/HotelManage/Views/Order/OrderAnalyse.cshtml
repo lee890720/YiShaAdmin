@@ -1,0 +1,497 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_FormGray.cshtml"; 
+}
+
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@section header{
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/report/echarts/echarts.min.js"))
+    @BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/moment/moment.min.js"))
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <h2>ECharts</h2>
+                    <p>
+                        <a href="https://github.com/apache/incubator-echarts" target="_blank">ECharts</a> 来自百度商业前端数据可视化团队，基于html5 Canvas，是一个纯Javascript图表库，提供直观，生动，可交互，可个性化定制的数据可视化图表。创新的拖拽重计算、数据视图、值域漫游等特性大大增强了用户体验，赋予了用户对数据进行挖掘、整合的能力。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>折线图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-line-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>柱状图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="echarts" id="echarts-bar-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>散点图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-scatter-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>K线图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-k-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>饼状图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-pie-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>雷达图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-radar-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>仪表盘</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-gauge-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>漏斗图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="echarts-funnel-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>中国地图</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div style="height:600px" id="echarts-map-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //#region 初始化参数
+    var _branchId = ys.getCookie("BranchId");
+    var _startdate = isPhone == 0 ? moment().add(-3, "days").format("YYYY-MM-DD") : moment().add(-1, "days").format("YYYY-MM-DD");
+    var _eventsData = [];
+    //#endregion
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+    });
+
+    //#region 初始化Event
+    function initEventList(start,end) {
+        var options = {
+            url: '@Url.Content("~/HotelManage/Order/GetListJson2")',
+            async: false,
+            data: {
+                BranchId: _branchId,
+                StartDate: start,
+                EndDate:end
+            },
+            success: function (rdata) {
+                _eventsData = [];
+                _eventsData = getJsonEvent(rdata.Data,start,end);
+            }
+        };
+        ys.ajax(options);
+    }
+    var getJsonEvent = function (data, start, end) {
+
+        var itemArr = [];
+
+        var itemArr2 = [];
+
+        var itemArr3 = [];
+
+        var dateArr = [];
+
+        var typeArr = [];
+
+        for (var i = 0; i < moment(end).diff(start, "days"); i++) {
+            dateArr.push(moment(start).add(i, "days").format("YYYY-MM-DD"));
+        }
+
+        for (var i = 0; i < _resourcesData.length; i++) {
+            typeArr.push(_resourcesData[i].id);
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].BranchId != _branchId)
+                continue;
+
+            var event = data[i];
+
+            var newEvent = {};
+
+            newEvent.id = event.Id;
+
+            newEvent.branchId = event.BranchId;
+
+            newEvent.channelId = event.ChannelId;
+
+            newEvent.houseTypeId = event.HouseTypeId;
+
+            newEvent.houseNumberId = event.HouseNumberId;
+
+            newEvent.houseNumber = event.HouseNumber;
+
+            newEvent.isFinance = event.IsFinance;
+
+            newEvent.isFinish = event.IsFinish;
+
+            newEvent.nickname = event.Nickname;
+
+            newEvent.orderName = event.OrderName;
+
+            newEvent.orderNumber = event.OrderNumber;
+
+            newEvent.phone = event.Phone;
+
+            newEvent.remark = event.Remark;
+
+            newEvent.state = event.State;
+
+            newEvent.stewardId = event.StewardId;
+
+            newEvent.totalPrice = event.TotalPrice;
+
+            newEvent.unitPrice = event.UnitPrice;
+
+            newEvent.houseCount = event.HouseCount;
+
+            newEvent.title = event.OrderName + " "+event.ChannelName;
+
+            newEvent.resourceId = event.HouseNumberId;
+
+            newEvent.start = event.StartDate;
+
+            newEvent.end = event.EndDate;
+
+            newEvent.channelName = event.ChannelName;
+
+            newEvent.allDay = true;
+
+            newEvent.backgroundColor = event.ChannelColor;
+
+            newEvent.borderColor = event.ChannelColor;
+
+            if (event.IsFinance == 1) {
+                newEvent.editable = false;
+                newEvent.startEditable = false;
+                newEvent.durationEditable = false;
+                newEvent.resourceEditable = false;
+            }
+
+            itemArr.push(newEvent);
+
+        }
+
+        for (var i = 0; i < itemArr.length; i++) {
+            var count = moment(itemArr[i].end).diff(itemArr[i].start, "days");
+            if (count > 1) {
+                for (var j = 0; j < count; j++) {
+                    var newEvent2 = {};
+                    newEvent2.id = itemArr[i].id;
+                    newEvent2.start = moment(itemArr[i].start).add(j, "days").format('YYYY-MM-DD');
+                    newEvent2.end = moment(itemArr[i].start).add(j + 1, "days").format('YYYY-MM-DD');
+                    newEvent2.resourceId = itemArr[i].houseTypeId;
+                    newEvent2.title = "";
+                    itemArr2.push(newEvent2);
+                }
+            }
+            else {
+                var newEvent2 = {};
+                newEvent2.id = itemArr[i].id;
+                newEvent2.start = moment(itemArr[i].start).format('YYYY-MM-DD');
+                newEvent2.end = moment(itemArr[i].end).format('YYYY-MM-DD');
+                newEvent2.resourceId = itemArr[i].houseTypeId;
+                newEvent2.title = "";
+                itemArr2.push(newEvent2);
+            }
+        }
+        var dateContainer = {}; // 针对键start进行归类的容器
+        itemArr2.forEach(item => {
+            dateContainer[item.start] = dateContainer[item.start] || [];
+
+            //当逻辑或||时，找到为true的分项就停止处理，并返回该分项的值，否则执行完，并返回最后分项的值。
+
+            dateContainer[item.start].push(item);
+        });
+        var dateName = Object.keys(dateContainer); // 获取日期种类：["apple", "banana"]
+        _branchEventsData = [];
+        dateName.forEach(dateItem => {
+            let count = 0;
+            dateContainer[dateItem].forEach(item => {
+                count++; // 遍历条目计算总数
+            });
+            itemArr.push({ 'start': dateItem, 'end': moment(dateItem).add(1, "days").format("YYYY-MM-DD"), 'title': count + "间", 'id': ys.getGuid(), 'resourceId': "00000001", 'backgroundColor': "LightSeaGreen", 'borderColor': "LightSeaGreen", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+            itemArr3.push({ 'start': dateItem, 'end': moment(dateItem).add(1, "days").format("YYYY-MM-DD"), 'title': count + "间", 'id': ys.getGuid(), 'resourceId': "00000001", 'backgroundColor': "LightSeaGreen", 'borderColor': "LightSeaGreen", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+
+            if (dm == 0) {
+                var typeContainer = {};
+                dateContainer[dateItem].forEach(item2 => {
+                    typeContainer[item2.resourceId] = typeContainer[item2.resourceId] || [];
+                    typeContainer[item2.resourceId].push(item2);
+                })
+                var typeName = Object.keys(typeContainer);
+                typeName.forEach(typeItem => {
+                    let count2 = 0;
+                    typeContainer[typeItem].forEach(item3 => {
+                        count2++;
+                    });
+                    itemArr.push({ 'start': dateItem, 'end': moment(dateItem).add(1, "days").format("YYYY-MM-DD"), 'title': count2 + "间", 'id': ys.getGuid(), 'resourceId': typeItem, 'backgroundColor': "LightGray", 'borderColor': "LightGray", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+                    itemArr3.push({ 'start': dateItem, 'end': moment(dateItem).add(1, "days").format("YYYY-MM-DD"), 'title': count2 + "间", 'id': ys.getGuid(), 'resourceId': typeItem, 'backgroundColor': "LightGray", 'borderColor': "LightGray", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+                });
+            }
+        });
+        if (dm == 0) {
+            for (var i = 0; i < typeArr.length; i++) {
+                for (var j = 0; j < dateArr.length; j++) {
+                    if (itemArr3.filter(obj => obj.start == dateArr[j] && obj.resourceId == typeArr[i]) == false) {
+                        if (typeArr[i] == "00000001")
+                            itemArr.push({ 'start': dateArr[j], 'end': moment(dateArr[j]).add(1, "days").format("YYYY-MM-DD"), 'title': "0间", 'id': (i * 1000 + j).toString(), 'resourceId': typeArr[i], 'backgroundColor': "IndianRed", 'borderColor': "IndianRed", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+                        else
+                            itemArr.push({ 'start': dateArr[j], 'end': moment(dateArr[j]).add(1, "days").format("YYYY-MM-DD"), 'title': "0间", 'id': (i * 1000 + j).toString(), 'resourceId': typeArr[i], 'backgroundColor': "LightGray", 'borderColor': "LightGray", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+                    }
+                }
+            }
+        }
+        else {
+            for (var j = 0; j < dateArr.length; j++) {
+                if (itemArr3.filter(obj => obj.start == dateArr[j] && obj.resourceId == "00000001") == false) {
+                    itemArr.push({ 'start': dateArr[j], 'end': moment(dateArr[j]).add(1, "days").format("YYYY-MM-DD"), 'title': "0间", 'id': (i * 1000 + j).toString(), 'resourceId': "00000001", 'backgroundColor': "IndianRed", 'borderColor': "IndianRed", 'editable': false, 'overlap': false, 'startEditable': false, 'durationEditable': false, 'resourceEditable': false });
+                }
+            }
+        }
+        return itemArr;
+
+    };
+    //#endregion
+
+</script>

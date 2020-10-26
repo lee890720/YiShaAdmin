@@ -320,8 +320,6 @@
         ys.openDialog({
             title: id > 0 ? '编辑 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate + ' )' : '添加 ( ' + _eventData.StartDate + ' - ' + _eventData.EndDate+ ' )',
             content: '@Url.Content("~/HotelManage/Scalp/ScalpClrForm")' + '?id=' + id,
-            width: '768px',
-            height: '378px',
             callback: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.saveForm(index);
