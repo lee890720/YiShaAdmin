@@ -39,7 +39,6 @@ namespace YiSha.Business.HotelManage
         {
             TData<List<BranchEntity>> obj = new TData<List<BranchEntity>>();
             obj.Data = await branchService.GetPageList(param, pagination);
-            //List<BranchBelongEntity> branchBelongList = await branchBelongService.GetList(new BranchBelongEntity { BranchIds = obj.Data.Select(p => p.Id.Value).ParseToStrings<long>() });
             obj.Total = pagination.TotalCount;
             obj.Tag = 1;
             return obj;
@@ -50,18 +49,6 @@ namespace YiSha.Business.HotelManage
             var obj = new TData<List<ZtreeInfo>>();
             obj.Data = new List<ZtreeInfo>();
             List<BranchEntity> branchList = await branchService.GetList(param);
-            //BranchEntity branch0 = new BranchEntity();
-            //foreach(var i in branchList)
-            //{
-            //    if(i.ParentId==0)
-            //    {
-            //        branch0 = i;
-            //        break;
-            //    }
-            //}
-            //List<long> childrenBranchIdList = await GetChildrenBranchIdList(branchList, (long)branch0.Id);
-            //branchList = branchList.Where(p => childrenBranchIdList.Contains(p.Id.Value)).ToList();
-
             foreach (BranchEntity branch in branchList)
             {
                 obj.Data.Add(new ZtreeInfo
@@ -101,11 +88,6 @@ namespace YiSha.Business.HotelManage
         public async Task<TData<string>> SaveForm(BranchEntity entity)
         {
             TData<string> obj = new TData<string>();
-            //if (branchService.ExistBranchName(entity))
-            //{
-            //    obj.Message = "部门名称已经存在！";
-            //    return obj;
-            //}
             await branchService.SaveForm(entity);
             obj.Data = entity.Id.ParseToString();
             obj.Tag = 1;

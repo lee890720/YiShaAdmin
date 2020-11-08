@@ -73,9 +73,8 @@ namespace YiSha.Service.HotelManage
         public async Task<List<OrderEntity>> GetPageList3(OrderListParam param, Pagination pagination)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilter4(param, strSql);
             var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
-            list = list.Where(p => p.State == OrderTypeEnum.Order4.ParseToInt());
             return list.ToList();
         }
 
@@ -268,6 +267,121 @@ namespace YiSha.Service.HotelManage
             }
             return parameter;
         }
+
+        private List<DbParameter> ListFilter4(OrderListParam param, StringBuilder strSql)
+        {
+            strSql.Append(@"SELECT  a.Id,
+                                    a.BaseIsDelete,
+                                    a.BaseCreateTime,
+                                    a.BaseCreatorId,
+                                    a.BaseModifyTime,
+                                    a.BaseModifierId,
+                                    a.BaseVersion,
+                                    a.OrderName,
+                                    a.Nickname,
+                                    a.Phone,
+                                    a.OrderNumber,
+                                    a.HouseTypeId,
+                                    a.HouseNumberId,
+                                    a.StartDate,
+                                    a.EndDate,
+                                    a.UnitPrice,
+                                    a.TotalPrice,
+                                    a.HouseCount,
+                                    a.State,
+                                    a.IsFinish,
+                                    a.IsFinance,
+                                    a.Remark,
+                                    a.StewardId,
+                                    a.ChannelId,
+                                    a.BranchId,
+                                    b.BranchName,
+                                    c.ChannelName,
+                                    c.ChannelColor,
+                                    d.RealName AS StewardName,
+                                    e.BranchName AS HouseType,
+                                    f.BranchName AS HouseNumber,
+                                    g.RealName AS CreateName,
+                                    h.RealName AS ModifierName
+                            FROM    HtlOrder a
+                                    LEFT JOIN HtlBranch b ON a.BranchId = b.Id
+                                    LEFT JOIN HtlChannel c ON a.ChannelId=c.Id
+                                    LEFT JOIN SysUser d ON a.StewardId=d.Id
+                                    LEFT JOIN HtlBranch e ON a.HouseTypeId=e.Id
+                                    LEFT JOIN HtlBranch f ON a.HouseNumberId=f.Id
+                                    LEFT JOIN SysUser g ON a.BaseCreatorId=g.Id
+                                    LEFT JOIN SysUser h ON a.BaseModifierId=h.Id
+                            WHERE   1 = 1");
+            var parameter = new List<DbParameter>();
+            if (param != null)
+            {
+                strSql.Append(" AND a.State = @State");
+                parameter.Add(DbParameterExtension.CreateDbParameter("@State", 3));
+                if (!string.IsNullOrEmpty(param.Id.ToString()))
+                {
+                    strSql.Append(" AND a.Id = @Id");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Id", param.Id));
+                }
+                if (!string.IsNullOrEmpty(param.OrderName))
+                {
+                    strSql.Append(" AND a.OrderName like @OrderName");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderName", "%" + param.OrderName + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.Nickname))
+                {
+                    strSql.Append(" AND a.Nickname like @Nickname");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Nickname", "%" + param.Nickname + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.Phone))
+                {
+                    strSql.Append(" AND a.Phone like @Phone");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Phone", "%" + param.Phone + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.OrderNumber))
+                {
+                    strSql.Append(" AND a.OrderNumber like @OrderNumber");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderNumber", "%" + param.OrderNumber + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.HouseTypeId.ToString()))
+                {
+                    strSql.Append(" AND a.HouseTypeId = @HouseTypeId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@HouseTypeId", param.HouseTypeId));
+                }
+                if (!string.IsNullOrEmpty(param.HouseNumberId.ToString()))
+                {
+                    strSql.Append(" AND a.HouseNumberId = @HouseNumberId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@HouseNumberId", param.HouseNumberId));
+                }
+                if (!string.IsNullOrEmpty(param.BranchId.ToString()))
+                {
+                    strSql.Append(" AND a.BranchId = @BranchId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@BranchId", param.BranchId));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinish.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinish = @IsFinish");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinish", param.IsFinish));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinance.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinance = @IsFinance");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinance", param.IsFinance));
+                }
+                if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.EndDate > @StartDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
+                }
+                if (!string.IsNullOrEmpty(param.EndDate.ParseToString()))
+                {
+                    //param.EndDate = (param.EndDate.Value.ToString("yyyy-MM-dd") + " 23:59:59").ParseToDateTime();
+                    strSql.Append(" AND a.StartDate < @EndDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@EndDate", param.EndDate));
+                }
+            }
+            return parameter;
+        }
+
 
         private Expression<Func<OrderEntity, bool>> ListFilter3(string param)
         {
