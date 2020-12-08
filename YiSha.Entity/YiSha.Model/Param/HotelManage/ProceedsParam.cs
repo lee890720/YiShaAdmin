@@ -16,5 +16,6 @@ namespace YiSha.Model.Param.HotelManage
         public string ProceedsIds { get; set; }
         public string BranchName { get; set; }
         public long? OrderId { get; set; }
+        public long? SaleId { get; set; }
     }
 }

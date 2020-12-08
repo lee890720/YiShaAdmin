@@ -92,6 +92,7 @@ namespace YiSha.Admin.Web.Areas.OrganizationManage.Controllers
             return Json(obj);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetStewardJson(long? id)
         {
             TData<List<UserEntity>> obj = await userBLL.GetStewardList(id);

@@ -54,8 +54,11 @@ namespace YiSha.Enum
         [Description("支付凭证")]
         Pay = 3,
 
-        [Description("订单")]
+        [Description("房收")]
         Orders=4,
+
+        [Description("外销")]
+        Sales = 5,
 
         [Description("导入的文件")]
         Import = 10

@@ -42,6 +42,7 @@
 <script type="text/javascript">
     var id = ys.request("id");
     var orderId = ys.request("orderId");
+    var saleId = ys.request("saleId");
     var branchId = ys.request("branchId");
 
     //自定义validate验证输入的数字小数点位数不能大于两位
@@ -56,7 +57,7 @@
             }
         }
         return returnVal;
-    }, "小数点后最多为两位"); 
+    }, "小数点后最多为两位");
 
     $(function () {
 
@@ -106,7 +107,8 @@
             var postData = $('#form').getWebControls({
                 Id: id,
                 OrderId: orderId,
-                BranchId:branchId,
+                SaleId:saleId,
+                BranchId:branchId
             });
             postData.PayImage = $("#payImage").imageUpload("getImageUrl");
             ys.ajax({
@@ -132,7 +134,8 @@
         if ($('#form').validate().form()) {
             var postData = $('#form').getWebControls({
                 Id: id,
-                OrderId: orderId
+                OrderId: orderId,
+                SaleId:saleId
             });
             postData.PayImage = $("#payImage").imageUpload("getImageUrl");
             ys.ajax({
@@ -156,8 +159,17 @@
     function uploadPayImage(file, callback) {
         var formdata = new FormData();
         formdata.append("fileList", file);
+        var tempurl = "";
+        if (orderId > 0)
+            tempurl = '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Orders.ParseToInt()';
+        else
+            console.log(orderId);
+        if (saleId > 0)
+            tempurl = '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Sales.ParseToInt()';
+        else
+            console.log(saleId);
         ys.ajaxUploadFile({
-            url: '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Orders.ParseToInt()',
+            url: tempurl,
             data: formdata,
             success: function (obj) {
                 if (obj.Tag == 1) {

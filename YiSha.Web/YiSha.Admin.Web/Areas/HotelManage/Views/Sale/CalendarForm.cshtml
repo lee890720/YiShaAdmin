@@ -1,0 +1,413 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.table/1.12.0/bootstrap-table.min.css"))
+@BundlerHelper.Render(HostingEnvironment.ContentRootPath, Url.Content("~/lib/bootstrap.table/1.12.0/bootstrap-table.min.js"))
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">姓名</label>
+            <div class="col-sm-5">
+                <input id="saleName" col="SaleName" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">日期</label>
+            <div class="col-sm-5">
+                <input id="createDate" col="CreateDate" type="text" class="form-control is-edit" disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">手机</label>
+            <div class="col-sm-5">
+                <input id="phone" col="Phone" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">ID号</label>
+            <div class="col-sm-5">
+                <input id="iDNumber" col="IDNumber" type="text" class="form-control is-edit" />
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label class="col-sm-1 control-label ">部门</label>
+            <div class="col-sm-5">
+                <div id="departmentId" col="DepartmentId" class="is-edit"></div>
+            </div>
+            <label class="col-sm-1 control-label ">管家</label>
+            <div class="col-sm-5">
+                <div id="stewardId" col="StewardId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">类目</label>
+            <div class="col-sm-5">
+                <div id="categoryId" col="CategoryId" class="is-edit"></div>
+            </div>
+            <label class="col-sm-1 control-label ">产品</label>
+            <div class="col-sm-5">
+                <div id="productId" col="ProductId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">售价</label>
+            <div class="col-sm-5">
+                <input id="salePrice" col="SalePrice" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">进价</label>
+            <div class="col-sm-5">
+                <input id="purchasePrice" col="PurchasePrice" type="text" class="form-control is-edit" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">提成</label>
+            <div class="col-sm-5">
+                <input id="commission" col="Commission" type="text" class="form-control is-edit" />
+            </div>
+            <label class="col-sm-1 control-label ">净利</label>
+            <div class="col-sm-5">
+                <input id="equity" col="Equity" type="text" class="form-control is-edit" disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <label class="col-sm-1 control-label ">列号</label>
+            <div class="col-sm-5">
+                <input id="sort" col="Sort" type="text" class="form-control is-edit" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">预审</label>
+            <div class="col-sm-5">
+                <div id="isFinish" col="IsFinish" class="is-edit is-finance"></div>
+            </div>
+            <label class="col-sm-1 control-label ">财务</label>
+            <div class="col-sm-5">
+                <div id="isFinance" col="IsFinance" class="is-edit is-finance"></div>
+            </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <label class="col-sm-1 control-label ">门店</label>
+            <div class="col-sm-5">
+                <div id="branchId" col="BranchId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label ">备注</label>
+            <div class="col-sm-11">
+                <textarea id="remark" col="Remark" class="form-control is-edit" style="height:60px"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="container-div">
+        <div class="row">
+            <div class="btn-group-sm hidden-xs is-edit">
+                <a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
+                <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
+                <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="gridTable" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var id = ys.request("id");
+    var branchId = parent._eventData.BranchId;
+
+    //自定义validate验证输入的数字小数点位数不能大于两位
+    jQuery.validator.addMethod("minNumber", function (value, element) {
+        var returnVal = true;
+        inputZ = value;
+        var ArrMen = inputZ.split(".");    //截取字符串
+        if (ArrMen.length == 2) {
+            if (ArrMen[1].length > 2) {    //判断小数点后面的字符串长度
+                returnVal = false;
+                return false;
+            }
+        }
+        return returnVal;
+    }, "小数点后最多为两位");         //验证错误信息
+
+    $(function () {
+        $('#form').validate({
+            rules: {
+                saleName: { required: true },
+                phone: { isPhone: true },
+                salePrice: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                },
+                purchasePrice: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                },
+                commission: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                    minNumber: true
+                },
+            }
+        });
+
+        $("#isFinish").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum).EnumToDictionaryString())),
+            class: "form-control",
+        });
+
+        $("#isFinance").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum).EnumToDictionaryString())),
+            class: "form-control",
+        });
+
+        $('#departmentId').ysComboBoxTree({
+            url: '@Url.Content("~/OrganizationManage/Department/GetDepartmentTreeListJson")',
+            class: "form-control",
+        });
+        $("#stewardId").ysComboBox({
+            url: '@Url.Content("~/OrganizationManage/User/GetPageListJson")' + '?departmentId=' ,
+            key: "Id",
+            value: "RealName",
+            class: "form-control",
+        });
+        $("#categoryId").ysComboBox({
+            url: '@Url.Content("~/HotelManage/Category/GetListJson")',
+            key: "Id",
+            value: "CategoryName",
+            class: "form-control",
+        });
+        $("#productId").ysComboBox({
+            url: '@Url.Content("~/HotelManage/Product/GetProductJson")',
+            key: "Id",
+            value: "ProductName",
+            class: "form-control",
+        });
+        getForm();
+
+        $("#departmentId").click(function () {
+            var vs = $("#departmentId").ysComboBoxTree("getValue");
+            if (ys.isNullOrEmpty(vs))
+                return;
+            var vslist = vs.split(",");
+            vs = vslist[vslist.length - 1]
+            $("#stewardId").ysComboBox({
+                url: '@Url.Content("~/OrganizationManage/User/GetPageListJson")' + '?departmentId=' +vs ,
+                key: "Id",
+                value: "RealName",
+                class: "form-control",
+            });
+            $('.select2-container').css("width", "100%");
+        });
+
+        $("#categoryId").change(function () {
+            var vs = $("#departmentId").ysComboBoxTree("getValue");
+            $("#productId").ysComboBox({
+                url: '@Url.Content("~/HotelManage/Product/GetProductJson")' + '?id=' +vs ,
+                key: "Id",
+                value: "ProductName",
+                class: "form-control",
+            });
+            $('.select2-container').css("width", "100%");
+        });
+
+        $('#purchasePrice,#salePrice,#commission').keyup(function () {
+            var purchasePrice = document.getElementById("purchasePrice").value;
+            var salePrice = document.getElementById("salePrice").value;
+            var commission = document.getElementById("commission").value;
+            if (ys.isNullOrEmpty(salePrice))
+                salePrice = 0;
+            if ( ys.isNullOrEmpty(purchasePrice))
+                purchasePrice = 0;
+            if (ys.isNullOrEmpty(commission))
+                commission = 0;
+            $('#equity').val((parseFloat(salePrice) - parseFloat(purchasePrice)-parseFloat(commission)).toFixed(2));
+        });
+    });
+
+    function getForm() {
+        $('#form').setWebControls(parent._eventData);
+        $('.select2-container').css("width", "100%");
+        if (parent._eventData.IsFinance == 1||ys.getCookie("IsOrder")==0) {
+            $('input,textarea').attr("disabled", "disabled");
+            $('.select2').attr("disabled", "disabled");
+            $('.btn').css("display", "none");
+        }
+        if (ys.getCookie("IsFinance") == 0)
+            $('.is-finance input').attr("disabled", "disabled");
+        else
+            $('.is-finance input').removeAttr("disabled");
+        if (ys.getCookie("IsPre") == 0)
+            $('.is-pre input').attr("disabled", "disabled");
+        else
+            $('.is-pre input').removeAttr("disabled");
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var profit = (parseFloat($("#salePrice").val()) - parseFloat($("#purchasePrice").val())).toFixed(2);
+            var equity = (parseFloat($("#salePrice").val()) - parseFloat($("#purchasePrice").val()) - parseFloat($("#commission").val())).toFixed(2);
+            var postData = $('#form').getWebControls({ Id: id, Profit: profit, Equity: equity });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Sale/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.calendar.refetchEvents();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+
+    $(function () {
+        initGrid(id);
+    });
+
+    function initGrid(saleId) {
+        var queryUrl = "";
+        if (saleId > 0) {
+           queryUrl= '@Url.Content("~/HotelManage/Proceeds/GetPageListJson2")' + '?saleId=' + saleId;
+        }
+        else {
+            return;
+        }
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            showFooter: true,
+            pagination: false,
+            showToggle:false,
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                { field: 'PayName', title: '支付方式' },
+                {
+                    field: 'Amount',
+                    title: '金额',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Amount);
+                        }
+                    return "￥"+sumAmount;
+                    }
+                },
+                {
+                    title: '图片',
+                    field:'PayImage',
+                    formatter: function (value, row, index) {
+                        var imageUrl = value;
+                        if (!ys.isNullOrEmpty(imageUrl)){
+                                var images = value.split(";");
+                                var hl = "";
+                                for(var i = 0; i<images.length; i++) {
+                                hl += '<img class="img-circle img-xs" src="' + images[i] + '" onclick=showImage("' + images[i] + '") />';
+                            }
+                        return hl;
+                        }
+                        return "";
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                {
+                    field: 'BaseModifyTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                { field: 'RealName', title: '创建人' },
+            ]
+        });
+    }
+
+    function showImage(imageUrl) {
+        var html = '<img src="' + imageUrl + '" width="100%" height="100%" class="img-responsive" />';
+        ys.openDialogContent({
+            content: html,
+            width: '90%',
+            //height: 'auto',
+            closeBtn: true
+        });
+    }
+
+    function showSaveForm(bAdd) {
+        if (!$('#form').validate().form())
+            return;
+        if ($('#form').validate().form()&&id==0) {
+            var profit = (parseFloat($("#salePrice").val()) - parseFloat($("#purchasePrice").val())).toFixed(2);
+            var equity = (parseFloat($("#salePrice").val()) - parseFloat($("#purchasePrice").val()) - parseFloat($("#commission").val())).toFixed(2);
+            var postData = $('#form').getWebControls({ Id: id, Profit: profit, Equity: equity });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Sale/SaveFormJson")',
+                type: 'post',
+                async: false,
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        id = obj.Data;
+                        saleId = obj.Data;
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+        var  tempId = 0;
+        if (!bAdd) {
+            var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+            if (!ys.checkRowEdit(selectedRow)) {
+                return;
+            }
+            else {
+                tempId = selectedRow[0].Id;
+            }
+        }
+        ys.openDialog({
+            title: id > 0 ? '编辑' : '添加',
+            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsForm")' + '?id=' + tempId+'&saleId='+id+'&branchId='+branchId,
+            width: '768px',
+            height: '550px',
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm2(index);
+            }
+        });
+    }
+
+    function deleteForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Proceeds/DeleteFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            location.reload();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function disForm() {
+        $('#houseDis').css("display", "inline");
+    }
+</script>
+

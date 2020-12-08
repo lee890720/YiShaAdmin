@@ -428,21 +428,6 @@ namespace YiSha.Business.OrganizationManage
                 user.BranchIds = string.Join(",", branchBelongList.Select(p => p.BelongId).ToList());
             }
         }
-
-        /// <summary>
-        /// 获取用户的订单
-        /// </summary>
-        /// <param name="user"></param>
-        private async Task GetUserBelongOrder(UserEntity user)
-        {
-            List<UserBelongEntity> userBelongList = await userBelongService.GetList(new UserBelongEntity { UserId = user.Id });
-
-            List<UserBelongEntity> orderBelongList = userBelongList.Where(p => p.BelongType == UserBelongTypeEnum.HotelOrder.ParseToInt()).ToList();
-            if (orderBelongList.Count > 0)
-            {
-                user.OrderIds = string.Join(",", orderBelongList.Select(p => p.BelongId).ToList());
-            }
-        }
         #endregion
     }
 }

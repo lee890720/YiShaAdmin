@@ -16,6 +16,7 @@
 
 <script type="text/javascript">
     var orderId = ys.request("orderId");
+    var saleId = ys.request("saleId");
     $(function () {
         initGrid();
     });
@@ -25,8 +26,8 @@
         if (orderId > 0) {
            queryUrl= '@Url.Content("~/HotelManage/Proceeds/GetPageListJson2")' + '?orderId=' + orderId;
         }
-        else {
-           queryUrl= '@Url.Content("~/HotelManage/Proceeds/GetPageListJson2")';
+        if (saleId > 0) {
+           queryUrl= '@Url.Content("~/HotelManage/Proceeds/GetPageListJson2")' + '?saleId=' + saleId;
         }
         $('#gridTable').ysTable({
             url: queryUrl,
@@ -89,27 +90,6 @@
     function searchGrid() {
         $('#gridTable').ysTable('search');
         resetToolbarStatus();
-    }
-
-    function showSaveForm(bAdd) {
-        var id = 0;
-        if (!bAdd) {
-            var selectedRow = $('#gridTable').bootstrapTable('getSelections');
-            if (!ys.checkRowEdit(selectedRow)) {
-                return;
-            }
-            else {
-                id = selectedRow[0].Id;
-            }
-        }
-        ys.openDialog({
-            title: id > 0 ? '编辑' : '添加',
-            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsForm")' + '?id=' + id,
-            callback: function (index, layero) {
-                var iframeWin = window[layero.find('iframe')[0]['name']];
-                iframeWin.saveForm(index);
-            }
-        });
     }
 
     function deleteForm() {

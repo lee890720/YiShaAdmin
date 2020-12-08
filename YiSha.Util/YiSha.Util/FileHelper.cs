@@ -114,6 +114,21 @@ namespace YiSha.Util
                     dirModule = UploadFileType.Orders.ToString();
                     break;
 
+                case (int)UploadFileType.Sales:
+                    if (file.Length > 5 * 1024 * 1024) // 5MB
+                    {
+                        obj.Message = "文件最大限制为 5MB";
+                        return obj;
+                    }
+                    objCheck = CheckFileExtension(Path.GetExtension(file.FileName), ".jpg|.jpeg|.gif|.png");
+                    if (objCheck.Tag != 1)
+                    {
+                        obj.Message = objCheck.Message;
+                        return obj;
+                    }
+                    dirModule = UploadFileType.Sales.ToString();
+                    break;
+
                 case (int)UploadFileType.Import:
                     objCheck = CheckFileExtension(Path.GetExtension(file.FileName), ".xls|.xlsx");
                     if (objCheck.Tag != 1)

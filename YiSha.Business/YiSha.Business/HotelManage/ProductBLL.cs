@@ -61,6 +61,16 @@ namespace YiSha.Business.HotelManage
             }
             return obj;
         }
+
+        public async Task<TData<List<ProductEntity>>> GetProductList(long? categoryId)
+        {
+            TData<List<ProductEntity>> obj = new TData<List<ProductEntity>>();
+            List<ProductEntity> productList = await productService.GetList(new ProductListParam { CategoryId=categoryId});
+            obj.Data = productList.OrderBy(x=>x.Sort).ToList();
+            obj.Total = obj.Data.Count;
+            obj.Tag = 1;
+            return obj;
+        }
         #endregion
 
         #region 提交数据
@@ -91,8 +101,12 @@ namespace YiSha.Business.HotelManage
                     ProductEntity dbEntity = await productService.GetEntity(entity.ProductName);
                     if (dbEntity != null)
                     {
-                        entity.Id = dbEntity.Id;
                         if (param.IsOverride == 1)
+                        {
+                            entity.Id = dbEntity.Id;
+                            await productService.SaveForm(entity);
+                        }
+                        else
                         {
                             await productService.SaveForm(entity);
                         }

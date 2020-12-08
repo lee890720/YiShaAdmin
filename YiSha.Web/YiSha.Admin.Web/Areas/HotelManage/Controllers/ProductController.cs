@@ -67,6 +67,13 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<ProductEntity> obj = await productBLL.GetEntity(id);
             return Json(obj);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductJson(long? id)
+        {
+            TData<List<ProductEntity>> obj = await productBLL.GetProductList(id);
+            return Json(obj);
+        }
         #endregion
 
         #region 提交数据

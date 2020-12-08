@@ -113,10 +113,15 @@ namespace YiSha.Service.HotelManage
             var parameter = new List<DbParameter>();
             if (param != null)
             {
-                if (param.OrderId>-1)
+                if (param.OrderId>0)
                 {
                     strSql.Append(" AND a.OrderId = @OrderId");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@OrderId",  param.OrderId ));
+                }
+                if (param.SaleId > 0)
+                {
+                    strSql.Append(" AND a.SaleId = @SaleId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@SaleId", param.SaleId));
                 }
             }
             return parameter;

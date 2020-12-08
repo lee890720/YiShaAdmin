@@ -17,9 +17,6 @@ namespace YiSha.Enum.OrganizationManage
         Role = 2,
 
         [Description("门店")]
-        Branch = 3,
-
-        [Description("订单")]
-        HotelOrder = 4
+        Branch = 3
     }
 }

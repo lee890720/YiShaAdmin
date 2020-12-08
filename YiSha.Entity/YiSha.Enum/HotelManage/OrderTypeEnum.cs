@@ -45,4 +45,22 @@ namespace YiSha.Enum.HotelManage
         [Description("已审核")]
         Check2 = 1,
     }
+
+    public enum SatisfactionTypeEnum
+    {
+        [Description("未评价")]
+        Unknown = 0,
+
+        [Description("不满意")]
+        S1 = 1,
+
+        [Description("一般")]
+        S2 = 2,
+
+        [Description("满意")]
+        S3 = 3,
+
+        [Description("非常满意")]
+        S4 = 4,
+    }
 }

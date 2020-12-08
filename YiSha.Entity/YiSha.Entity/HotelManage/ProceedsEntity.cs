@@ -46,6 +46,12 @@ namespace YiSha.Entity.HotelManage
         /// <returns></returns>
         [JsonConverter(typeof(StringJsonConverter))]
         public long? OrderId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [JsonConverter(typeof(StringJsonConverter))]
+        public long? SaleId { get; set; }
 
         [NotMapped]
         public string BranchName { get; set; }
