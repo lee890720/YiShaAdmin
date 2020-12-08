@@ -6,9 +6,7 @@
             <div id="searchDiv" class="col-sm-12 search-collapse">
                 <div class="select-list">
                     <ul>
-                        <li>
-                            Id号：<input id="id" col="Id" type="text" />
-                        </li>
+
                         <li>
                             客人：<input id="saleName" col="SaleName" type="text" />
                         </li>
@@ -16,7 +14,13 @@
                             手机：<input id="phone" col="Phone" type="text" />
                         </li>
                         <li>
-                            产品：<input id="product" col="Product" type="text" />
+                            类目：<span id="categoryId" col="CategoryId"></span>
+                        </li>
+                        <li>
+                            产品：<span id="productId" col="ProductId"></span>
+                        </li>
+                        <li>
+                            Id号：<input id="id" col="Id" type="text" />
                         </li>
                         <li>
                             财务：<input id="isFinance" col="IsFinance" type="text" placeholder="0代表未审核，1代表已审核" />
@@ -37,6 +41,7 @@
                 </div>
             </div>
             <div class="btn-group-sm hidden-xs" id="toolbar">
+                <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
                 <a id="btnCheck" class="btn btn-danger disabled" onclick="checkForm()"> 财务审核</a>
                 <a id="btnExport" class="btn btn-warning" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
                 <a id="btnRepeal" class="btn btn-danger disabled" onclick="repealForm()"> 撤销审核</a>
@@ -54,6 +59,24 @@
     var vEndDate = moment().endOf('month').add(1,'days').format("YYYY-MM-DD");
     $("#branchId").val(_branchId);
     $(function () {
+        $("#categoryId").ysComboBox({
+            url: '@Url.Content("~/HotelManage/Category/GetListJson")',
+            key: "Id",
+            value: "CategoryName",
+            onChange:function() {
+                var vs = $("#categoryId").ysComboBox("getValue");
+                $("#productId").ysComboBox({
+                    url: '@Url.Content("~/HotelManage/Product/GetProductJson")' + '?id=' + vs,
+                    key: "Id",
+                    value: "ProductName",
+                });
+            },
+        });
+        $("#productId").ysComboBox({
+            url: '@Url.Content("~/HotelManage/Product/GetProductJson")',
+            key: "Id",
+            value: "ProductName",
+        });
         laydate.render({ elem: '#startDate', format: 'yyyy-MM-dd', value: vStartDate });
         laydate.render({ elem: '#endDate', format: 'yyyy-MM-dd', value: vEndDate });
         initGrid();

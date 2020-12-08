@@ -119,7 +119,10 @@
                     if (obj.Tag == 1) {
                         ys.msgSuccess(obj.Message);
                         parent.layer.close(index);
-                        parent.initGrid(orderId);
+                        if (!ys.isNullOrEmpty(orderId)&&orderId>0)
+                            parent.initGrid(orderId);
+                        if (!ys.isNullOrEmpty(saleId) && saleId > 0)
+                            parent.initGrid(saleId);
                         parent.$('#gridTable').bootstrapTable('refresh');
                     }
                     else {
@@ -162,12 +165,9 @@
         var tempurl = "";
         if (orderId > 0)
             tempurl = '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Orders.ParseToInt()';
-        else
-            console.log(orderId);
+
         if (saleId > 0)
             tempurl = '@GlobalContext.SystemConfig.ApiSite' + '/File/UploadFile?fileModule=@UploadFileType.Sales.ParseToInt()';
-        else
-            console.log(saleId);
         ys.ajaxUploadFile({
             url: tempurl,
             data: formdata,

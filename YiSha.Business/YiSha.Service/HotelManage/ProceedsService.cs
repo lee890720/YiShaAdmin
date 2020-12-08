@@ -102,6 +102,7 @@ namespace YiSha.Service.HotelManage
                                     a.PayId,
                                     a.BranchId,
                                     a.OrderId,
+                                    a.SaleId,
                                     b.BranchName,
                                     c.PayName,
                                     d.RealName

@@ -179,6 +179,16 @@
             key: "Id",
             value: "CategoryName",
             class: "form-control",
+            onChange:function() {
+                var vs = $("#categoryId").ysComboBox("getValue");
+                $("#productId").ysComboBox({
+                    url: '@Url.Content("~/HotelManage/Product/GetProductJson")' + '?id=' +vs ,
+                    key: "Id",
+                    value: "ProductName",
+                    class: "form-control",
+                });
+                $('.select2-container').css("width", "100%");
+            },
         });
         $("#productId").ysComboBox({
             url: '@Url.Content("~/HotelManage/Product/GetProductJson")',
@@ -186,6 +196,7 @@
             value: "ProductName",
             class: "form-control",
         });
+        initGrid(id);
         getForm();
 
         $("#departmentId").click(function () {
@@ -193,22 +204,11 @@
             if (ys.isNullOrEmpty(vs))
                 return;
             var vslist = vs.split(",");
-            vs = vslist[vslist.length - 1]
+            vs = vslist[vslist.length - 1];
             $("#stewardId").ysComboBox({
                 url: '@Url.Content("~/OrganizationManage/User/GetPageListJson")' + '?departmentId=' +vs ,
                 key: "Id",
                 value: "RealName",
-                class: "form-control",
-            });
-            $('.select2-container').css("width", "100%");
-        });
-
-        $("#categoryId").change(function () {
-            var vs = $("#departmentId").ysComboBoxTree("getValue");
-            $("#productId").ysComboBox({
-                url: '@Url.Content("~/HotelManage/Product/GetProductJson")' + '?id=' +vs ,
-                key: "Id",
-                value: "ProductName",
                 class: "form-control",
             });
             $('.select2-container').css("width", "100%");
@@ -268,10 +268,6 @@
             });
         }
     }
-
-    $(function () {
-        initGrid(id);
-    });
 
     function initGrid(saleId) {
         var queryUrl = "";

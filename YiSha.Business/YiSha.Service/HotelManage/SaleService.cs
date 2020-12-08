@@ -185,7 +185,7 @@ namespace YiSha.Service.HotelManage
                     strSql.Append(" AND a.IDNumber like @IDNumber");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@IDNumber", "%" + param.IDNumber + "%"));
                 }
-                if (!string.IsNullOrEmpty(param.ProductId.ToString()))
+                if (!string.IsNullOrEmpty(param.ProductId.ToString())&&param.ProductId>-1)
                 {
                     strSql.Append(" AND a.ProductId = @ProductId");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@ProductId", param.ProductId ));
