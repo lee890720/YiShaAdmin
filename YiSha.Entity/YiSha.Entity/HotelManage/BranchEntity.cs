@@ -54,7 +54,11 @@ namespace YiSha.Entity.HotelManage
         /// </summary>
         /// <returns></returns>
         public int? IsClean { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int? Status { get; set; }
         /// <summary>
         /// 多个部门Id
         /// </summary>

@@ -39,6 +39,12 @@
             <div class="col-sm-8">
                 <input id="branchLevel" col="BranchLevel" type="text" placeholder="品牌=1，门店=2，房型=3，房号=4" class="form-control" />
             </div>
+        </div>        
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">状态（所有）</label>
+            <div class="col-sm-8">
+                <div id="status" col="Status"></div>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label ">支付方式（门店）</label>
@@ -62,6 +68,7 @@
 <script type="text/javascript">
     var id = ys.request("id");
     $(function () {
+        $("#status").ysRadioBox({ data: ys.getJson(@Html.Raw(typeof(StatusEnum).EnumToDictionaryString())) });
         $("#channelId").ysCheckBox({
             url: '@Url.Content("~/HotelManage/Channel/GetListJson")',
             key: "Id",
@@ -73,13 +80,6 @@
             key: "Id",
             value: "PayName"
         });
-        @*$("#payId").ysComboBox({
-            url: '@Url.Content("~/HotelManage/Pay/GetListJson")',
-            key: "Id",
-            value: "PayName",
-            class: "form-control",
-            multiple: true
-        });*@
 
         $('#parentId').ysComboBoxTree({ url: '@Url.Content("~/HotelManage/Branch/GetBranchTreeListJson")', async: false });
 
@@ -105,15 +105,9 @@
             });
         }
         else {
-             ys.ajax({
-                 url: '@Url.Content("~/HotelManage/Branch/GetMaxSortJson")',
-                type: "get",
-                success: function (obj) {
-                    if (obj.Tag == 1) {
-                        $("#branchSort").val(obj.Data);
-                    }
-                }
-            });
+            var defaultData = {};
+            defaultData.Status = "@StatusEnum.Yes.ParseToInt()";
+            $("#form").setWebControls(defaultData);
         }
     }
 

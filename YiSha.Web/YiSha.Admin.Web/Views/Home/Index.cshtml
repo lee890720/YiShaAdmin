@@ -15,6 +15,7 @@
     OperatorInfo operatorInfo = ViewBag.OperatorInfo;
     String portrait = operatorInfo.Portrait;
     BranchListParam param = new BranchListParam();
+    param.Status = 1;
     RoleListParam param2 = new RoleListParam();
     TData<List<BranchEntity>> obj = await branchBLL.GetList(param);
     TData<List<RoleEntity>> obj2 = await roleBLL.GetList(param2);

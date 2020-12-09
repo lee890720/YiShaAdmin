@@ -172,6 +172,10 @@ namespace YiSha.Service.HotelManage
                 {
                     expression = expression.And(t => t.BranchLevel==param.BranchLevel);
                 }
+                if (param.Status > 0)
+                {
+                    expression = expression.And(t => t.Status == param.Status);
+                }
             }
             return expression;
         }

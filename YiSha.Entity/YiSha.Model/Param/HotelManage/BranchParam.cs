@@ -14,6 +14,7 @@ namespace YiSha.Model.Param.HotelManage
     {
         public string BranchName { get; set; }
         public int BranchLevel { get; set; }
+        public int Status { get; set; }
         public string Ids { get; set; }
     }
 }

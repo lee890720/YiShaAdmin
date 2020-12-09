@@ -34,7 +34,7 @@
 <div class="container-div ui-layout-center">
     <div class="row">
         <div id="searchDiv" class="col-sm-12 search-collapse">
-            @*<input type="hidden" id="departmentId" col="DepartmentId">*@
+            <input type="hidden" id="departmentId" col="DepartmentId">
             <div class="select-list">
                 <ul>
                     <li>
@@ -112,6 +112,7 @@
             maxHeight: "700px",
             callback: {
                 onClick: function (event, treeId, treeNode) {
+                    console.log(treeNode);
                     $("#departmentId").val(treeNode.id);
                     searchGrid();
                 }

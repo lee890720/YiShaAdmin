@@ -42,6 +42,24 @@ namespace YiSha.Business.OrganizationManage
             return obj;
         }
 
+        public async Task<TData<List<UserEntity>>> GetList2(UserListParam param)
+        {
+            TData<List<UserEntity>> obj = new TData<List<UserEntity>>();
+            if (param?.DepartmentId != null)
+            {
+                param.ChildrenDepartmentIdList = await departmentBLL.GetChildrenDepartmentIdList(null, param.DepartmentId.Value);
+            }
+            else
+            {
+                OperatorInfo user = await Operator.Instance.Current();
+                param.ChildrenDepartmentIdList = await departmentBLL.GetChildrenDepartmentIdList(null, user.DepartmentId.Value);
+            }
+            obj.Data = await userService.GetList2(param);
+            obj.Total = obj.Data.Count;
+            obj.Tag = 1;
+            return obj;
+        }
+
         public async Task<TData<List<UserEntity>>> GetPageList(UserListParam param, Pagination pagination)
         {
             TData<List<UserEntity>> obj = new TData<List<UserEntity>>();

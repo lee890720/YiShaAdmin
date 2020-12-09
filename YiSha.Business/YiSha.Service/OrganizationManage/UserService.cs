@@ -31,9 +31,16 @@ namespace YiSha.Service.OrganizationManage
             return list.ToList();
         }
 
+        public async Task<List<UserEntity>> GetList2(UserListParam param)
+        {
+            var expression = ListFilter2(param);
+            var list = await this.BaseRepository().FindList(expression);
+            return list.ToList();
+        }
+
         public async Task<List<UserEntity>> GetPageList(UserListParam param, Pagination pagination)
         {
-            var expression = ListFilter(param);
+            var expression = ListFilter2(param);
             var list = await this.BaseRepository().FindList(expression, pagination);
             return list.ToList();
         }
@@ -208,6 +215,45 @@ namespace YiSha.Service.OrganizationManage
                     param.EndTime = (param.EndTime.Value.ToString("yyyy-MM-dd") + " 23:59:59").ParseToDateTime();
                     expression = expression.And(t => t.BaseModifyTime <= param.EndTime);
                 }
+                //if (param.ChildrenDepartmentIdList != null && param.ChildrenDepartmentIdList.Count > 0)
+                //{
+                //    expression = expression.And(t => param.ChildrenDepartmentIdList.Contains(t.DepartmentId.Value));
+                //}
+            }
+            return expression;
+        }
+
+        private Expression<Func<UserEntity, bool>> ListFilter2(UserListParam param)
+        {
+            var expression = LinqExtensions.True<UserEntity>();
+            if (param != null)
+            {
+                if (!string.IsNullOrEmpty(param.UserName))
+                {
+                    expression = expression.And(t => t.UserName.Contains(param.UserName));
+                }
+                if (!string.IsNullOrEmpty(param.UserIds))
+                {
+                    long[] userIdList = TextHelper.SplitToArray<long>(param.UserIds, ',');
+                    expression = expression.And(t => userIdList.Contains(t.Id.Value));
+                }
+                if (!string.IsNullOrEmpty(param.Mobile))
+                {
+                    expression = expression.And(t => t.Mobile.Contains(param.Mobile));
+                }
+                if (param.UserStatus > -1)
+                {
+                    expression = expression.And(t => t.UserStatus == param.UserStatus);
+                }
+                if (!string.IsNullOrEmpty(param.StartTime.ParseToString()))
+                {
+                    expression = expression.And(t => t.BaseModifyTime >= param.StartTime);
+                }
+                if (!string.IsNullOrEmpty(param.EndTime.ParseToString()))
+                {
+                    param.EndTime = (param.EndTime.Value.ToString("yyyy-MM-dd") + " 23:59:59").ParseToDateTime();
+                    expression = expression.And(t => t.BaseModifyTime <= param.EndTime);
+                }
                 if (param.ChildrenDepartmentIdList != null && param.ChildrenDepartmentIdList.Count > 0)
                 {
                     expression = expression.And(t => param.ChildrenDepartmentIdList.Contains(t.DepartmentId.Value));
@@ -215,6 +261,7 @@ namespace YiSha.Service.OrganizationManage
             }
             return expression;
         }
+
         #endregion
     }
 }

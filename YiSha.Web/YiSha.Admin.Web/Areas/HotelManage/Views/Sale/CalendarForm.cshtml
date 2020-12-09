@@ -169,7 +169,7 @@
             class: "form-control",
         });
         $("#stewardId").ysComboBox({
-            url: '@Url.Content("~/OrganizationManage/User/GetPageListJson")' + '?departmentId=' ,
+            url: '@Url.Content("~/OrganizationManage/User/GetListJson")' + '?departmentId=' ,
             key: "Id",
             value: "RealName",
             class: "form-control",
@@ -206,7 +206,7 @@
             var vslist = vs.split(",");
             vs = vslist[vslist.length - 1];
             $("#stewardId").ysComboBox({
-                url: '@Url.Content("~/OrganizationManage/User/GetPageListJson")' + '?departmentId=' +vs ,
+                url: '@Url.Content("~/OrganizationManage/User/GetListJson2")' + '?departmentId=' +vs ,
                 key: "Id",
                 value: "RealName",
                 class: "form-control",

@@ -14,33 +14,21 @@
 <script src="~/lib/moment/moment.min.js"></script>
 <script type="text/javascript">
     //#region 初始化参数
-    var system = {};
-    //var isPhone = 0;
-    var p = navigator.platform;
-    system.win = p.indexOf("Win") == 0;
-    system.mac = p.indexOf("Mac") == 0;
-    system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
-    //if (system.win || system.mac || system.xll) {
-    //    isPhone = 0;
-    //}
-    //else {
-    //    isPhone = 1;
-    //}
-
     var _branchId = ys.getCookie("BranchId");
-    //var _startdate = isPhone == 0 ? moment().add(-3, "days").format("YYYY-MM-DD") : moment().add(-1, "days").format("YYYY-MM-DD");
     var _startdate = moment().add(-3, "days").format("YYYY-MM-DD");
     var _resourcesData = [];
     var _houseNumberData = [];
+    //日历加载的数据
     var _eventsData = [];
+    //传递至子窗口的数据
     var _eventData = [];
     var _branchEventsData = [];
     //#endregion
 
+    //#region 页面初始化
     document.addEventListener('DOMContentLoaded', function () {
+
         calendar.render();
-        //if(isPhone==1)
-        //    calendar.changeView("resourceTimelineThirtyDays", { resourceAreaWidth: '75px'});
 
         $(document.getElementById("displayMode")).on('click', function () {
             var dm = ys.getCookie("DisplayMode");
@@ -80,6 +68,7 @@
             }
         });
     });
+    //#endregion
 
     //#region 初始化Resource
     function initResourceList() {
@@ -98,8 +87,6 @@
                 };
                 resourcesData.push(newbranch);
                 var dm = ys.getCookie("DisplayMode");
-                //if (isPhone == 1)
-                //    dm = 1;
                 if (dm == 0) {
                     _resourcesData = resourcesData;
                     _houseNumberData = [];
@@ -174,12 +161,10 @@
         };
         ys.ajax(options);
     }
+
     var getJsonEvent = function (data, start, end) {
 
         var dm = ys.getCookie("DisplayMode");
-
-        //if (isPhone == 1)
-        //    dm = 1;
 
         var itemArr = [];
 
@@ -350,6 +335,8 @@
         return itemArr;
 
     };
+
+    //对应saveEvent
     var setJsonEvent = function (data) {
 
         var event = {};
@@ -395,6 +382,8 @@
         return event;
 
     };
+
+    //对应saveEvent2
     var setJsonEvent2 = function (data) {
 
         var event = {};
@@ -657,6 +646,8 @@
             },
         });
     }
+
+    //eventDrop对应事件
     function saveEvent(info) {
         var postData = setJsonEvent(info);
         ys.ajax({
@@ -675,6 +666,8 @@
             }
         });
     }
+
+    //eventResize对应事件
     function saveEvent2(info) {
         var postData = setJsonEvent2(info);
         ys.ajax({

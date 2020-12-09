@@ -42,6 +42,14 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         [HttpGet]
         public async Task<ActionResult> GetListJson(BranchListParam param)
         {
+            param.Status = 1;
+            TData<List<BranchEntity>> obj = await branchBLL.GetList(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetListJson2(BranchListParam param)
+        {
             TData<List<BranchEntity>> obj = await branchBLL.GetList(param);
             return Json(obj);
         }
@@ -49,6 +57,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         [HttpGet]
         public async Task<ActionResult> GetPageListJson(BranchListParam param, Pagination pagination)
         {
+            param.Status = 1;
             TData<List<BranchEntity>> obj = await branchBLL.GetPageList(param, pagination);
             return Json(obj);
         }
@@ -56,6 +65,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranchTreeListJson(BranchListParam param)
         {
+            param.Status = 1;
             TData<List<ZtreeInfo>> obj = await branchBLL.GetZtreeBranchList(param);
             return Json(obj);
         }

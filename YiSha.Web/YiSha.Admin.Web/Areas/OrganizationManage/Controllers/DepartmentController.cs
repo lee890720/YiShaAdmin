@@ -41,7 +41,7 @@ namespace YiSha.Admin.Web.Areas.OrganizationManage.Controllers
         }
 
         [HttpGet]
-        [AuthorizeFilter("organization:department:search,organization:user:search")]
+        //[AuthorizeFilter("organization:department:search,organization:user:search")]
         public async Task<IActionResult> GetDepartmentTreeListJson(DepartmentListParam param)
         {
             TData<List<ZtreeInfo>> obj = await departmentBLL.GetZtreeDepartmentList(param);

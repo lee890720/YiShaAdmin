@@ -70,10 +70,16 @@ namespace YiSha.Admin.Web.Areas.OrganizationManage.Controllers
 
         #region 获取数据
         [HttpGet]
-        [AuthorizeFilter("organization:user:search")]
         public async Task<IActionResult> GetListJson(UserListParam param)
         {
             TData<List<UserEntity>> obj = await userBLL.GetList(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListJson2(UserListParam param)
+        {
+            TData<List<UserEntity>> obj = await userBLL.GetList2(param);
             return Json(obj);
         }
 
