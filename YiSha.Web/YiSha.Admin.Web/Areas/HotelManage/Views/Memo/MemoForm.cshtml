@@ -1,0 +1,128 @@
+﻿@{
+    Layout = "~/Views/Shared/_FormWhite.cshtml";
+}
+<div class="wrapper animated fadeInRight">
+    <form id="form" class="form-horizontal m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">截止日期</label>
+            <div class="col-sm-10">
+                <input id="executeDate" col="ExecuteDate" type="text" class="form-control  datepicker" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">事件</label>
+            <div class="col-sm-10">
+                <textarea id="memo" col="Memo" class="form-control" style="height:60px"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">部门</label>
+            <div class="col-sm-10">
+                <div id="departmentId" col="DepartmentId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">负责人</label>
+            <div class="col-sm-10">
+                <div id="stewardId" col="StewardId" class="is-edit"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label ">进度</label>
+            <div class="col-sm-10">
+                <div id="isFinish" col="IsFinish" class="is-edit is-finance"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var id = ys.request("id");
+    var branchId = parent._branchId;
+    var startDate = moment().format("YYYY-MM-DD");
+    $(function () {
+
+        $('#form').validate({
+            rules: {
+
+            }
+        });
+        $("#isFinish").ysRadioBox({
+            data: ys.getJson(@Html.Raw(typeof(CheckTypeEnum2).EnumToDictionaryString())),
+            class: "form-control",
+        });
+        $('#departmentId').ysComboBoxTree({
+            url: '@Url.Content("~/OrganizationManage/Department/GetDepartmentTreeListJson")',
+            class: "form-control",
+        });
+        $("#stewardId").ysComboBox({
+            url: '@Url.Content("~/OrganizationManage/User/GetListJson")' + '?departmentId=' ,
+            key: "Id",
+            value: "RealName",
+            class: "form-control",
+        });
+
+        getForm();
+
+        laydate.render({ elem: '#executeDate', format: 'yyyy-MM-dd', value: startDate });
+
+        $("#departmentId").click(function () {
+            var vs = $("#departmentId").ysComboBoxTree("getValue");
+            if (ys.isNullOrEmpty(vs))
+                return;
+            var vslist = vs.split(",");
+            vs = vslist[vslist.length - 1];
+            $("#stewardId").ysComboBox({
+                url: '@Url.Content("~/OrganizationManage/User/GetListJson2")' + '?departmentId=' +vs ,
+                key: "Id",
+                value: "RealName",
+                class: "form-control",
+            });
+            $('.select2-container').css("width", "100%");
+        });
+    });
+
+    function getForm() {
+        if (id > 0) {
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Memo/GetFormJson")' + '?id=' + id,
+                type: 'get',
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        obj.Data.ExecuteDate = moment(obj.Data.ExecuteDate).format("YYYY-MM-DD");
+                        $('#form').setWebControls(obj.Data);
+                        $('.select2-container').css("width", "100%");
+                    }
+                }
+            });
+        }
+        else {
+            var defaultData = {IsFinish:0};
+            $('#form').setWebControls(defaultData);
+            $('.select2-container').css("width", "100%");
+        }
+    }
+
+    function saveForm(index) {
+        if ($('#form').validate().form()) {
+            var postData = $('#form').getWebControls({ Id: id,BranchId:branchId  });
+            ys.ajax({
+                url: '@Url.Content("~/HotelManage/Memo/SaveFormJson")',
+                type: 'post',
+                data: postData,
+                success: function (obj) {
+                    if (obj.Tag == 1) {
+                        ys.msgSuccess(obj.Message);
+                        parent.searchGrid();
+                        parent.layer.close(index);
+                    }
+                    else {
+                        ys.msgError(obj.Message);
+                    }
+                }
+            });
+        }
+    }
+</script>
+

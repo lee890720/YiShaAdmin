@@ -12,7 +12,7 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>今日住宿</h5>
+                    <h5>今日销售</h5>
                     <div class="ibox-tools">
                         <div class="btn-group-sm hidden-xs" id="toolbar">
                             <div id="searchDiv">
@@ -28,8 +28,6 @@
                     <div class="table-responsive">
                         <table id="gridTable" class="table select-table table-striped"></table>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -43,10 +41,10 @@
                 </div>
                 <div class="ibox-content">
                     <div>
-                        <a id="DailyProfitRateBtn" title="Room Revenue" class="btn btn-box-tool hidden-xs">房收</a>
-                        <a id="DailyProfitBtn" title="Occupancy" class="btn btn-box-tool hidden-xs">入住率</a>
-                        <a id="DailyHandBtn" title="Average Daily Rate" class="btn btn-box-tool hidden-xs">均价</a>
-                        <a id="DailyPointBtn" title="Revenue Per Available Room" class="btn btn-box-tool hidden-xs">单房收益</a>
+                        <a id="DailyProfitRateBtn" class="btn btn-box-tool hidden-xs">净利润</a>
+                        <a id="DailyProfitBtn" class="btn btn-box-tool hidden-xs">销售额</a>
+                        <a id="DailyHandBtn" class="btn btn-box-tool hidden-xs">销售量</a>
+                        <a id="DailyPointBtn" class="btn btn-box-tool hidden-xs">销售成本</a>
                     </div>
                     <div class="echarts" id="DailyBaseChart"></div>
                 </div>
@@ -62,10 +60,10 @@
                 </div>
                 <div class="ibox-content" style="height:310px">
                     <div>
-                        <a id="MonthProfitRateBtn" title="Room Revenue" class="btn btn-box-tool hidden-xs">房收</a>
-                        <a id="MonthProfitBtn" title="Occupancy" class="btn btn-box-tool hidden-xs">入住率</a>
-                        <a id="MonthHandBtn" title="Average Daily Rate" class="btn btn-box-tool hidden-xs">均价</a>
-                        <a id="MonthPointBtn" title="Revenue Per Available Room" class="btn btn-box-tool hidden-xs">单房收益</a>
+                        <a id="MonthProfitRateBtn" class="btn btn-box-tool hidden-xs">净利润</a>
+                        <a id="MonthProfitBtn" class="btn btn-box-tool hidden-xs">销售额</a>
+                        <a id="MonthHandBtn" class="btn btn-box-tool hidden-xs">销售量</a>
+                        <a id="MonthPointBtn" class="btn btn-box-tool hidden-xs">销售成本</a>
                     </div>
                     <div class="echarts" id="MonthBaseChart"></div>
                 </div>
@@ -87,9 +85,6 @@
                                         月度
                                     </th>
                                     <th>
-                                        同比
-                                    </th>
-                                    <th>
                                         环比
                                     </th>
                                     <th>
@@ -101,49 +96,30 @@
                                 <tr>
                                     <th class="text-nowrap">时间</th>
                                     <td id="mp1"></td>
-                                    <td id="tp1"></td>
                                     <td id="hp1"></td>
                                     <td id="yp1"></td>
                                 </tr>
                                 <tr>
-                                    <th class="text-nowrap">房收</th>
+                                    <th class="text-nowrap">净利润</th>
                                     <td id="mp2"></td>
-                                    <td id="tp2"></td>
                                     <td id="hp2"></td>
                                     <td id="yp2"></td>
                                 </tr>
                                 <tr>
-                                    <th class="text-nowrap">实售间夜</th>
-                                    <td id="mp6"></td>
-                                    <td id="tp6"></td>
-                                    <td id="hp6"></td>
-                                    <td id="yp6"></td>
-                                </tr>
-                                <tr>
-                                    <th class="text-nowrap">总间夜</th>
-                                    <td id="mp7"></td>
-                                    <td id="tp7"></td>
-                                    <td id="hp7"></td>
-                                    <td id="yp7"></td>
-                                </tr>
-                                <tr>
-                                    <th class="text-nowrap">入住率</th>
+                                    <th class="text-nowrap">销售额</th>
                                     <td id="mp3"></td>
-                                    <td id="tp3"></td>
                                     <td id="hp3"></td>
                                     <td id="yp3"></td>
                                 </tr>
                                 <tr>
-                                    <th class="text-nowrap">均价</th>
+                                    <th class="text-nowrap">销售量</th>
                                     <td id="mp4"></td>
-                                    <td id="tp4"></td>
                                     <td id="hp4"></td>
                                     <td id="yp4"></td>
                                 </tr>
                                 <tr>
-                                    <th class="text-nowrap">单房收益</th>
+                                    <th class="text-nowrap">成本</th>
                                     <td id="mp5"></td>
-                                    <td id="tp5"></td>
                                     <td id="hp5"></td>
                                     <td id="yp5"></td>
                                 </tr>
@@ -161,7 +137,7 @@
         <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>月渠道分析</h5>
+                    <h5>月产品分析</h5>
                 </div>
                 <div class="ibox-content">
                     <div id="Pie1Chart" style="height:500px"></div>
@@ -171,7 +147,7 @@
         <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>年渠道分析</h5>
+                    <h5>年产品分析</h5>
                 </div>
                 <div class="ibox-content">
                     <div id="Pie2Chart" style="height:500px"></div>
@@ -189,10 +165,8 @@
     var Pie2Chart = echarts.init(document.getElementById('Pie2Chart'));
     var P1legendData = [];
     var P1series1Data = [];
-    var P1series2Data = [];
     var P2legendData = [];
     var P2series1Data = [];
-    var P2series2Data = [];
 
     var DailyBaseData = [];
     var DailyBaseChart = echarts.init(document.getElementById('DailyBaseChart'));
@@ -216,12 +190,9 @@
     //#endregion
 
     function initGrid() {
-        var queryUrl = '@Url.Content("~/HotelManage/Order/GetPageListJsonForDay")';
+        var queryUrl = '@Url.Content("~/HotelManage/Sale/GetPageListJsonForDay")';
         $('#gridTable').ysTable({
             url: queryUrl,
-            pagination:false,
-            showFooter: false,
-            pageSize: 50,
             columns: [
                 { field: 'Id', title: 'Id', visible: false },
                 {
@@ -234,45 +205,26 @@
                         return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
                     }
                 },
-                { field: 'OrderName', title: '客人姓名' },
-                { field: 'Nickname', title: '昵称' },
+                {
+                    field: 'CreateDate', title: '发生日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                { field: 'SaleName', title: '客人名称' },
                 { field: 'Phone', title: '手机号' },
-                { field: 'OrderNumber', title: '订单号' },
-                { field: 'HouseType', title: '房型' },
-                { field: 'HouseNumber', title: '房号' },
-                {
-                    field: 'StartDate', title: '入住日期', formatter: function (value, row, index) {
-                        return ys.formatDate(value, "yyyy-MM-dd");
-                    }
-                },
-                {
-                    field: 'EndDate', title: '离店日期', formatter: function (value, row, index) {
-                        return ys.formatDate(value, "yyyy-MM-dd");
-                    }
-                },
-                {
-                    field: 'UnitPrice',
-                    title: '房价',
-                    formatter: function (value, row, index) {
-                        return value.toFixed(2);
-                    },
-                    footerFormatter: function (value) {
-                        var sumAmount = 0;
-                        for (var i in value) {
-                            sumAmount += parseFloat(value[i].UnitPrice);
-                        }
-                        return "￥" + sumAmount.toFixed(2);
-                    }
-                },
-                { field: 'HouseCount', title: '总间夜数' },
-                { field: 'State', title: '订单状态' },
+                { field: 'IDNumber', title: '身份证号' },
+                { field: 'SalePrice', title: '销售价' },
+                { field: 'PurchasePrice', title: '采购价' },
+                { field: 'Profit', title: '利润' },
+                { field: 'Equity', title: '净利润' },
+                { field: 'Commission', title: '管家提成' },
                 {
                     field: 'IsFinish',
                     title: '预审',
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        if(row.IsFinish==0)
+                        if (row.IsFinish == 0)
                             actions.push('<a href="#" style="color:red">未审核</a>');
                         else if (row.IsFinish == 1)
                             actions.push('<a href="#" style="color:black">已审核</a>');
@@ -294,7 +246,7 @@
                 },
                 { field: 'Remark', title: '备注' },
                 { field: 'StewardName', title: '管家' },
-                { field: 'ChannelName', title: '渠道' },
+                { field: 'ProductName', title: '产品' },
                 { field: 'BranchName', title: '门店' },
                 { field: 'CreateName', title: '创建人' },
                 { field: 'ModifierName', title: '修改人' },
@@ -434,16 +386,16 @@
         var seriesName = "";
 
         if (type == 1) {
-            seriesName = "房费收入";
+            seriesName = "净利润";
         }
         else if (type == 2) {
-            seriesName = "出租率";
+            seriesName = "销售额";
         }
         else if (type == 3) {
-            seriesName = "平均房价";
+            seriesName = "销售量";
         }
         else if (type == 4) {
-            seriesName = "单房收益";
+            seriesName = "销售成本";
         }
 
         optionDailyBase.series[0].name = seriesName;
@@ -451,32 +403,32 @@
         if (data != null) {
             $.each(data, function () {
                 optionDailyBase.xAxis.data.push(moment(this.StartDate).format("YYYY-MM-DD"));
-                //房费流水
+                //净利润
                 if (type == 1) {
-                    optionDailyBase.series[0].data.push((this.HouseAmount).toFixed(0));
+                    optionDailyBase.series[0].data.push((this.Equity).toFixed(0));
                     optionDailyBase.series[0].label.normal.formatter = function (p) {
                         return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
-                //出租率
-                else if (type == 2) {
-                    optionDailyBase.series[0].data.push((this.Rate * 100).toFixed(2));
+                //销售额
+                if (type == 2) {
+                    optionDailyBase.series[0].data.push((this.Sale).toFixed(0));
                     optionDailyBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                        return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
-                //均价
-                else if (type == 3) {
-                    optionDailyBase.series[0].data.push(this.Average.toFixed(0));
+                //销售量
+                if (type == 3) {
+                    optionDailyBase.series[0].data.push((this.Total).toFixed(0));
                     optionDailyBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                        return (p.value > 0 || p.value < 0) ? ('N' + p.value) : '';
                     };
                 }
-                //有效均价
-                else if (type == 4) {
-                    optionDailyBase.series[0].data.push(this.ValidAverage.toFixed(0));
+                //销售成本
+                if (type == 4) {
+                    optionDailyBase.series[0].data.push((this.Cost).toFixed(0));
                     optionDailyBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                        return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
             })
@@ -489,17 +441,17 @@
                     return res;
                 }
             } else if (type == 2) {
-                optionDailyBase.yAxis[0].axisLabel.formatter = '{value} %';
-                optionDailyBase.tooltip.formatter = function (params) {
-                    var res = params[0].seriesName + '<br/>' +
-                        params[0].name + "：" + params[0].value + " %";
-                    return res;
-                }
-            } else if (type == 3) {
                 optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
                 optionDailyBase.tooltip.formatter = function (params) {
                     var res = params[0].seriesName + '<br/>' +
                         params[0].name + "：" + params[0].value + " 元";
+                    return res;
+                }
+            } else if (type == 3) {
+                optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 次';
+                optionDailyBase.tooltip.formatter = function (params) {
+                    var res = params[0].seriesName + '<br/>' +
+                        params[0].name + "：" + params[0].value + " 次";
                     return res;
                 }
             } else if (type == 4) {
@@ -623,16 +575,16 @@
         var seriesName = "";
 
         if (type == 1) {
-            seriesName = "房费收入";
+            seriesName = "净利润";
         }
         else if (type == 2) {
-            seriesName = "出租率";
+            seriesName = "销售额";
         }
         else if (type == 3) {
-            seriesName = "平均房价";
+            seriesName = "销售量";
         }
         else if (type == 4) {
-            seriesName = "单房收益";
+            seriesName = "销售成本";
         }
 
         optionMonthBase.series[0].name = seriesName;
@@ -640,32 +592,32 @@
         if (data != null) {
             $.each(data, function () {
                 optionMonthBase.xAxis.data.push(moment(this.StartDate).format("YYYY-MM"));
-                //房费流水
+                //净利润
                 if (type == 1) {
-                    optionMonthBase.series[0].data.push((this.HouseAmount).toFixed(0));
+                    optionMonthBase.series[0].data.push((this.Equity).toFixed(0));
                     optionMonthBase.series[0].label.normal.formatter = function (p) {
                         return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
-                //出租率
-                else if (type == 2) {
-                    optionMonthBase.series[0].data.push((this.Rate * 100).toFixed(2));
+                //销售额
+                if (type == 2) {
+                    optionMonthBase.series[0].data.push((this.Sale).toFixed(0));
                     optionMonthBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                        return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
-                //均价
-                else if (type == 3) {
-                    optionMonthBase.series[0].data.push(this.Average.toFixed(0));
+                //销售量
+                if (type == 3) {
+                    optionMonthBase.series[0].data.push((this.Total).toFixed(0));
                     optionMonthBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                        return (p.value > 0 || p.value < 0) ? ('N' + p.value) : '';
                     };
                 }
-                //有效均价
-                else if (type == 4) {
-                    optionMonthBase.series[0].data.push(this.ValidAverage.toFixed(0));
+                //销售成本
+                if (type == 4) {
+                    optionMonthBase.series[0].data.push((this.Cost).toFixed(0));
                     optionMonthBase.series[0].label.normal.formatter = function (p) {
-                        return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                        return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
                     };
                 }
             })
@@ -678,17 +630,17 @@
                     return res;
                 }
             } else if (type == 2) {
-                optionMonthBase.yAxis[0].axisLabel.formatter = '{value} %';
-                optionMonthBase.tooltip.formatter = function (params) {
-                    var res = params[0].seriesName + '<br/>' +
-                        params[0].name + "：" + params[0].value + " %";
-                    return res;
-                }
-            } else if (type == 3) {
                 optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
                 optionMonthBase.tooltip.formatter = function (params) {
                     var res = params[0].seriesName + '<br/>' +
                         params[0].name + "：" + params[0].value + " 元";
+                    return res;
+                }
+            } else if (type == 3) {
+                optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 次';
+                optionMonthBase.tooltip.formatter = function (params) {
+                    var res = params[0].seriesName + '<br/>' +
+                        params[0].name + "：" + params[0].value + " 次";
                     return res;
                 }
             } else if (type == 4) {
@@ -705,7 +657,7 @@
 
     function getDailyDataList() {
         ys.ajax({
-            url: '@Url.Content("~/HotelManage/Order/GetListJsonForDailyData")',
+            url: '@Url.Content("~/HotelManage/Sale/GetListJsonForDailyData")',
             type: 'get',
             data: getParams(),
             success: function (obj) {
@@ -719,83 +671,39 @@
 
     function getMonthDataList() {
         ys.ajax({
-            url: '@Url.Content("~/HotelManage/Order/GetListJsonForMonthData")',
+            url: '@Url.Content("~/HotelManage/Sale/GetListJsonForMonthData")',
             type: 'get',
             data: getParams(),
             success: function (obj) {
                 if (obj.Tag == 1) {
                     MonthBaseData = obj.Data;
                     $("#mp1").text(MonthBaseData[12].StartDate);
-                    $("#mp2").text(MonthBaseData[12].HouseAmount.toFixed(0));
-                    $("#mp3").text((MonthBaseData[12].Rate * 100).toFixed(0).toString()+"%");
-                    $("#mp4").text(MonthBaseData[12].Average.toFixed(0));
-                    $("#mp5").text(MonthBaseData[12].ValidAverage.toFixed(0));
-                    $("#mp6").text(MonthBaseData[12].HouseCount);
-                    $("#mp7").text(MonthBaseData[12].HouseTotal);
-
-                    $("#tp1").text(MonthBaseData[0].StartDate);
-                    var tp2 = (MonthBaseData[12].HouseAmount - MonthBaseData[0].HouseAmount).toFixed(0).toString();
-                    var tp3 = ((MonthBaseData[12].Rate - MonthBaseData[0].Rate) * 100).toFixed(0).toString() + "%";
-                    var tp4 = (MonthBaseData[12].Average - MonthBaseData[0].Average).toFixed(0).toString();
-                    var tp5 = (MonthBaseData[12].ValidAverage - MonthBaseData[0].ValidAverage).toFixed(0).toString();
-                    var tp6 = MonthBaseData[12].HouseCount - MonthBaseData[0].HouseCount;
-                    var tp7 = MonthBaseData[12].HouseTotal - MonthBaseData[0].HouseTotal;
-                    if ((MonthBaseData[12].HouseAmount - MonthBaseData[0].HouseAmount).toFixed(0) < 0)
-                        $("#tp2").html(tp2 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp2").html(tp2 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].Rate - MonthBaseData[0].Rate < 0)
-                        $("#tp3").html(tp3 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp3").html(tp3 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].Average - MonthBaseData[0].Average< 0)
-                        $("#tp4").html(tp4 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp4").html(tp4 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].ValidAverage - MonthBaseData[0].ValidAverage < 0)
-                        $("#tp5").html(tp5 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp5").html(tp5 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].HouseCount - MonthBaseData[0].HouseCount < 0)
-                        $("#tp6").html(tp6 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp6").html(tp6 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].HouseTotal - MonthBaseData[0].HouseTotal< 0)
-                        $("#tp7").html(tp7 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#tp7").html(tp7 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
+                    $("#mp2").text(MonthBaseData[12].Equity.toFixed(0));
+                    $("#mp3").text(MonthBaseData[12].Sale.toFixed(0));
+                    $("#mp4").text(MonthBaseData[12].Total.toFixed(0));
+                    $("#mp5").text(MonthBaseData[12].Cost.toFixed(0));
 
                     $("#hp1").text(MonthBaseData[11].StartDate);
-                    var hp2 = (MonthBaseData[12].HouseAmount - MonthBaseData[11].HouseAmount).toFixed(0).toString();
-                    var hp3 = ((MonthBaseData[12].Rate - MonthBaseData[11].Rate) * 100).toFixed(0).toString() + "%";
-                    var hp4 = (MonthBaseData[12].Average - MonthBaseData[11].Average).toFixed(0).toString();
-                    var hp5 = (MonthBaseData[12].ValidAverage - MonthBaseData[11].ValidAverage).toFixed(0).toString();
-                    var hp6 = MonthBaseData[12].HouseCount - MonthBaseData[11].HouseCount;
-                    var hp7 = MonthBaseData[12].HouseTotal - MonthBaseData[11].HouseTotal;
-                    if ((MonthBaseData[12].HouseAmount - MonthBaseData[11].HouseAmount).toFixed(0) < 0)
+                    var hp2 = (MonthBaseData[12].Equity - MonthBaseData[11].Equity).toFixed(0);
+                    var hp3 = (MonthBaseData[12].Sale - MonthBaseData[11].Sale).toFixed(0);
+                    var hp4 = (MonthBaseData[12].Total - MonthBaseData[11].Total).toFixed(0);
+                    var hp5 = (MonthBaseData[12].Cost - MonthBaseData[11].Cost).toFixed(0);
+                    if (hp2 < 0)
                         $("#hp2").html(hp2 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
                     else
                         $("#hp2").html(hp2 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].Rate - MonthBaseData[11].Rate < 0)
+                    if (hp3 < 0)
                         $("#hp3").html(hp3 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
                     else
                         $("#hp3").html(hp3 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].Average - MonthBaseData[11].Average < 0)
+                    if (hp4 < 0)
                         $("#hp4").html(hp4 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
                     else
                         $("#hp4").html(hp4 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].ValidAverage - MonthBaseData[11].ValidAverage < 0)
+                    if (hp5 < 0)
                         $("#hp5").html(hp5 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
                     else
                         $("#hp5").html(hp5 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].HouseCount - MonthBaseData[11].HouseCount < 0)
-                        $("#hp6").html(hp6 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#hp6").html(hp6 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
-                    if (MonthBaseData[12].HouseTotal - MonthBaseData[11].HouseTotal < 0)
-                        $("#hp7").html(hp7 + ' <i style="color:red" class="fa fa-arrow-down"></i>');
-                    else
-                        $("#hp7").html(hp7 + ' <i style="color:green" class="fa fa-arrow-up"></i>');
 
                     MonthBaseData.shift();
                     Render_MonthBaseChart(MonthBaseData, 1);
@@ -807,18 +715,16 @@
 
     function getYearDataList() {
         ys.ajax({
-            url: '@Url.Content("~/HotelManage/Order/GetListJsonForYearData")',
+            url: '@Url.Content("~/HotelManage/Sale/GetListJsonForYearData")',
             type: 'get',
             data: getParams(),
             success: function (obj) {
                 if (obj.Tag == 1) {
                     $("#yp1").text(obj.Data.StartDate);
-                    $("#yp2").text(obj.Data.HouseAmount.toFixed(0));
-                    $("#yp3").text((obj.Data.Rate*100).toFixed(0)+"%");
-                    $("#yp4").text(obj.Data.Average.toFixed(0));
-                    $("#yp5").text(obj.Data.ValidAverage.toFixed(0));
-                    $("#yp6").text(obj.Data.HouseCount);
-                    $("#yp7").text(obj.Data.HouseTotal);
+                    $("#yp2").text(obj.Data.Equity.toFixed(0));
+                    $("#yp3").text(obj.Data.Sale.toFixed(0));
+                    $("#yp4").text(obj.Data.Total.toFixed(0));
+                    $("#yp5").text(obj.Data.Cost.toFixed(0));
                 }
             }
         });
@@ -829,7 +735,7 @@
     function Render_PieChart() {
         Pie1Chart.setOption({
             title: {
-                text: '渠道占比',
+                text: '产品占比',
                 x: 'center',
                 show: true
             },
@@ -878,7 +784,7 @@
                     data: []
                 },
                 {
-                    name: '渠道占比',
+                    name: '产品占比',
                     type: 'pie',
                     radius: ['50%', '65%'],
                     label: {
@@ -920,7 +826,7 @@
         Pie1Chart.showLoading();
         Pie2Chart.setOption({
             title: {
-                text: '渠道占比',
+                text: '产品占比',
                 x: 'center',
                 show: true
             },
@@ -969,7 +875,7 @@
                     data: []
                 },
                 {
-                    name: '渠道占比',
+                    name: '产品占比',
                     type: 'pie',
                     radius: ['50%', '65%'],
                     label: {
@@ -1012,7 +918,7 @@
     }
     function getPieMonthDataList() {
         ys.ajax({
-            url: '@Url.Content("~/HotelManage/Order/GetListJsonForPieMonthData")',
+            url: '@Url.Content("~/HotelManage/Sale/GetListJsonForPieMonthData")',
             type: 'get',
             data: getParams(),
             success: function (obj) {
@@ -1021,9 +927,8 @@
                 P1series2Data = [];
                 if (obj.Tag == 1) {
                     for (var i = 0; i < obj.Data.length; i++) {
-                        P1legendData.push(obj.Data[i].Channel);
-                        P1series1Data.push({ name: obj.Data[i].Channel, value: obj.Data[i].ATotal });
-                        P1series2Data.push({ name: obj.Data[i].Channel, value: obj.Data[i].CTotal });
+                        P1legendData.push(obj.Data[i].Product);
+                        P1series1Data.push({ name: obj.Data[i].Product, value: obj.Data[i].Total });
                     }
                     Pie1Chart.hideLoading();
                     Pie1Chart.setOption({
@@ -1046,7 +951,7 @@
     }
     function getPieYearDataList() {
         ys.ajax({
-            url: '@Url.Content("~/HotelManage/Order/GetListJsonForPieYearData")',
+            url: '@Url.Content("~/HotelManage/Sale/GetListJsonForPieYearData")',
             type: 'get',
             data: getParams(),
             success: function (obj) {
@@ -1055,9 +960,8 @@
                 P2series2Data = [];
                 if (obj.Tag == 1) {
                     for (var i = 0; i < obj.Data.length; i++) {
-                        P2legendData.push(obj.Data[i].Channel);
-                        P2series1Data.push({ name: obj.Data[i].Channel, value: obj.Data[i].ATotal });
-                        P2series2Data.push({ name: obj.Data[i].Channel, value: obj.Data[i].CTotal });
+                        P2legendData.push(obj.Data[i].Product);
+                        P2series1Data.push({ name: obj.Data[i].Product, value: obj.Data[i].Total });
                     }
                     Pie2Chart.hideLoading();
                     Pie2Chart.setOption({
@@ -1087,7 +991,7 @@
     }
 
     function exportForm() {
-    var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson2")';
+    var url = '@Url.Content("~/HotelManage/Sale/ExportSaleJson2")';
     var postData = $("#searchDiv").getWebControls();
     ys.exportExcel(url, postData);
     }
@@ -1095,7 +999,7 @@
     function showProceedsIndex(id) {
         ys.openDialog({
             title: "收款明细",
-            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsIndex")' + '?orderId=' + id,
+            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsIndex")' + '?saleId=' + id,
             btn: ['关闭'],
             closeBtn: 0,
             callback: function (index, layero) {

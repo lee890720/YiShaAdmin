@@ -68,7 +68,7 @@ namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDataDictListJson()
         {
-            TData<List<DataDictInfo>> obj = await dataDictBLL.GetDataDictList();
+            TData<List<DailyBaseDataInfo>> obj = await dataDictBLL.GetDataDictList();
             return Json(obj);
         }
         #endregion

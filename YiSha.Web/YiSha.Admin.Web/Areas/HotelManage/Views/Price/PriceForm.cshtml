@@ -1,7 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_FormWhite.cshtml";
 }
-<link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 <div class="wrapper animated fadeInRight">
     <form id="form" class="form-horizontal m">
         <div class="form-group">
@@ -48,23 +47,18 @@
         </div>
     </form>
 </div>
-<script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-<script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="~/lib/moment/moment.min.js"></script>
 <script type="text/javascript">
     var id = ys.request("id");
-
-    $(".datepicker").datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        language: "zh-CN",
-        todayBtn: 'linked',
-        todayHighlight: true,
-        //initialDate:'now',
-    });
-
+    var vStartDate = moment().startOf('month').format("YYYY-MM-DD");
+    var vEndDate = moment().endOf('month').format("YYYY-MM-DD");
     $(function () {
-
         getForm();
+
+        laydate.render({ elem: '#beginDate', format: 'yyyy-MM-dd', value: vStartDate });
+        laydate.render({ elem: '#overDate', format: 'yyyy-MM-dd', value: vEndDate });
+        laydate.render({ elem: '#startDate', format: 'yyyy-MM-dd', value: vStartDate });
+        laydate.render({ elem: '#endDate', format: 'yyyy-MM-dd', value: vEndDate });
 
         $('#form').validate({
             rules: {
@@ -80,6 +74,10 @@
                 type: 'get',
                 success: function (obj) {
                     if (obj.Tag == 1) {
+                        obj.Data.BeginDate = moment(obj.Data.BeginDate).format("YYYY-MM-DD");
+                        obj.Data.OverDate = moment(obj.Data.OverDate).format("YYYY-MM-DD");
+                        obj.Data.StartDate = moment(obj.Data.StartDate).format("YYYY-MM-DD");
+                        obj.Data.EndDate = moment(obj.Data.EndDate).format("YYYY-MM-DD");
                         $('#form').setWebControls(obj.Data);
                     }
                 }

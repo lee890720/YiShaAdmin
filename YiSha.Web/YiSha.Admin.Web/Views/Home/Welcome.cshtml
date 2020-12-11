@@ -1,68 +1,477 @@
-﻿@{
-    Layout = "~/Views/Shared/_FormGray.cshtml";
+﻿@{ Layout = "~/Views/Shared/_Index.cshtml"; }
+@section header{
+    <link href="@Url.Content("~/lib/bootstrap.table/1.12.0/extensions/editable/bootstrap-editable.css")" rel="stylesheet" type="text/css">
+    <script src='@Url.Content("~/lib/bootstrap.table/1.12.0/extensions/editable/bootstrap-editable.min.js")' type="text/javascript"></script>
+    <script src='@Url.Content("~/lib/bootstrap.table/1.12.0/extensions/editable/bootstrap-table-editable.js")' type="text/javascript"></script>
+    <script src='@Url.Content("~/lib/bootstrap.table/1.12.0/extensions/editable/bootstrap-datepicker.zh-CN.js")' type="text/javascript"></script>
 }
-
-    <div class="wrapper wrapper-content">
-    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>待办事务</h5>
+                    <div class="ibox-tools">
+                        <div class="ibox-tools">
+                            <a id="btnAdd" class="collapse-link" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
+                            <a id="btnEdit" class="collapse-link" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
+                            <a id="btnDelete" class="collapse-link" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="gridTable" class="table select-table table-striped"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>今日住宿</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="gridTable2" class="table select-table table-striped"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>今日销售</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link" onclick="exportForm2()"><i class="fa fa-download"></i> 导出</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="gridTable3" class="table select-table table-striped"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/moment/moment.min.js"></script>
+<script type="text/javascript">
+    var _branchId = ys.getCookie("BranchId");
+    var vStartDate = moment().format("YYYY-MM-DD");
     $(function () {
-
-        @*dd.ready(function () {
-            // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
-
-            dd.runtime.permission.requestAuthCode({
-                corpId: "ding79a8988e26be74d035c2f4657eb6378f",
-                onSuccess: function (result) {
-                    //通过corpId，code获取userid,code为string类型
-                    var code = result.code;
-                    //alert(code)
-
-                    $.ajax({
-                        async: false,
-                        type: 'get',
-                        contentType: "application/json;charset=UTF-8",
-                        datatype: "",
-                        data: { "code": code },
-                        //后端接收code获取userid的方法GetuserInfo
-                        url: '@Url.Content("~/Home/GetUserInfo")',
-                        success: function (ref) {
-                            alert(ref);
-                        },
-                    })
-                },
-
-                onFail: function (err) {
-                    alert(JSON.stringify(err));
-
-                }
-
-            });
-        });*@
-        $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
-            var div_ibox = $(this).closest("div.ibox"),
-                e = $(this).find("i"),
-                i = div_ibox.find("div.ibox-content");
-            i.slideToggle(200),
-                e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"),
-                div_ibox.toggleClass("").toggleClass("border-bottom"),
-                setTimeout(function () {
-                    div_ibox.resize();
-                }, 50);
-        }), $(".close-link").click(function () {
-            var div_ibox = $(this).closest("div.ibox");
-            div_ibox.remove()
-        });
-
-        $('#pay-qrcode').click(function () {
-            var html = $(this).html();
-            ys.openDialogContent({
-                content: html,
-                width: '600px',
-                height: '321px'
-            });
-        });
-
+        initGrid();
+        initGrid2();
+        initGrid3();
     });
 
-    </script>
+    function initGrid() {
+        var queryUrl = '@Url.Content("~/HotelManage/Memo/GetPageListJson")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            onEditableSave: onEditableSave,
+            showColumns: false,                  // 是否显示所有的列（选择显示的列）
+            showRefresh: false,                  // 是否显示刷新按钮
+            showToggle:  false,                  // 是否显示详细视图和列表视图的切换按钮
+            columns: [
+                { checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', visible: false, formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'ExecuteDate', title: '截止日期',
+                    formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    },
+                    editable: {
+                        type: 'date',
+                        clear: false,
+                        placement: 'bottom',
+                        showbuttons:false,
+                        //mode:"inline",
+                        datepicker: { language: 'zh-CN'},//中文支持
+                        validate: function (value) {
+                            if (value == '') { return '不能为空!' }
+                        }
+                    }
+
+                },
+                {
+                    field: 'Memo',
+                    title: '备忘录',
+                    editable: {
+                        type: 'text'
+                    }
+
+                },
+                {
+                    field: 'IsFinish',
+                    title: '进度',
+                    align: 'center',
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未完成"
+                        }, {
+                            value: 1,
+                            text: "已完成"
+                        }]
+                    }
+
+                },
+                { field: 'StewardName', title: '负责人' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                queryString.BranchId = _branchId;
+                queryString.IsFinish = 0;
+                return queryString;
+            }
+        });
+    }
+
+    function initGrid2() {
+        var queryUrl = '@Url.Content("~/HotelManage/Order/GetPageListJsonForDay")';
+        $('#gridTable2').ysTable({
+            url: queryUrl,
+            onEditableSave: onEditableSave2,
+            showColumns: false,                  // 是否显示所有的列（选择显示的列）
+            showRefresh: false,                  // 是否显示刷新按钮
+            showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
+            pagination:false,
+            showFooter: false,
+            pageSize: 50,
+            columns: [
+                { field: 'Id', title: 'Id', visible: false },
+                {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                { field: 'OrderName', title: '客人姓名' },
+                { field: 'Nickname', title: '昵称' },
+                { field: 'Phone', title: '手机号' },
+                { field: 'OrderNumber', title: '订单号' },
+                { field: 'HouseType', title: '房型' },
+                { field: 'HouseNumber', title: '房号' },
+                {
+                    field: 'StartDate', title: '入住日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'EndDate', title: '离店日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'UnitPrice',
+                    title: '房价',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].UnitPrice);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                { field: 'HouseCount', title: '总间夜数' },
+                {
+                    field: 'State',
+                    title: '订单状态',
+                    align: 'center',
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "预订"
+                        }, {
+                            value: 1,
+                            text: "入住"
+                        }, {
+                            value: 2,
+                            text: "退房"
+                        }, {
+                            value: 3,
+                            text: "删除"
+                        }]
+                    }
+
+                },
+
+                {
+                    field: 'IsFinish',
+                    title: '预审',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if(row.IsFinish==0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinish == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                {
+                    field: 'IsFinance',
+                    title: '财务审核',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.IsFinance == 0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinance == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                { field: 'StewardName', title: '管家' },
+                { field: 'ChannelName', title: '渠道' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndex(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
+                        return actions.join('');
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable2').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                queryString.BranchId = _branchId;
+                queryString.StartDate = vStartDate;
+                return queryString;
+            }
+        });
+    }
+
+    function initGrid3() {
+        var queryUrl = '@Url.Content("~/HotelManage/Sale/GetPageListJsonForDay")';
+        $('#gridTable3').ysTable({
+            url: queryUrl,
+            showColumns: false,                  // 是否显示所有的列（选择显示的列）
+            showRefresh: false,                  // 是否显示刷新按钮
+            showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
+            columns: [
+                { field: 'Id', title: 'Id', visible: false },
+                {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'CreateDate', title: '发生日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                { field: 'SaleName', title: '客人名称' },
+                { field: 'Phone', title: '手机号' },
+                { field: 'IDNumber', title: '身份证号' },
+                { field: 'SalePrice', title: '销售价' },
+                { field: 'PurchasePrice', title: '采购价' },
+                { field: 'Profit', title: '利润' },
+                { field: 'Equity', title: '净利润' },
+                { field: 'Commission', title: '管家提成' },
+                {
+                    field: 'IsFinish',
+                    title: '预审',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.IsFinish == 0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinish == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                {
+                    field: 'IsFinance',
+                    title: '财务审核',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.IsFinance == 0)
+                            actions.push('<a href="#" style="color:red">未审核</a>');
+                        else if (row.IsFinance == 1)
+                            actions.push('<a href="#" style="color:black">已审核</a>');
+                        return actions.join('');
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                { field: 'StewardName', title: '管家' },
+                { field: 'ProductName', title: '产品' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndex(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
+                        return actions.join('');
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable3').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                queryString.BranchId = _branchId;
+                queryString.StartDate = vStartDate;
+                return queryString;
+            }
+        });
+    }
+
+
+    function searchGrid() {
+        $('#gridTable').ysTable('search');
+    }
+
+    function searchGrid2() {
+        $('#gridTable2').ysTable('search');
+    }
+
+    function searchGrid3() {
+        $('#gridTable3').ysTable('search');
+    }
+
+    function onEditableSave(field, row, oldValue, $el) {
+        delete row.BaseCreatorId;
+        delete row.BaseModifierId;
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Memo/SaveFormJson")',
+            type: 'post',
+            data: row,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    searchGrid()
+                    ys.msgSuccess(obj.Message);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+
+    }
+
+    function onEditableSave2(field, row, oldValue, $el) {
+        delete row.BaseCreatorId;
+        delete row.BaseModifierId;
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Order/SaveFormJson")',
+            type: 'post',
+            data: row,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    searchGrid2()
+                    ys.msgSuccess(obj.Message);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+
+    function showSaveForm(bAdd) {
+        var id = 0;
+        if (!bAdd) {
+            var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+            if (!ys.checkRowEdit(selectedRow)) {
+                return;
+            }
+            else {
+                id = selectedRow[0].Id;
+            }
+        }
+        ys.openDialog({
+            title: id > 0 ? '编辑' : '添加',
+            content: '@Url.Content("~/HotelManage/Memo/MemoForm")' + '?id=' + id,
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            }
+        });
+    }
+
+    function deleteForm() {
+        var selectedRow = $('#gridTable').bootstrapTable('getSelections');
+        if (ys.checkRowDelete(selectedRow)) {
+            ys.confirm('确认要删除选中的' + selectedRow.length + '条数据吗？', function () {
+                var ids = ys.getIds(selectedRow);
+                ys.ajax({
+                    url: '@Url.Content("~/HotelManage/Memo/DeleteFormJson")' + '?ids=' + ids,
+                    type: 'post',
+                    success: function (obj) {
+                        if (obj.Tag == 1) {
+                            ys.msgSuccess(obj.Message);
+                            searchGrid();
+                        }
+                        else {
+                            ys.msgError(obj.Message);
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function exportForm() {
+    var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson2")';
+    var postData = $("#searchDiv").getWebControls();
+    ys.exportExcel(url, postData);
+
+    }
+    function exportForm2() {
+    var url2 = '@Url.Content("~/HotelManage/Sale/ExportSaleJson2")';
+    var postData2 = $("#searchDiv").getWebControls();
+    ys.exportExcel(url2, postData2);
+
+    }
+</script>

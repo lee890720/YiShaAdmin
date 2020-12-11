@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YiSha.Model.Result.SystemManage
 {
-    public class DataDictInfo
+    public class DailyBaseDataInfo
     {
         /// <summary>
         /// 数据字典类型

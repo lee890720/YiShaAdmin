@@ -84,5 +84,100 @@ namespace YiSha.Util
             return string.Empty;
         }
         #endregion
+
+        /// <summary>
+        /// 获取当前周初日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetStartWeek(DateTime dt)
+        {
+            DateTime startWeek = dt.AddDays(1 - Convert.ToInt32(dt.DayOfWeek.ToString("d"))); //本周周一
+            return startWeek;
+        }
+
+        /// <summary>
+        /// 获取当前周末日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetEndWeek(DateTime dt)
+        {
+            DateTime startWeek = dt.AddDays(1 - Convert.ToInt32(dt.DayOfWeek.ToString("d"))); //本周周一
+            DateTime endWeek = startWeek.AddDays(6); //本周周日
+            return endWeek;
+        }
+
+        /// <summary>
+        /// 获取当前月初日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetStartMonth(DateTime dt)
+        {
+            DateTime startMonth = dt.AddDays(1 - dt.Day); //本月月初
+            return startMonth;
+        }
+
+        /// <summary>
+        /// 获取当前月的月末日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetEndMonth(DateTime dt)
+        {
+            DateTime startMonth = dt.AddDays(1 - dt.Day); //本月月初
+            DateTime endMonth = startMonth.AddMonths(1).AddDays(-1); //本月月末
+            return endMonth;
+        }
+
+        /// <summary>
+        /// 获取当前月的天数
+        /// </summary>
+        /// <returns></returns>
+        public static int GetDaysInMonth(DateTime dt)
+        {
+            int days = DateTime.DaysInMonth(dt.Year, dt.Month);
+            if (dt.AddDays(1 - dt.Day).Date == DateTime.Now.AddDays(1 - DateTime.Now.Day).Date)
+                days = DateTime.Now.Day;
+            return days;
+        }
+
+        /// <summary>
+        /// 获取当前季初日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetStartQuarter(DateTime dt)
+        {
+            DateTime startQuarter = dt.AddMonths(0 - (dt.Month - 1) % 3).AddDays(1 - dt.Day); //本季度初
+            return startQuarter;
+        }
+
+        /// <summary>
+        /// 获取当前季末日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetEndQuarter(DateTime dt)
+        {
+            DateTime startQuarter = dt.AddMonths(0 - (dt.Month - 1) % 3).AddDays(1 - dt.Day); //本季度初
+            DateTime endQuarter = startQuarter.AddMonths(3).AddDays(-1); //本季度末
+            return endQuarter;
+        }
+
+        /// <summary>
+        /// 获取当前年初日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetStartYear(DateTime dt)
+        {
+            DateTime startYear = new DateTime(dt.Year, 1, 1); //本年年初
+            return startYear;
+        }
+
+        /// <summary>
+        /// 获取当前年末日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetEndYear(DateTime dt)
+        {
+            DateTime endYear = new DateTime(dt.Year, 12, 31); //本年年初
+            return endYear;
+        }
     }
 }

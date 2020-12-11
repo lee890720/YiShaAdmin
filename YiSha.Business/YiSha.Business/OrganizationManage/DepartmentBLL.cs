@@ -78,11 +78,11 @@ namespace YiSha.Business.OrganizationManage
             obj.Data = new List<ZtreeInfo>();
             List<DepartmentEntity> departmentList = await departmentService.GetList(param);
             OperatorInfo operatorInfo = await Operator.Instance.Current();
-            if (operatorInfo.IsSystem != 1)
-            {
-                List<long> childrenDepartmentIdList = await GetChildrenDepartmentIdList(departmentList, operatorInfo.DepartmentId.Value);
-                departmentList = departmentList.Where(p => childrenDepartmentIdList.Contains(p.Id.Value)).ToList();
-            }
+            //if (operatorInfo.IsSystem != 1)
+            //{
+            //    List<long> childrenDepartmentIdList = await GetChildrenDepartmentIdList(departmentList, operatorInfo.DepartmentId.Value);
+            //    departmentList = departmentList.Where(p => childrenDepartmentIdList.Contains(p.Id.Value)).ToList();
+            //}
             List<UserEntity> userList = await userService.GetList(null);
             foreach (DepartmentEntity department in departmentList)
             {

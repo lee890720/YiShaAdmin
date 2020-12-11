@@ -31,50 +31,54 @@ namespace YiSha.Service.HotelManage
         #region 获取数据
         public async Task<List<OrderEntity>> GetList(OrderListParam param)
         {
-            var expression = ListFilter(param);
-            var list = await this.BaseRepository().FindList(expression);
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilterForCal(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
         public async Task<List<OrderEntity>> GetPageList(OrderListParam param, Pagination pagination)
         {
-            var expression = ListFilter(param);
-            var list= await this.BaseRepository().FindList(expression, pagination);
-            return list.ToList();
-        }
-
-        public async Task<List<OrderEntity>> GetList2(OrderListParam param)
-        {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
-            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
-            list = list.Where(p => p.State != OrderTypeEnum.Order4.ParseToInt());
-            return list.ToList();
-        }
-
-        public async Task<List<OrderEntity>> GetList3(OrderListParam param)
-        {
-            var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
-            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
-            list = list.Where(p => p.State == OrderTypeEnum.Order4.ParseToInt());
-            return list.ToList();
-        }
-
-        public async Task<List<OrderEntity>> GetPageList2(OrderListParam param, Pagination pagination)
-        {
-            var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilter(param, strSql);
             var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
-            list = list.Where(p => p.State != OrderTypeEnum.Order4.ParseToInt());
             return list.ToList();
         }
 
-        public async Task<List<OrderEntity>> GetPageList3(OrderListParam param, Pagination pagination)
+        public async Task<List<OrderEntity>> GetPageListForDel(OrderListParam param, Pagination pagination)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter4(param, strSql);
+            List<DbParameter> filter = ListFilterForDel(param, strSql);
             var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
+            return list.ToList();
+        }
+
+        public async Task<List<OrderEntity>> GetListForDay(OrderListParam param)
+        {
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
+            return list.ToList();
+        }
+
+        public async Task<List<OrderEntity>> GetPageListForDay(OrderListParam param, Pagination pagination)
+        {
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray(), pagination);
+            return list.ToList();
+        }
+
+        public async Task<List<OrderEntity>> GetListForMonth(OrderListParam param)
+        {
+            if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+            {
+                param.EndDate = DateTimeHelper.GetEndMonth((DateTime)param.StartDate);
+                param.StartDate = DateTimeHelper.GetStartMonth((DateTime)param.StartDate);
+            }
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
@@ -119,7 +123,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task CheckForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach(var i in list)
             {
@@ -130,7 +134,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task RepealForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach (var i in list)
             {
@@ -147,16 +151,7 @@ namespace YiSha.Service.HotelManage
         #endregion
 
         #region 私有方法
-        private Expression<Func<OrderEntity, bool>> ListFilter(OrderListParam param)
-        {
-            var expression = LinqExtensions.True<OrderEntity>();
-            if (param != null)
-            {
-            }
-            return expression;
-        }
-
-        private List<DbParameter> ListFilter2(OrderListParam param, StringBuilder strSql)
+        private List<DbParameter> ListFilter(OrderListParam param, StringBuilder strSql)
         {
             strSql.Append(@"SELECT  a.Id,
                                     a.BaseIsDelete,
@@ -203,6 +198,9 @@ namespace YiSha.Service.HotelManage
             var parameter = new List<DbParameter>();
             if(param!=null)
             {
+                strSql.Append(" AND a.State < @State");
+                parameter.Add(DbParameterExtension.CreateDbParameter("@State", OrderTypeEnum.Order4.ParseToInt()));
+
                 if (!string.IsNullOrEmpty(param.Id.ToString()))
                 {
                     strSql.Append(" AND a.Id = @Id");
@@ -255,20 +253,133 @@ namespace YiSha.Service.HotelManage
                 }
                 if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
                 {
-                    strSql.Append(" AND a.EndDate > @StartDate");
+                    strSql.Append(" AND a.StartDate >= @StartDate");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
                 }
                 if (!string.IsNullOrEmpty(param.EndDate.ParseToString()))
                 {
-                    //param.EndDate = (param.EndDate.Value.ToString("yyyy-MM-dd") + " 23:59:59").ParseToDateTime();
-                    strSql.Append(" AND a.StartDate < @EndDate");
+                    strSql.Append(" AND a.StartDate <= @EndDate");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@EndDate", param.EndDate));
                 }
             }
             return parameter;
         }
 
-        private List<DbParameter> ListFilter4(OrderListParam param, StringBuilder strSql)
+        private List<DbParameter> ListFilterForCal(OrderListParam param, StringBuilder strSql)
+        {
+            strSql.Append(@"SELECT  a.Id,
+                                    a.BaseIsDelete,
+                                    a.BaseCreateTime,
+                                    a.BaseCreatorId,
+                                    a.BaseModifyTime,
+                                    a.BaseModifierId,
+                                    a.BaseVersion,
+                                    a.OrderName,
+                                    a.Nickname,
+                                    a.Phone,
+                                    a.OrderNumber,
+                                    a.HouseTypeId,
+                                    a.HouseNumberId,
+                                    a.StartDate,
+                                    a.EndDate,
+                                    a.UnitPrice,
+                                    a.TotalPrice,
+                                    a.HouseCount,
+                                    a.State,
+                                    a.IsFinish,
+                                    a.IsFinance,
+                                    a.Remark,
+                                    a.StewardId,
+                                    a.ChannelId,
+                                    a.BranchId,
+                                    b.BranchName,
+                                    c.ChannelName,
+                                    c.ChannelColor,
+                                    d.RealName AS StewardName,
+                                    e.BranchName AS HouseType,
+                                    f.BranchName AS HouseNumber,
+                                    g.RealName AS CreateName,
+                                    h.RealName AS ModifierName
+                            FROM    HtlOrder a
+                                    LEFT JOIN HtlBranch b ON a.BranchId = b.Id
+                                    LEFT JOIN HtlChannel c ON a.ChannelId=c.Id
+                                    LEFT JOIN SysUser d ON a.StewardId=d.Id
+                                    LEFT JOIN HtlBranch e ON a.HouseTypeId=e.Id
+                                    LEFT JOIN HtlBranch f ON a.HouseNumberId=f.Id
+                                    LEFT JOIN SysUser g ON a.BaseCreatorId=g.Id
+                                    LEFT JOIN SysUser h ON a.BaseModifierId=h.Id
+                            WHERE   1 = 1");
+            var parameter = new List<DbParameter>();
+            if (param != null)
+            {
+                strSql.Append(" AND a.State < @State");
+                parameter.Add(DbParameterExtension.CreateDbParameter("@State", OrderTypeEnum.Order4.ParseToInt()));
+
+                if (!string.IsNullOrEmpty(param.Id.ToString()))
+                {
+                    strSql.Append(" AND a.Id = @Id");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Id", param.Id));
+                }
+                if (!string.IsNullOrEmpty(param.OrderName))
+                {
+                    strSql.Append(" AND a.OrderName like @OrderName");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderName", "%" + param.OrderName + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.Nickname))
+                {
+                    strSql.Append(" AND a.Nickname like @Nickname");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Nickname", "%" + param.Nickname + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.Phone))
+                {
+                    strSql.Append(" AND a.Phone like @Phone");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Phone", "%" + param.Phone + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.OrderNumber))
+                {
+                    strSql.Append(" AND a.OrderNumber like @OrderNumber");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderNumber", "%" + param.OrderNumber + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.HouseTypeId.ToString()))
+                {
+                    strSql.Append(" AND a.HouseTypeId = @HouseTypeId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@HouseTypeId", param.HouseTypeId));
+                }
+                if (!string.IsNullOrEmpty(param.HouseNumberId.ToString()))
+                {
+                    strSql.Append(" AND a.HouseNumberId = @HouseNumberId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@HouseNumberId", param.HouseNumberId));
+                }
+                if (!string.IsNullOrEmpty(param.BranchId.ToString()))
+                {
+                    strSql.Append(" AND a.BranchId = @BranchId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@BranchId", param.BranchId));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinish.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinish = @IsFinish");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinish", param.IsFinish));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinance.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinance = @IsFinance");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinance", param.IsFinance));
+                }
+                if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.EndDate > @StartDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
+                }
+                if (!string.IsNullOrEmpty(param.EndDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.StartDate <= @EndDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@EndDate", param.EndDate));
+                }
+            }
+            return parameter;
+        }
+
+        private List<DbParameter> ListFilterForDel(OrderListParam param, StringBuilder strSql)
         {
             strSql.Append(@"SELECT  a.Id,
                                     a.BaseIsDelete,
@@ -316,7 +427,8 @@ namespace YiSha.Service.HotelManage
             if (param != null)
             {
                 strSql.Append(" AND a.State = @State");
-                parameter.Add(DbParameterExtension.CreateDbParameter("@State", 3));
+                parameter.Add(DbParameterExtension.CreateDbParameter("@State", OrderTypeEnum.Order4.ParseToInt()));
+
                 if (!string.IsNullOrEmpty(param.Id.ToString()))
                 {
                     strSql.Append(" AND a.Id = @Id");
@@ -382,8 +494,71 @@ namespace YiSha.Service.HotelManage
             return parameter;
         }
 
+        private List<DbParameter> ListFilterForDay(OrderListParam param, StringBuilder strSql)
+        {
+            strSql.Append(@"SELECT  a.Id,
+                                    a.BaseIsDelete,
+                                    a.BaseCreateTime,
+                                    a.BaseCreatorId,
+                                    a.BaseModifyTime,
+                                    a.BaseModifierId,
+                                    a.BaseVersion,
+                                    a.OrderName,
+                                    a.Nickname,
+                                    a.Phone,
+                                    a.OrderNumber,
+                                    a.HouseTypeId,
+                                    a.HouseNumberId,
+                                    a.StartDate,
+                                    a.EndDate,
+                                    a.UnitPrice,
+                                    a.TotalPrice,
+                                    a.HouseCount,
+                                    a.State,
+                                    a.IsFinish,
+                                    a.IsFinance,
+                                    a.Remark,
+                                    a.StewardId,
+                                    a.ChannelId,
+                                    a.BranchId,
+                                    b.BranchName,
+                                    c.ChannelName,
+                                    c.ChannelColor,
+                                    d.RealName AS StewardName,
+                                    e.BranchName AS HouseType,
+                                    f.BranchName AS HouseNumber,
+                                    g.RealName AS CreateName,
+                                    h.RealName AS ModifierName
+                            FROM    HtlOrder a
+                                    LEFT JOIN HtlBranch b ON a.BranchId = b.Id
+                                    LEFT JOIN HtlChannel c ON a.ChannelId=c.Id
+                                    LEFT JOIN SysUser d ON a.StewardId=d.Id
+                                    LEFT JOIN HtlBranch e ON a.HouseTypeId=e.Id
+                                    LEFT JOIN HtlBranch f ON a.HouseNumberId=f.Id
+                                    LEFT JOIN SysUser g ON a.BaseCreatorId=g.Id
+                                    LEFT JOIN SysUser h ON a.BaseModifierId=h.Id
+                            WHERE   1 = 1");
+            var parameter = new List<DbParameter>();
+            if (param != null)
+            {
+                strSql.Append(" AND a.State < @State");
+                parameter.Add(DbParameterExtension.CreateDbParameter("@State", OrderTypeEnum.Order4.ParseToInt()));
 
-        private Expression<Func<OrderEntity, bool>> ListFilter3(string param)
+                if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.EndDate > @StartDate AND a.StartDate<=@StartDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
+                }
+                if (!string.IsNullOrEmpty(param.BranchId.ToString()))
+                {
+                    strSql.Append(" AND a.BranchId = @BranchId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@BranchId", param.BranchId));
+                }
+            }
+            return parameter;
+        }
+
+        private Expression<Func<OrderEntity, bool>> ListFilterForCheck(string param)
         {
             var expression = LinqExtensions.True<OrderEntity>();
             if (param != null)
@@ -396,7 +571,6 @@ namespace YiSha.Service.HotelManage
             }
             return expression;
         }
-
         #endregion
     }
 }

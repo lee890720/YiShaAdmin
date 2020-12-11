@@ -12,6 +12,7 @@ using YiSha.Admin.Web.Controllers;
 using YiSha.Entity.HotelManage;
 using YiSha.Business.HotelManage;
 using YiSha.Model.Param.HotelManage;
+using YiSha.Model.Result.HotelManage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -32,6 +33,15 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         {
             return View();
         }
+        public ActionResult CalendarIndex()
+        {
+            return View();
+        }
+
+        public ActionResult OrderAnalyse()
+        {
+            return View();
+        }
 
         public ActionResult OrderDelIndex()
         {
@@ -39,11 +49,6 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         }
 
         public ActionResult OrderForm()
-        {
-            return View();
-        }
-
-        public ActionResult CalendarIndex()
         {
             return View();
         }
@@ -56,6 +61,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
 
         #region 获取数据
         [HttpGet]
+        //CalendarIndex
         public async Task<ActionResult> GetListJson(OrderListParam param)
         {
             TData<List<OrderEntity>> obj = await orderBLL.GetList(param);
@@ -63,6 +69,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         }
 
         [HttpGet]
+        //OrderIndex
         public async Task<ActionResult> GetPageListJson(OrderListParam param, Pagination pagination)
         {
             TData<List<OrderEntity>> obj = await orderBLL.GetPageList(param, pagination);
@@ -70,34 +77,53 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetListJson2(OrderListParam param)
+        //OrderDelIndex
+        public async Task<ActionResult> GetPageListJsonForDel(OrderListParam param, Pagination pagination)
         {
-            TData<List<OrderEntity>> obj = await orderBLL.GetList2(param);
+            TData<List<OrderEntity>> obj = await orderBLL.GetPageListForDel(param, pagination);
             return Json(obj);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetListJson3(OrderListParam param)
+        //OrderAnalyse
+        public async Task<ActionResult> GetPageListJsonForDay(OrderListParam param, Pagination pagination)
         {
-            TData<List<OrderEntity>> obj = await orderBLL.GetList3(param);
+            TData<List<OrderEntity>> obj = await orderBLL.GetPageListForDay(param, pagination);
             return Json(obj);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetPageListJson2(OrderListParam param, Pagination pagination)
+        public async Task<ActionResult> GetListJsonForDailyData(OrderListParam param)
         {
-            TData<List<OrderEntity>> obj = await orderBLL.GetPageList2(param, pagination);
-
-            //JsonSerializerSettings settings = new JsonSerializerSettings();
-            //settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            //return Json(obj, settings);
+            TData<List<OrderBarData>> obj = await orderBLL.GetListForDailyData(param);
             return Json(obj);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetPageListJson3(OrderListParam param, Pagination pagination)
+        public async Task<ActionResult> GetListJsonForMonthData(OrderListParam param)
         {
-            TData<List<OrderEntity>> obj = await orderBLL.GetPageList3(param, pagination);
+            TData<List<OrderBarData>> obj = await orderBLL.GetListForMonthData(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetListJsonForYearData(OrderListParam param)
+        {
+            TData<OrderBarData> obj = await orderBLL.GetListForYearData(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetListJsonForPieMonthData(OrderListParam param)
+        {
+            TData<List<OrderPieData>> obj = await orderBLL.GetListForPieMonthData(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetListJsonForPieYearData(OrderListParam param)
+        {
+            TData<List<OrderPieData>> obj = await orderBLL.GetListForPieYearData(param);
             return Json(obj);
         }
 
@@ -143,10 +169,24 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         public async Task<IActionResult> ExportOrderJson(OrderListParam param)
         {
             TData<string> obj = new TData<string>();
-            TData<List<OrderEntity>> orderObj = await orderBLL.GetList2(param);
+            TData<List<OrderEntity>> orderObj = await orderBLL.GetList(param);
             if (orderObj.Tag == 1)
             {
                 string file = new ExcelHelper<OrderEntity>().ExportToExcel("订单列表.xls", "订单列表",orderObj.Data,new string[] { "Id","OrderName","Nickname","Phone","OrderNumber","HouseType","HouseNumber","StartDate","EndDate","UnitPrice","TotalPrice","HouseCount","StewardName","ChannelName","BranchName","CreateName","ModifierName" ,"State"});
+                obj.Data = file;
+                obj.Tag = 1;
+            }
+            return Json(obj);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExportOrderJson2(OrderListParam param)
+        {
+            TData<string> obj = new TData<string>();
+            TData<List<OrderEntity>> orderObj = await orderBLL.GetListForDay(param);
+            if (orderObj.Tag == 1)
+            {
+                string file = new ExcelHelper<OrderEntity>().ExportToExcel("订单列表.xls", "订单列表", orderObj.Data, new string[] { "Id", "OrderName", "Nickname", "Phone", "OrderNumber", "HouseType", "HouseNumber", "StartDate", "EndDate", "UnitPrice", "TotalPrice", "HouseCount", "StewardName", "ChannelName", "BranchName", "CreateName", "ModifierName", "State" });
                 obj.Data = file;
                 obj.Tag = 1;
             }

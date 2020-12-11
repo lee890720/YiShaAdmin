@@ -31,31 +31,46 @@ namespace YiSha.Service.HotelManage
         #region 获取数据
         public async Task<List<SaleEntity>> GetList(SaleListParam param)
         {
-            var expression = ListFilter(param);
-            var list = await this.BaseRepository().FindList(expression);
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<SaleEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
         public async Task<List<SaleEntity>> GetPageList(SaleListParam param, Pagination pagination)
         {
-            var expression = ListFilter(param);
-            var list= await this.BaseRepository().FindList(expression, pagination);
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<SaleEntity>(strSql.ToString(), filter.ToArray(), pagination);
             return list.ToList();
         }
 
-        public async Task<List<SaleEntity>> GetList2(SaleListParam param)
+        public async Task<List<SaleEntity>> GetListForDay(SaleListParam param)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
             var list = await this.BaseRepository().FindList<SaleEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
-        public async Task<List<SaleEntity>> GetPageList2(SaleListParam param, Pagination pagination)
+        public async Task<List<SaleEntity>> GetPageListForDay(SaleListParam param, Pagination pagination)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
             var list = await this.BaseRepository().FindList<SaleEntity>(strSql.ToString(), filter.ToArray(), pagination);
+            return list.ToList();
+        }
+
+        public async Task<List<SaleEntity>> GetListForMonth(SaleListParam param)
+        {
+            if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+            {
+                param.EndDate = DateTimeHelper.GetEndMonth((DateTime)param.StartDate);
+                param.StartDate = DateTimeHelper.GetStartMonth((DateTime)param.StartDate);
+            }
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<SaleEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
@@ -88,7 +103,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task CheckForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach(var i in list)
             {
@@ -99,7 +114,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task RepealForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach (var i in list)
             {
@@ -116,16 +131,7 @@ namespace YiSha.Service.HotelManage
         #endregion
 
         #region 私有方法
-        private Expression<Func<SaleEntity, bool>> ListFilter(SaleListParam param)
-        {
-            var expression = LinqExtensions.True<SaleEntity>();
-            if (param != null)
-            {
-            }
-            return expression;
-        }
-
-        private List<DbParameter> ListFilter2(SaleListParam param, StringBuilder strSql)
+        private List<DbParameter> ListFilter(SaleListParam param, StringBuilder strSql)
         {
             strSql.Append(@"SELECT  a.Id,
                                     a.BaseIsDelete,
@@ -221,7 +227,98 @@ namespace YiSha.Service.HotelManage
             return parameter;
         }
 
-        private Expression<Func<SaleEntity, bool>> ListFilter3(string param)
+        private List<DbParameter> ListFilterForDay(SaleListParam param, StringBuilder strSql)
+        {
+            strSql.Append(@"SELECT  a.Id,
+                                    a.BaseIsDelete,
+                                    a.BaseCreateTime,
+                                    a.BaseCreatorId,
+                                    a.BaseModifyTime,
+                                    a.BaseModifierId,
+                                    a.BaseVersion,
+                                    a.CreateDate,
+                                    a.SaleName,
+                                    a.Phone,
+                                    a.IDNumber,
+                                    a.SalePrice,
+                                    a.PurchasePrice,
+                                    a.Profit,
+                                    a.Equity,
+                                    a.Commission,
+                                    a.IsFinish,
+                                    a.IsFinance,
+                                    a.Sort,
+                                    a.Remark,
+                                    a.StewardId,
+                                    a.ProductId,
+                                    a.BranchId,
+                                    b.BranchName,
+                                    c.ProductName,
+                                    d.RealName AS StewardName,
+                                    g.RealName AS CreateName,
+                                    h.RealName AS ModifierName
+                            FROM    HtlSale a
+                                    LEFT JOIN HtlBranch b ON a.BranchId = b.Id
+                                    LEFT JOIN HtlProduct c ON a.ProductId=c.Id
+                                    LEFT JOIN SysUser d ON a.StewardId=d.Id
+                                    LEFT JOIN SysUser g ON a.BaseCreatorId=g.Id
+                                    LEFT JOIN SysUser h ON a.BaseModifierId=h.Id
+                            WHERE   1 = 1");
+            var parameter = new List<DbParameter>();
+            if (param != null)
+            {
+                if (!string.IsNullOrEmpty(param.Id.ToString()))
+                {
+                    strSql.Append(" AND a.Id = @Id");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Id", param.Id));
+                }
+                if (!string.IsNullOrEmpty(param.SaleName))
+                {
+                    strSql.Append(" AND a.SaleName like @SaleName");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@SaleName", "%" + param.SaleName + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.Phone))
+                {
+                    strSql.Append(" AND a.Phone like @Phone");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Phone", "%" + param.Phone + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.IDNumber))
+                {
+                    strSql.Append(" AND a.IDNumber like @IDNumber");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IDNumber", "%" + param.IDNumber + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.ProductId.ToString()) && param.ProductId > -1)
+                {
+                    strSql.Append(" AND a.ProductId = @ProductId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@ProductId", param.ProductId));
+                }
+                if (!string.IsNullOrEmpty(param.BranchId.ToString()))
+                {
+                    strSql.Append(" AND a.BranchId = @BranchId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@BranchId", param.BranchId));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinish.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinish = @IsFinish");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinish", param.IsFinish));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinance.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinance = @IsFinance");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinance", param.IsFinance));
+                }
+                if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.CreateDate = @StartDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
+
+                }
+            }
+            return parameter;
+        }
+
+
+        private Expression<Func<SaleEntity, bool>> ListFilterForCheck(string param)
         {
             var expression = LinqExtensions.True<SaleEntity>();
             if (param != null)

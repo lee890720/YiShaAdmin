@@ -25,9 +25,9 @@ namespace YiSha.Admin.WebApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<TData<List<DataDictInfo>>> GetList([FromQuery]DataDictListParam param)
+        public async Task<TData<List<DailyBaseDataInfo>>> GetList([FromQuery]DataDictListParam param)
         {
-            TData<List<DataDictInfo>> obj = await dataDictBLL.GetDataDictList();
+            TData<List<DailyBaseDataInfo>> obj = await dataDictBLL.GetDataDictList();
             obj.Tag = 1;
             return obj;
         }

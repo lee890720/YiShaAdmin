@@ -54,6 +54,7 @@ namespace YiSha.Admin.Web.Controllers
         }
 
         [HttpGet]
+        [AuthorizeFilter]
         public IActionResult Welcome()
         {
             return View();

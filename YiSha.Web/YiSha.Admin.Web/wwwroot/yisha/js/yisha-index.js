@@ -216,7 +216,7 @@ $(function () {
             href = $(this).attr("href"),
             addMenuTab = true;
 
-        if (dataUrl.indexOf("HotelManage") != -1) {
+        if (dataUrl.indexOf("HotelManage") != -1 || dataUrl.indexOf("main") != -1) {
             $(document.getElementById("addbtn")).css("display", "inline");
         }
         else {
@@ -370,7 +370,7 @@ $(function () {
     $('.menuTabs').on('click', '.menuTab', function activeTab() {
         if (!$(this).hasClass('active')) {
             var currentId = $(this).data('id');
-            if (currentId.indexOf("HotelManage") != -1) {
+            if (currentId.indexOf("HotelManage") != -1 || currentId.indexOf("main") != -1) {
                 $(document.getElementById("addbtn")).css("display", "inline");
             }
             else {

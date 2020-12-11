@@ -60,12 +60,12 @@ namespace YiSha.Business.SystemManage
         /// 获取所有的数据字典
         /// </summary>
         /// <returns></returns>
-        public async Task<TData<List<DataDictInfo>>> GetDataDictList()
+        public async Task<TData<List<DailyBaseDataInfo>>> GetDataDictList()
         {
-            TData<List<DataDictInfo>> obj = new TData<List<DataDictInfo>>();
+            TData<List<DailyBaseDataInfo>> obj = new TData<List<DailyBaseDataInfo>>();
             List<DataDictEntity> dataDictList = await dataDictCache.GetList();
             List<DataDictDetailEntity> dataDictDetailList = await dataDictDetailCache.GetList();
-            List<DataDictInfo> dataDictInfoList = new List<DataDictInfo>();
+            List<DailyBaseDataInfo> dataDictInfoList = new List<DailyBaseDataInfo>();
             foreach (DataDictEntity dataDict in dataDictList)
             {
                 List<DataDictDetailInfo> detailList = dataDictDetailList.Where(p => p.DictType == dataDict.DictType).OrderBy(p => p.DictSort).Select(p => new DataDictDetailInfo
@@ -77,7 +77,7 @@ namespace YiSha.Business.SystemManage
                     DictStatus = p.DictStatus,
                     Remark = p.Remark
                 }).ToList();
-                dataDictInfoList.Add(new DataDictInfo
+                dataDictInfoList.Add(new DailyBaseDataInfo
                 {
                     DictType = dataDict.DictType,
                     Detail = detailList

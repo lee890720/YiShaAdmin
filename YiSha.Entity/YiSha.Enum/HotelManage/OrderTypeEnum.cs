@@ -46,6 +46,16 @@ namespace YiSha.Enum.HotelManage
         Check2 = 1,
     }
 
+    public enum CheckTypeEnum2
+    {
+
+        [Description("未完成")]
+        Check1 = 0,
+
+        [Description("已完成")]
+        Check2 = 1,
+    }
+
     public enum SatisfactionTypeEnum
     {
         [Description("未评价")]
