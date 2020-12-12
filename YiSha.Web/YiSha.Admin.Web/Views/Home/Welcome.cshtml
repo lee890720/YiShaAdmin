@@ -13,6 +13,9 @@
                     <h5>待办事务</h5>
                     <div class="ibox-tools">
                         <div class="ibox-tools">
+                            <a><i class="fa fa-chevron-left"></i></a>
+                            <a id="startDate" class="collapse-link"></a>
+                            <a><i class="fa fa-chevron-right"></i></a>
                             <a id="btnAdd" class="collapse-link" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
                             <a id="btnEdit" class="collapse-link" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
                             <a id="btnDelete" class="collapse-link" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>
@@ -34,7 +37,8 @@
                 <div class="ibox-title">
                     <h5>今日住宿</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link" onclick="exportForm()"><i class="fa fa-download"></i> 导出</a>
+                        <a class="collapse-link" onclick="showOrderIndex()"><i class="fa fa-plus"></i>新增</a>
+                        <a class="collapse-link" onclick="exportForm2()"><i class="fa fa-download"></i> 导出</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -52,7 +56,8 @@
                 <div class="ibox-title">
                     <h5>今日销售</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link" onclick="exportForm2()"><i class="fa fa-download"></i> 导出</a>
+                        <a class="collapse-link" onclick="showSaleIndex()"><i class="fa fa-plus"></i>新增</a>
+                        <a class="collapse-link" onclick="exportForm3()"><i class="fa fa-download"></i> 导出</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -68,6 +73,19 @@
 <script type="text/javascript">
     var _branchId = ys.getCookie("BranchId");
     var vStartDate = moment().format("YYYY-MM-DD");
+    laydate.render({
+        elem: '#startDate',
+        format: 'yyyy-MM-dd',
+        value: vStartDate,
+        done: function (value, date, endDate) {
+            // 回调函数
+            //$("#endDate").focus();
+                searchGrid();
+                searchGrid2();
+                searchGrid3();
+        }
+    });
+
     $(function () {
         initGrid();
         initGrid2();
@@ -91,7 +109,7 @@
                     }
                 },
                 {
-                    field: 'BaseModifyTime', title: '修改时间', visible: false, formatter: function (value, row, index) {
+                    field: 'BaseModifyTime', title: '修改时间',  formatter: function (value, row, index) {
                         return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
                     }
                 },
@@ -136,7 +154,6 @@
                             text: "已完成"
                         }]
                     }
-
                 },
                 { field: 'StewardName', title: '负责人' },
                 { field: 'BranchName', title: '门店' },
@@ -148,6 +165,7 @@
                 var queryString = $('#searchDiv').getWebControls(pagination);
                 queryString.BranchId = _branchId;
                 queryString.IsFinish = 0;
+                queryString.StartDate = $("#startDate").text();
                 return queryString;
             }
         });
@@ -230,31 +248,36 @@
                     }
 
                 },
-
                 {
                     field: 'IsFinish',
-                    title: '预审',
+                    title: '门店预审',
                     align: 'center',
-                    formatter: function (value, row, index) {
-                        var actions = [];
-                        if(row.IsFinish==0)
-                            actions.push('<a href="#" style="color:red">未审核</a>');
-                        else if (row.IsFinish == 1)
-                            actions.push('<a href="#" style="color:black">已审核</a>');
-                        return actions.join('');
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
                     }
                 },
                 {
                     field: 'IsFinance',
                     title: '财务审核',
                     align: 'center',
-                    formatter: function (value, row, index) {
-                        var actions = [];
-                        if (row.IsFinance == 0)
-                            actions.push('<a href="#" style="color:red">未审核</a>');
-                        else if (row.IsFinance == 1)
-                            actions.push('<a href="#" style="color:black">已审核</a>');
-                        return actions.join('');
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
                     }
                 },
                 { field: 'Remark', title: '备注' },
@@ -277,7 +300,7 @@
                 var pagination = $('#gridTable2').ysTable('getPagination', params);
                 var queryString = $('#searchDiv').getWebControls(pagination);
                 queryString.BranchId = _branchId;
-                queryString.StartDate = vStartDate;
+                queryString.StartDate = $("#startDate").text();
                 return queryString;
             }
         });
@@ -287,6 +310,7 @@
         var queryUrl = '@Url.Content("~/HotelManage/Sale/GetPageListJsonForDay")';
         $('#gridTable3').ysTable({
             url: queryUrl,
+            onEditableSave: onEditableSave3,
             showColumns: false,                  // 是否显示所有的列（选择显示的列）
             showRefresh: false,                  // 是否显示刷新按钮
             showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
@@ -317,28 +341,34 @@
                 { field: 'Commission', title: '管家提成' },
                 {
                     field: 'IsFinish',
-                    title: '预审',
+                    title: '门店预审',
                     align: 'center',
-                    formatter: function (value, row, index) {
-                        var actions = [];
-                        if (row.IsFinish == 0)
-                            actions.push('<a href="#" style="color:red">未审核</a>');
-                        else if (row.IsFinish == 1)
-                            actions.push('<a href="#" style="color:black">已审核</a>');
-                        return actions.join('');
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
                     }
                 },
                 {
                     field: 'IsFinance',
                     title: '财务审核',
                     align: 'center',
-                    formatter: function (value, row, index) {
-                        var actions = [];
-                        if (row.IsFinance == 0)
-                            actions.push('<a href="#" style="color:red">未审核</a>');
-                        else if (row.IsFinance == 1)
-                            actions.push('<a href="#" style="color:black">已审核</a>');
-                        return actions.join('');
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
                     }
                 },
                 { field: 'Remark', title: '备注' },
@@ -361,7 +391,7 @@
                 var pagination = $('#gridTable3').ysTable('getPagination', params);
                 var queryString = $('#searchDiv').getWebControls(pagination);
                 queryString.BranchId = _branchId;
-                queryString.StartDate = vStartDate;
+                queryString.StartDate = $("#startDate").text();
                 return queryString;
             }
         });
@@ -419,6 +449,25 @@
         });
     }
 
+    function onEditableSave3(field, row, oldValue, $el) {
+        delete row.BaseCreatorId;
+        delete row.BaseModifierId;
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Sale/SaveFormJson")',
+            type: 'post',
+            data: row,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    searchGrid3()
+                    ys.msgSuccess(obj.Message);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+
     function showSaveForm(bAdd) {
         var id = 0;
         if (!bAdd) {
@@ -462,16 +511,26 @@
         }
     }
 
-    function exportForm() {
+    function exportForm2() {
     var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson2")';
     var postData = $("#searchDiv").getWebControls();
     ys.exportExcel(url, postData);
 
     }
-    function exportForm2() {
+    function exportForm3() {
     var url2 = '@Url.Content("~/HotelManage/Sale/ExportSaleJson2")';
     var postData2 = $("#searchDiv").getWebControls();
     ys.exportExcel(url2, postData2);
 
+    }
+
+    function showOrderIndex() {
+        var url = '@Url.Content("~/HotelManage/Order/CalendarIndex")';
+        createMenuItem(url, "住宿订单");
+    }
+
+    function showSaleIndex() {
+        var url = '@Url.Content("~/HotelManage/Sale/CalendarIndex")';
+        createMenuItem(url, "销售订单");
     }
 </script>
