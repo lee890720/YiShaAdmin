@@ -29,32 +29,35 @@ namespace YiSha.Service.HotelManage
     public class ScalpService :  RepositoryFactory
     {
         #region 获取数据
+
         public async Task<List<ScalpEntity>> GetList(ScalpListParam param)
         {
-            var expression = ListFilter(param);
-            var list = await this.BaseRepository().FindList(expression);
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<ScalpEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
         public async Task<List<ScalpEntity>> GetPageList(ScalpListParam param, Pagination pagination)
         {
-            var expression = ListFilter(param);
-            var list= await this.BaseRepository().FindList(expression, pagination);
+            var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<ScalpEntity>(strSql.ToString(), filter.ToArray(), pagination);
             return list.ToList();
         }
 
-        public async Task<List<ScalpEntity>> GetList2(ScalpListParam param)
+        public async Task<List<ScalpEntity>> GetListForDay(ScalpListParam param)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
             var list = await this.BaseRepository().FindList<ScalpEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
         }
 
-        public async Task<List<ScalpEntity>> GetPageList2(ScalpListParam param, Pagination pagination)
+        public async Task<List<ScalpEntity>> GetPageListForDay(ScalpListParam param, Pagination pagination)
         {
             var strSql = new StringBuilder();
-            List<DbParameter> filter = ListFilter2(param, strSql);
+            List<DbParameter> filter = ListFilterForDay(param, strSql);
             var list = await this.BaseRepository().FindList<ScalpEntity>(strSql.ToString(), filter.ToArray(), pagination);
             return list.ToList();
         }
@@ -83,7 +86,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task CheckForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach(var i in list)
             {
@@ -94,7 +97,7 @@ namespace YiSha.Service.HotelManage
 
         public async Task RepealForm(string ids)
         {
-            var expression = ListFilter3(ids);
+            var expression = ListFilterForCheck(ids);
             var list = await this.BaseRepository().FindList(expression);
             foreach (var i in list)
             {
@@ -111,16 +114,8 @@ namespace YiSha.Service.HotelManage
         #endregion
 
         #region 私有方法
-        private Expression<Func<ScalpEntity, bool>> ListFilter(ScalpListParam param)
-        {
-            var expression = LinqExtensions.True<ScalpEntity>();
-            if (param != null)
-            {
-            }
-            return expression;
-        }
 
-        private List<DbParameter> ListFilter2(ScalpListParam param, StringBuilder strSql)
+        private List<DbParameter> ListFilter(ScalpListParam param, StringBuilder strSql)
         {
             strSql.Append(@"SELECT  a.Id,
                                     a.BaseIsDelete,
@@ -201,7 +196,82 @@ namespace YiSha.Service.HotelManage
             return parameter;
         }
 
-        private Expression<Func<ScalpEntity, bool>> ListFilter3(string param)
+        private List<DbParameter> ListFilterForDay(ScalpListParam param, StringBuilder strSql)
+        {
+            strSql.Append(@"SELECT  a.Id,
+                                    a.BaseIsDelete,
+                                    a.BaseCreateTime,
+                                    a.BaseCreatorId,
+                                    a.BaseModifyTime,
+                                    a.BaseModifierId,
+                                    a.BaseVersion,
+                                    a.OrderName,
+                                    a.OrderNumber,
+                                    a.HouseNumber,
+                                    a.StartDate,
+                                    a.EndDate,
+                                    a.Commission,
+                                    a.TotalPrice,
+                                    a.RealPrice,
+                                    a.IsFinish,
+                                    a.IsFinance,
+                                    a.Remark,
+                                    a.BranchId,
+                                    a.ChannelId,
+                                    b.BranchName,
+                                    c.ChannelName,
+                                    c.ChannelColor,
+                                    g.RealName AS CreateName,
+                                    h.RealName AS ModifierName
+                            FROM    HtlScalp a
+                                    LEFT JOIN HtlBranch b ON a.BranchId = b.Id
+                                    LEFT JOIN HtlChannel c ON a.ChannelId=c.Id
+                                    LEFT JOIN SysUser g ON a.BaseCreatorId=g.Id
+                                    LEFT JOIN SysUser h ON a.BaseModifierId=h.Id
+                            WHERE   1 = 1");
+            var parameter = new List<DbParameter>();
+            if (param != null)
+            {
+                if (!string.IsNullOrEmpty(param.Id.ToString()))
+                {
+                    strSql.Append(" AND a.Id = @Id");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@Id", param.Id));
+                }
+                if (!string.IsNullOrEmpty(param.OrderName))
+                {
+                    strSql.Append(" AND a.OrderName like @OrderName");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderName", "%" + param.OrderName + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.OrderNumber))
+                {
+                    strSql.Append(" AND a.OrderNumber like @OrderNumber");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@OrderNumber", "%" + param.OrderNumber + "%"));
+                }
+                if (!string.IsNullOrEmpty(param.BranchId.ToString()))
+                {
+                    strSql.Append(" AND a.BranchId = @BranchId");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@BranchId", param.BranchId));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinish.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinish = @IsFinish");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinish", param.IsFinish));
+                }
+                if (!string.IsNullOrEmpty(param.IsFinance.ToString()))
+                {
+                    strSql.Append(" AND a.IsFinance = @IsFinance");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@IsFinance", param.IsFinance));
+                }
+                if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
+                {
+                    strSql.Append(" AND a.StartDate = @StartDate");
+                    parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
+                }
+            }
+            return parameter;
+        }
+
+        private Expression<Func<ScalpEntity, bool>> ListFilterForCheck(string param)
         {
             var expression = LinqExtensions.True<ScalpEntity>();
             if (param != null)

@@ -161,7 +161,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<List<SaleEntity>> SaleObj = await saleBLL.GetList(param);
             if (SaleObj.Tag == 1)
             {
-                string file = new ExcelHelper<SaleEntity>().ExportToExcel("外销列表.xls", "外销列表",SaleObj.Data,new string[] { "Id", "CreateDate","SaleName","Phone","IDNumber", "ProductName", "SalePrice","PurchasePrice","Profit","Equity","Commission","StewardName","BranchName","CreateName","ModifierName"});
+                string file = new ExcelHelper<SaleEntity>().ExportToExcel("销售列表.xls", "销售列表",SaleObj.Data,new string[] { "Id", "CreateDate","SaleName","Phone","IDNumber", "ProductName", "SalePrice","PurchasePrice","Profit","Equity","Commission","StewardName","BranchName","CreateName","ModifierName"});
                 obj.Data = file;
                 obj.Tag = 1;
             }
@@ -175,7 +175,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<List<SaleEntity>> SaleObj = await saleBLL.GetListForDay(param);
             if (SaleObj.Tag == 1)
             {
-                string file = new ExcelHelper<SaleEntity>().ExportToExcel("外销列表.xls", "外销列表", SaleObj.Data, new string[] { "Id", "CreateDate", "SaleName", "Phone", "IDNumber", "ProductName", "SalePrice", "PurchasePrice", "Profit", "Equity", "Commission", "StewardName", "BranchName", "CreateName", "ModifierName" });
+                string file = new ExcelHelper<SaleEntity>().ExportToExcel("销售列表.xls", "销售列表", SaleObj.Data, new string[] { "Id", "CreateDate", "SaleName", "Phone", "IDNumber", "ProductName", "SalePrice", "PurchasePrice", "Profit", "Equity", "Commission", "StewardName", "BranchName", "CreateName", "ModifierName" });
                 obj.Data = file;
                 obj.Tag = 1;
             }

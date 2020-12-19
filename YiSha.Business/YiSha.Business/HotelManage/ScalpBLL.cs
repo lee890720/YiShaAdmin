@@ -39,19 +39,19 @@ namespace YiSha.Business.HotelManage
             return obj;
         }
 
-        public async Task<TData<List<ScalpEntity>>> GetList2(ScalpListParam param)
+        public async Task<TData<List<ScalpEntity>>> GetListForDay(ScalpListParam param)
         {
             TData<List<ScalpEntity>> obj = new TData<List<ScalpEntity>>();
-            obj.Data = await scalpService.GetList2(param);
+            obj.Data = await scalpService.GetListForDay(param);
             obj.Total = obj.Data.Count;
             obj.Tag = 1;
             return obj;
         }
 
-        public async Task<TData<List<ScalpEntity>>> GetPageList2(ScalpListParam param, Pagination pagination)
+        public async Task<TData<List<ScalpEntity>>> GetPageListForDay(ScalpListParam param, Pagination pagination)
         {
             TData<List<ScalpEntity>> obj = new TData<List<ScalpEntity>>();
-            obj.Data = await scalpService.GetPageList2(param, pagination);
+            obj.Data = await scalpService.GetPageListForDay(param, pagination);
             obj.Total = pagination.TotalCount;
             obj.Tag = 1;
             return obj;

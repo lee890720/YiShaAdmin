@@ -60,20 +60,14 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         public async Task<ActionResult> GetPageListJson(ScalpListParam param, Pagination pagination)
         {
             TData<List<ScalpEntity>> obj = await scalpBLL.GetPageList(param, pagination);
+
             return Json(obj);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetListJson2(ScalpListParam param)
+        public async Task<ActionResult> GetPageListJsonForDay(ScalpListParam param, Pagination pagination)
         {
-            TData<List<ScalpEntity>> obj = await scalpBLL.GetList2(param);
-            return Json(obj);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetPageListJson2(ScalpListParam param, Pagination pagination)
-        {
-            TData<List<ScalpEntity>> obj = await scalpBLL.GetPageList2(param, pagination);
+            TData<List<ScalpEntity>> obj = await scalpBLL.GetPageListForDay(param, pagination);
 
             return Json(obj);
         }
@@ -120,10 +114,24 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
         public async Task<IActionResult> ExportScalpJson(ScalpListParam param)
         {
             TData<string> obj = new TData<string>();
-            TData<List<ScalpEntity>> scalpObj = await scalpBLL.GetList2(param);
+            TData<List<ScalpEntity>> scalpObj = await scalpBLL.GetList(param);
             if (scalpObj.Tag == 1)
             {
                 string file = new ExcelHelper<ScalpEntity>().ExportToExcel("推广列表.xls", "推广列表",scalpObj.Data,new string[] { "Id","OrderName","OrderNumber","StartDate","EndDate", "Commission", "TotalPrice","RealPrice","BranchName","CreateName","ModifierName" });
+                obj.Data = file;
+                obj.Tag = 1;
+            }
+            return Json(obj);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExportScalpJson2(ScalpListParam param)
+        {
+            TData<string> obj = new TData<string>();
+            TData<List<ScalpEntity>> scalpObj = await scalpBLL.GetListForDay(param);
+            if (scalpObj.Tag == 1)
+            {
+                string file = new ExcelHelper<ScalpEntity>().ExportToExcel("推广列表.xls", "推广列表", scalpObj.Data, new string[] { "Id", "OrderName", "OrderNumber", "StartDate", "EndDate", "Commission", "TotalPrice", "RealPrice", "BranchName", "CreateName", "ModifierName" });
                 obj.Data = file;
                 obj.Tag = 1;
             }

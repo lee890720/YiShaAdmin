@@ -219,9 +219,6 @@
         var queryUrl = '@Url.Content("~/HotelManage/Order/GetPageListJsonForDay")';
         $('#gridTable').ysTable({
             url: queryUrl,
-            pagination:false,
-            showFooter: false,
-            pageSize: 50,
             columns: [
                 { field: 'Id', title: 'Id', visible: false },
                 {

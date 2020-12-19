@@ -172,7 +172,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<List<OrderEntity>> orderObj = await orderBLL.GetList(param);
             if (orderObj.Tag == 1)
             {
-                string file = new ExcelHelper<OrderEntity>().ExportToExcel("订单列表.xls", "订单列表",orderObj.Data,new string[] { "Id","OrderName","Nickname","Phone","OrderNumber","HouseType","HouseNumber","StartDate","EndDate","UnitPrice","TotalPrice","HouseCount","StewardName","ChannelName","BranchName","CreateName","ModifierName" ,"State"});
+                string file = new ExcelHelper<OrderEntity>().ExportToExcel("住宿列表.xls", "住宿列表", orderObj.Data,new string[] { "Id","OrderName","Nickname","Phone","OrderNumber","HouseType","HouseNumber","StartDate","EndDate","UnitPrice","TotalPrice","HouseCount","StewardName","ChannelName","BranchName","CreateName","ModifierName" ,"State"});
                 obj.Data = file;
                 obj.Tag = 1;
             }
@@ -186,7 +186,7 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
             TData<List<OrderEntity>> orderObj = await orderBLL.GetListForDay(param);
             if (orderObj.Tag == 1)
             {
-                string file = new ExcelHelper<OrderEntity>().ExportToExcel("订单列表.xls", "订单列表", orderObj.Data, new string[] { "Id", "OrderName", "Nickname", "Phone", "OrderNumber", "HouseType", "HouseNumber", "StartDate", "EndDate", "UnitPrice", "TotalPrice", "HouseCount", "StewardName", "ChannelName", "BranchName", "CreateName", "ModifierName", "State" });
+                string file = new ExcelHelper<OrderEntity>().ExportToExcel("住宿列表.xls", "住宿列表", orderObj.Data, new string[] { "Id", "OrderName", "Nickname", "Phone", "OrderNumber", "HouseType", "HouseNumber", "StartDate", "EndDate", "UnitPrice", "TotalPrice", "HouseCount", "StewardName", "ChannelName", "BranchName", "CreateName", "ModifierName", "State" });
                 obj.Data = file;
                 obj.Tag = 1;
             }

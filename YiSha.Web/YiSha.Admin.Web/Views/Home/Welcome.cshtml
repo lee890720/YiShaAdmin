@@ -68,6 +68,25 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>今日推广</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link" onclick="showScalpIndex()"><i class="fa fa-plus"></i>新增</a>
+                        <a class="collapse-link" onclick="exportForm4()"><i class="fa fa-download"></i> 导出</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="gridTable4" class="table select-table table-striped"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="~/lib/moment/moment.min.js"></script>
 <script type="text/javascript">
@@ -83,6 +102,7 @@
                 searchGrid();
                 searchGrid2();
                 searchGrid3();
+                searchGrid4();
         }
     });
 
@@ -90,6 +110,7 @@
         initGrid();
         initGrid2();
         initGrid3();
+        initGrid4();
     });
 
     function initGrid() {
@@ -176,12 +197,12 @@
         $('#gridTable2').ysTable({
             url: queryUrl,
             onEditableSave: onEditableSave2,
+            showFooter: true,
             showColumns: false,                  // 是否显示所有的列（选择显示的列）
             showRefresh: false,                  // 是否显示刷新按钮
             showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
-            pagination:false,
-            showFooter: false,
-            pageSize: 50,
+            //pagination:false,
+            //pageSize: 50,
             columns: [
                 { field: 'Id', title: 'Id', visible: false },
                 {
@@ -214,14 +235,14 @@
                     field: 'UnitPrice',
                     title: '房价',
                     formatter: function (value, row, index) {
-                        return value.toFixed(2);
+                        return value.toFixed(0);
                     },
                     footerFormatter: function (value) {
                         var sumAmount = 0;
                         for (var i in value) {
                             sumAmount += parseFloat(value[i].UnitPrice);
                         }
-                        return "￥" + sumAmount.toFixed(2);
+                        return sumAmount.toFixed(0);
                     }
                 },
                 { field: 'HouseCount', title: '总间夜数' },
@@ -291,7 +312,7 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndex(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndexForOrder(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
                         return actions.join('');
                     }
                 }
@@ -311,6 +332,7 @@
         $('#gridTable3').ysTable({
             url: queryUrl,
             onEditableSave: onEditableSave3,
+            showFooter: true,
             showColumns: false,                  // 是否显示所有的列（选择显示的列）
             showRefresh: false,                  // 是否显示刷新按钮
             showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
@@ -334,11 +356,61 @@
                 { field: 'SaleName', title: '客人名称' },
                 { field: 'Phone', title: '手机号' },
                 { field: 'IDNumber', title: '身份证号' },
-                { field: 'SalePrice', title: '销售价' },
-                { field: 'PurchasePrice', title: '采购价' },
-                { field: 'Profit', title: '利润' },
-                { field: 'Equity', title: '净利润' },
-                { field: 'Commission', title: '管家提成' },
+                {
+                    field: 'SalePrice',
+                    title: '销售价',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].SalePrice);
+                        }
+                        return sumAmount.toFixed(0);
+                    }
+                },
+                {
+                    field: 'PurchasePrice',
+                    title: '采购价',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].PurchasePrice);
+                        }
+                        return sumAmount.toFixed(0);
+                    }
+                },
+                {
+                    field: 'Profit',
+                    title: '利润',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Profit);
+                        }
+                        return sumAmount.toFixed(0);
+                    }
+                },
+                {
+                    field: 'Equity',
+                    title: '净利润',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Equity);
+                        }
+                        return sumAmount.toFixed(0);
+                    }
+                },
+                {
+                    field: 'Commission',
+                    title: '管家提成',
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Commission);
+                        }
+                        return sumAmount.toFixed(0);
+                    }
+                },
                 {
                     field: 'IsFinish',
                     title: '门店预审',
@@ -382,7 +454,7 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndex(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="showProceedsIndexForSale(\'' + row.Id + '\')"><i class="fa fa-edit"></i>明细</a>');
                         return actions.join('');
                     }
                 }
@@ -397,6 +469,129 @@
         });
     }
 
+    function initGrid4() {
+        var queryUrl = '@Url.Content("~/HotelManage/Scalp/GetPageListJsonForDay")';
+        $('#gridTable4').ysTable({
+            url: queryUrl,
+            onEditableSave: onEditableSave4,
+            showFooter: true,
+            showColumns: false,                  // 是否显示所有的列（选择显示的列）
+            showRefresh: false,                  // 是否显示刷新按钮
+            showToggle: false,                  // 是否显示详细视图和列表视图的切换按钮
+            columns: [
+                { field: 'Id', title: 'Id', visible: false },
+                {
+                    field: 'BaseCreateTime', title: '创建时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'BaseModifyTime', title: '修改时间', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                { field: 'OrderName', title: '姓名' },
+                { field: 'OrderNumber', title: '订单号' },
+                {
+                    field: 'StartDate', title: '入住日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'EndDate', title: '离店日期', formatter: function (value, row, index) {
+                        return ys.formatDate(value, "yyyy-MM-dd");
+                    }
+                },
+                {
+                    field: 'Commission',
+                    title: '佣金',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].Commission);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    field: 'TotalPrice',
+                    title: '支付价',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].TotalPrice);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    field: 'RealPrice',
+                    title: '底价',
+                    formatter: function (value, row, index) {
+                        return value.toFixed(2);
+                    },
+                    footerFormatter: function (value) {
+                        var sumAmount = 0;
+                        for (var i in value) {
+                            sumAmount += parseFloat(value[i].RealPrice);
+                        }
+                        return "￥" + sumAmount.toFixed(2);
+                    }
+                },
+                {
+                    field: 'IsFinish',
+                    title: '门店预审',
+                    align: 'center',
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
+                    }
+                },
+                {
+                    field: 'IsFinance',
+                    title: '财务审核',
+                    align: 'center',
+                    editable: {
+                        type: 'select',
+                        emptytext: "",
+                        source: [{
+                            value: 0,
+                            text: "未审核"
+                        }, {
+                            value: 1,
+                            text: "已审核"
+                        }]
+                    }
+                },
+                { field: 'Remark', title: '备注' },
+                { field: 'BranchName', title: '门店' },
+                { field: 'CreateName', title: '创建人' },
+                { field: 'ModifierName', title: '修改人' }
+            ],
+            queryParams: function (params) {
+                var pagination = $('#gridTable4').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                queryString.BranchId = _branchId;
+                queryString.StartDate = $("#startDate").text();
+                return queryString;
+            }
+        });
+    }
+
+
 
     function searchGrid() {
         $('#gridTable').ysTable('search');
@@ -408,6 +603,10 @@
 
     function searchGrid3() {
         $('#gridTable3').ysTable('search');
+    }
+
+    function searchGrid4() {
+        $('#gridTable4').ysTable('search');
     }
 
     function onEditableSave(field, row, oldValue, $el) {
@@ -468,6 +667,26 @@
         });
     }
 
+    function onEditableSave4(field, row, oldValue, $el) {
+        delete row.BaseCreatorId;
+        delete row.BaseModifierId;
+        ys.ajax({
+            url: '@Url.Content("~/HotelManage/Scalp/SaveFormJson")',
+            type: 'post',
+            data: row,
+            success: function (obj) {
+                if (obj.Tag == 1) {
+                    searchGrid4()
+                    ys.msgSuccess(obj.Message);
+                }
+                else {
+                    ys.msgError(obj.Message);
+                }
+            }
+        });
+    }
+
+
     function showSaveForm(bAdd) {
         var id = 0;
         if (!bAdd) {
@@ -512,16 +731,28 @@
     }
 
     function exportForm2() {
-    var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson2")';
-    var postData = $("#searchDiv").getWebControls();
-    ys.exportExcel(url, postData);
+        var url = '@Url.Content("~/HotelManage/Order/ExportOrderJson2")';
+        var postData = $("#searchDiv").getWebControls();
+        postData.BranchId = _branchId;
+        postData.StartDate = $("#startDate").text();
+        ys.exportExcel(url, postData);
 
     }
-    function exportForm3() {
-    var url2 = '@Url.Content("~/HotelManage/Sale/ExportSaleJson2")';
-    var postData2 = $("#searchDiv").getWebControls();
-    ys.exportExcel(url2, postData2);
 
+    function exportForm3() {
+        var url = '@Url.Content("~/HotelManage/Sale/ExportSaleJson2")';
+        var postData = $("#searchDiv").getWebControls();
+        postData.BranchId = _branchId;
+        postData.StartDate = $("#startDate").text();
+        ys.exportExcel(url, postData);
+    }
+
+    function exportForm4() {
+        var url = '@Url.Content("~/HotelManage/Scalp/ExportScalpJson2")';
+        var postData = $("#searchDiv").getWebControls();
+        postData.BranchId = _branchId;
+        postData.StartDate = $("#startDate").text();
+        ys.exportExcel(url, postData);
     }
 
     function showOrderIndex() {
@@ -532,5 +763,34 @@
     function showSaleIndex() {
         var url = '@Url.Content("~/HotelManage/Sale/CalendarIndex")';
         createMenuItem(url, "销售订单");
+    }
+
+    function showScalpIndex() {
+        var url = '@Url.Content("~/HotelManage/Scalp/ScalpClrIndex")';
+        createMenuItem(url, "推广订单");
+    }
+
+    function showProceedsIndexForOrder(id) {
+        ys.openDialog({
+            title: "收款明细",
+            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsIndex")' + '?orderId=' + id,
+            btn: ['关闭'],
+            closeBtn: 0,
+            callback: function (index, layero) {
+                layer.close(index);
+            }
+        });
+    }
+
+    function showProceedsIndexForSale(id) {
+        ys.openDialog({
+            title: "收款明细",
+            content: '@Url.Content("~/HotelManage/Proceeds/ProceedsIndex")' + '?saleId=' + id,
+            btn: ['关闭'],
+            closeBtn: 0,
+            callback: function (index, layero) {
+                layer.close(index);
+            }
+        });
     }
 </script>

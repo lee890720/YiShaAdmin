@@ -144,12 +144,12 @@ namespace YiSha.Service.HotelManage
                 }
                 if (!string.IsNullOrEmpty(param.StartDate.ParseToString()))
                 {
-                    strSql.Append(" AND a.ExecuteDate >= @StartDate");
+                    strSql.Append(" AND (a.ExecuteDate >= @StartDate OR a.IsFinish=0)");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@StartDate", param.StartDate));
                 }
                 if (!string.IsNullOrEmpty(param.EndDate.ParseToString()))
                 {
-                    strSql.Append(" AND a.ExecuteDate <= @EndDate");
+                    strSql.Append(" AND a.ExecuteDate <= @EndDate OR a.IsFinish=0");
                     parameter.Add(DbParameterExtension.CreateDbParameter("@EndDate", param.EndDate));
                 }
                 if (!string.IsNullOrEmpty(param.ExecuteDate.ParseToString()))
