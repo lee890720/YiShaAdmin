@@ -5,6 +5,7 @@
     <AssemblyVersion>3.1.0.0</AssemblyVersion>
     <FileVersion>3.1.0.0</FileVersion>
     <Copyright>YiShaAdmin</Copyright>
+    <UserSecretsId>1302fc3e-296c-432c-91e2-15488081cef6</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

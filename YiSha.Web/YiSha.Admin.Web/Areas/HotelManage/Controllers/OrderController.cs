@@ -61,10 +61,17 @@ namespace YiSha.Admin.Web.Areas.HotelManage.Controllers
 
         #region 获取数据
         [HttpGet]
-        //CalendarIndex
         public async Task<ActionResult> GetListJson(OrderListParam param)
         {
             TData<List<OrderEntity>> obj = await orderBLL.GetList(param);
+            return Json(obj);
+        }
+
+        [HttpGet]
+        //CalendarIndex
+        public async Task<ActionResult> GetListJsonForCal(OrderListParam param)
+        {
+            TData<List<OrderEntity>> obj = await orderBLL.GetListForCal(param);
             return Json(obj);
         }
 

@@ -11,6 +11,7 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <AllowUntrustedCertificate>True</AllowUntrustedCertificate>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <UserSecretsId>041f5fdb-216e-4fa1-8871-6faff28d96c0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

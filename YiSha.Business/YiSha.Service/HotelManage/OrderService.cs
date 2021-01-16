@@ -32,6 +32,14 @@ namespace YiSha.Service.HotelManage
         public async Task<List<OrderEntity>> GetList(OrderListParam param)
         {
             var strSql = new StringBuilder();
+            List<DbParameter> filter = ListFilter(param, strSql);
+            var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
+            return list.ToList();
+        }
+
+        public async Task<List<OrderEntity>> GetListForCal(OrderListParam param)
+        {
+            var strSql = new StringBuilder();
             List<DbParameter> filter = ListFilterForCal(param, strSql);
             var list = await this.BaseRepository().FindList<OrderEntity>(strSql.ToString(), filter.ToArray());
             return list.ToList();
