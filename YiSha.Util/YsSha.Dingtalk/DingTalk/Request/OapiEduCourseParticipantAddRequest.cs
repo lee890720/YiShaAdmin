@@ -37,7 +37,7 @@ namespace DingTalk.Api.Request
         public Nullable<long> ParticipantType { get; set; }
 
         /// <summary>
-        /// 参与方角色。student：学生、teacher：老师（注意：授课老师只支持通过课程创建和修改接口，进行添加和修改）
+        /// 参与方角色。student：学生、guardian: 监护人、teacher：老师（注意：授课老师只支持通过课程创建和修改接口，进行添加和修改）
         /// </summary>
         public string Role { get; set; }
 

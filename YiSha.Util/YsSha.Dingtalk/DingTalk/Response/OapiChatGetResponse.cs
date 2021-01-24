@@ -104,6 +104,12 @@ public class ChatInfoDomain : TopObject
 	        public long ShowHistoryType { get; set; }
 	
 	        /// <summary>
+	        /// 群状态 1-正常 2-已解散
+	        /// </summary>
+	        [XmlElement("status")]
+	        public long Status { get; set; }
+	
+	        /// <summary>
 	        /// useridlist
 	        /// </summary>
 	        [XmlArray("useridlist")]

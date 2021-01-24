@@ -90,6 +90,8 @@ namespace DingTalk.Api.Request
             RequestValidator.ValidateRequired("name", this.Name);
             RequestValidator.ValidateMaxLength("name", this.Name, 64);
             RequestValidator.ValidateRequired("op_userid", this.OpUserid);
+            RequestValidator.ValidateRequired("teacher_corpid", this.TeacherCorpid);
+            RequestValidator.ValidateRequired("teacher_userid", this.TeacherUserid);
         }
 
         #endregion

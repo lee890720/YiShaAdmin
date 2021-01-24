@@ -36,6 +36,12 @@ namespace DingTalk.Api.Response
 public class DeptDauSummaryVoDomain : TopObject
 {
 	        /// <summary>
+	        /// 钉钉app端登录人数
+	        /// </summary>
+	        [XmlElement("app_active_users")]
+	        public long AppActiveUsers { get; set; }
+	
+	        /// <summary>
 	        /// 通讯录人数
 	        /// </summary>
 	        [XmlElement("contacts_number")]
@@ -58,6 +64,12 @@ public class DeptDauSummaryVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("dept_name")]
 	        public string DeptName { get; set; }
+	
+	        /// <summary>
+	        /// 钉钉pc端登录人数
+	        /// </summary>
+	        [XmlElement("pc_active_users")]
+	        public long PcActiveUsers { get; set; }
 }
 
 	/// <summary>

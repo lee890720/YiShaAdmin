@@ -21,6 +21,11 @@ namespace DingTalk.Api.Request
         /// </summary>
         public string DataIdList { get; set; }
 
+        /// <summary>
+        /// 自建应用时传入定制服务商ID
+        /// </summary>
+        public string ProviderCorpid { get; set; }
+
         #region IDingTalkRequest Members
 
         public override string GetApiName()
@@ -38,6 +43,7 @@ namespace DingTalk.Api.Request
             TopDictionary parameters = new TopDictionary();
             parameters.Add("current_operator_userid", this.CurrentOperatorUserid);
             parameters.Add("data_id_list", this.DataIdList);
+            parameters.Add("provider_corpid", this.ProviderCorpid);
             if (this.otherParams != null)
             {
                 parameters.AddAll(this.otherParams);

@@ -46,6 +46,12 @@ public class TicketFieldDtoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("value")]
 	        public string Value { get; set; }
+	
+	        /// <summary>
+	        /// 附件类型
+	        /// </summary>
+	        [XmlElement("value_type")]
+	        public string ValueType { get; set; }
 }
 
 	/// <summary>

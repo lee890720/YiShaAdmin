@@ -42,13 +42,13 @@ namespace DingTalk.Api.Response
 public class OpenRoleDomain : TopObject
 {
 	        /// <summary>
-	        /// 标签id
+	        /// 标签ID
 	        /// </summary>
 	        [XmlElement("id")]
 	        public long Id { get; set; }
 	
 	        /// <summary>
-	        /// 标签名
+	        /// 标签名称
 	        /// </summary>
 	        [XmlElement("name")]
 	        public string Name { get; set; }
@@ -79,6 +79,12 @@ public class OpenIndustryEmpDomain : TopObject
 	        [XmlArray("roles")]
 	        [XmlArrayItem("open_role")]
 	        public List<OpenRoleDomain> Roles { get; set; }
+	
+	        /// <summary>
+	        /// unionId
+	        /// </summary>
+	        [XmlElement("unionid")]
+	        public string Unionid { get; set; }
 }
 
     }

@@ -54,10 +54,10 @@ public class CourseDomain : TopObject
 	        public string Code { get; set; }
 	
 	        /// <summary>
-	        /// 结束时间，Unix毫秒时间戳
+	        /// 课程结束时间
 	        /// </summary>
 	        [XmlElement("end_time")]
-	        public string EndTime { get; set; }
+	        public long EndTime { get; set; }
 	
 	        /// <summary>
 	        /// 课程介绍
@@ -72,10 +72,10 @@ public class CourseDomain : TopObject
 	        public string Name { get; set; }
 	
 	        /// <summary>
-	        /// 开始时间，Unix毫秒时间戳
+	        /// 课程开始时间
 	        /// </summary>
 	        [XmlElement("start_time")]
-	        public string StartTime { get; set; }
+	        public long StartTime { get; set; }
 	
 	        /// <summary>
 	        /// 老师的组织CorpId

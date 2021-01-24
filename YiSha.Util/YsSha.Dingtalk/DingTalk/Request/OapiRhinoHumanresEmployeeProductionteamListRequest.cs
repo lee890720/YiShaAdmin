@@ -54,6 +54,12 @@ namespace DingTalk.Api.Request
 public class QueryCorpEmployeeProductionTeamDtoDomain : TopObject
 {
 	        /// <summary>
+	        /// 是否包含未激活或者离职状态
+	        /// </summary>
+	        [XmlElement("include_inactive")]
+	        public Nullable<bool> IncludeInactive { get; set; }
+	
+	        /// <summary>
 	        /// 资产ID
 	        /// </summary>
 	        [XmlElement("tenant_id")]

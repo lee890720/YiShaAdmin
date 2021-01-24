@@ -61,6 +61,26 @@ public class CertdataDomain : TopObject
 }
 
 	/// <summary>
+/// OpenPracticalTaskDataDomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class OpenPracticalTaskDataDomain : TopObject
+{
+	        /// <summary>
+	        /// true表示完成，false表示未完成
+	        /// </summary>
+	        [XmlElement("finish")]
+	        public bool Finish { get; set; }
+	
+	        /// <summary>
+	        /// 实操任务code，sendCard表示发布打卡，sendImMsg表示发布消息
+	        /// </summary>
+	        [XmlElement("task_code")]
+	        public string TaskCode { get; set; }
+}
+
+	/// <summary>
 /// OpenQueryCertResponseDomain Data Structure.
 /// </summary>
 [Serializable]
@@ -79,6 +99,13 @@ public class OpenQueryCertResponseDomain : TopObject
 	        /// </summary>
 	        [XmlElement("current_cert_level")]
 	        public long CurrentCertLevel { get; set; }
+	
+	        /// <summary>
+	        /// 实操任务完成信息
+	        /// </summary>
+	        [XmlArray("practical_task_data")]
+	        [XmlArrayItem("open_practical_task_data")]
+	        public List<OpenPracticalTaskDataDomain> PracticalTaskData { get; set; }
 }
 
     }

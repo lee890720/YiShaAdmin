@@ -49,7 +49,7 @@ public class OapiBlackboardVoDomain : TopObject
 	        public string Title { get; set; }
 	
 	        /// <summary>
-	        /// 跳转URL
+	        /// 跳转URL。参数解释：{2}：公告来源；{4}：企业corpId；{5}：公告id
 	        /// </summary>
 	        [XmlElement("url")]
 	        public string Url { get; set; }

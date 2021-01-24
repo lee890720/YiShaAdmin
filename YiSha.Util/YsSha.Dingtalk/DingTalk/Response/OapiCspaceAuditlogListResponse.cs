@@ -72,6 +72,12 @@ public class AuditLogVODomain : TopObject
 	        public long GmtModified { get; set; }
 	
 	        /// <summary>
+	        /// 操作机器ip
+	        /// </summary>
+	        [XmlElement("ip_address")]
+	        public string IpAddress { get; set; }
+	
+	        /// <summary>
 	        /// 操作来源空间
 	        /// </summary>
 	        [XmlElement("operate_module")]
@@ -90,6 +96,12 @@ public class AuditLogVODomain : TopObject
 	        public string OperatorName { get; set; }
 	
 	        /// <summary>
+	        /// 文件所属组织名称
+	        /// </summary>
+	        [XmlElement("org_name")]
+	        public string OrgName { get; set; }
+	
+	        /// <summary>
 	        /// 操作端
 	        /// </summary>
 	        [XmlElement("platform")]
@@ -102,10 +114,40 @@ public class AuditLogVODomain : TopObject
 	        public string PlatformView { get; set; }
 	
 	        /// <summary>
+	        /// 文件接收方名称
+	        /// </summary>
+	        [XmlElement("receiver_name")]
+	        public string ReceiverName { get; set; }
+	
+	        /// <summary>
+	        /// 文件接收方类型
+	        /// </summary>
+	        [XmlElement("receiver_type")]
+	        public long ReceiverType { get; set; }
+	
+	        /// <summary>
+	        /// 接收方类型翻译值
+	        /// </summary>
+	        [XmlElement("receiver_type_view")]
+	        public string ReceiverTypeView { get; set; }
+	
+	        /// <summary>
 	        /// 文件名
 	        /// </summary>
 	        [XmlElement("resource")]
 	        public string Resource { get; set; }
+	
+	        /// <summary>
+	        /// 文件类型
+	        /// </summary>
+	        [XmlElement("resource_extension")]
+	        public string ResourceExtension { get; set; }
+	
+	        /// <summary>
+	        /// 文件大小
+	        /// </summary>
+	        [XmlElement("resource_size")]
+	        public long ResourceSize { get; set; }
 	
 	        /// <summary>
 	        /// 记录状态

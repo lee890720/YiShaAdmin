@@ -67,10 +67,22 @@ public class CloseSessionDTODomain : TopObject
 	        public string OperatorId { get; set; }
 	
 	        /// <summary>
+	        /// 4,小二；1，会员
+	        /// </summary>
+	        [XmlElement("operator_type")]
+	        public string OperatorType { get; set; }
+	
+	        /// <summary>
 	        /// 关闭原因，memberIsSilent/heartBeatBreak/memberCloseTheSession
 	        /// </summary>
 	        [XmlElement("reason")]
 	        public string Reason { get; set; }
+	
+	        /// <summary>
+	        /// 客服的id
+	        /// </summary>
+	        [XmlElement("service_id")]
+	        public string ServiceId { get; set; }
 	
 	        /// <summary>
 	        /// 会话来源

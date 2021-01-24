@@ -113,6 +113,12 @@ public class OperationRecordsVoDomain : TopObject
 public class TaskTopVoDomain : TopObject
 {
 	        /// <summary>
+	        /// 节点id
+	        /// </summary>
+	        [XmlElement("activity_id")]
+	        public string ActivityId { get; set; }
+	
+	        /// <summary>
 	        /// 开始时间
 	        /// </summary>
 	        [XmlElement("create_time")]
@@ -137,7 +143,7 @@ public class TaskTopVoDomain : TopObject
 	        public string TaskStatus { get; set; }
 	
 	        /// <summary>
-	        /// 任务节点id
+	        /// 任务id
 	        /// </summary>
 	        [XmlElement("taskid")]
 	        public string Taskid { get; set; }

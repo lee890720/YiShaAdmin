@@ -19,6 +19,11 @@ namespace DingTalk.Api.Request
 
         public ObjectDataInstanceVoDomain Instance_ { set { this.Instance = TopUtils.ObjectToJson(value); } } 
 
+        /// <summary>
+        /// 自建应用时可选服务商组织ID
+        /// </summary>
+        public string ProviderCorpid { get; set; }
+
         #region IDingTalkRequest Members
 
         public override string GetApiName()
@@ -35,6 +40,7 @@ namespace DingTalk.Api.Request
         {
             TopDictionary parameters = new TopDictionary();
             parameters.Add("instance", this.Instance);
+            parameters.Add("provider_corpid", this.ProviderCorpid);
             if (this.otherParams != null)
             {
                 parameters.AddAll(this.otherParams);

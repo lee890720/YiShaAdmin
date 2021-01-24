@@ -35,6 +35,65 @@ namespace DingTalk.Api.Response
         public bool Success { get; set; }
 
 	/// <summary>
+/// TopCycleScheduleItemVODomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class TopCycleScheduleItemVODomain : TopObject
+{
+	        /// <summary>
+	        /// 班次id
+	        /// </summary>
+	        [XmlElement("class_id")]
+	        public long ClassId { get; set; }
+	
+	        /// <summary>
+	        /// 班次名称
+	        /// </summary>
+	        [XmlElement("class_name")]
+	        public string ClassName { get; set; }
+	
+	        /// <summary>
+	        /// 是否有效
+	        /// </summary>
+	        [XmlElement("is_valid")]
+	        public string IsValid { get; set; }
+}
+
+	/// <summary>
+/// TopCycleScheduleVODomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class TopCycleScheduleVODomain : TopObject
+{
+	        /// <summary>
+	        /// 排班周期名称
+	        /// </summary>
+	        [XmlElement("cycle_name")]
+	        public string CycleName { get; set; }
+	
+	        /// <summary>
+	        /// 是否删除
+	        /// </summary>
+	        [XmlElement("is_deleted")]
+	        public string IsDeleted { get; set; }
+	
+	        /// <summary>
+	        /// 是否有效
+	        /// </summary>
+	        [XmlElement("is_valid")]
+	        public string IsValid { get; set; }
+	
+	        /// <summary>
+	        /// 每天的班次设置
+	        /// </summary>
+	        [XmlArray("item_list")]
+	        [XmlArrayItem("top_cycle_schedule_item_v_o")]
+	        public List<TopCycleScheduleItemVODomain> ItemList { get; set; }
+}
+
+	/// <summary>
 /// TopSimpleGroupVODomain Data Structure.
 /// </summary>
 [Serializable]
@@ -47,6 +106,13 @@ public class TopSimpleGroupVODomain : TopObject
 	        [XmlArray("address_list")]
 	        [XmlArrayItem("string")]
 	        public List<string> AddressList { get; set; }
+	
+	        /// <summary>
+	        /// 排班周期设置
+	        /// </summary>
+	        [XmlArray("cycle_schedules")]
+	        [XmlArrayItem("top_cycle_schedule_v_o")]
+	        public List<TopCycleScheduleVODomain> CycleSchedules { get; set; }
 	
 	        /// <summary>
 	        /// id
@@ -77,6 +143,13 @@ public class TopSimpleGroupVODomain : TopObject
 	        /// </summary>
 	        [XmlElement("owner_user_id")]
 	        public string OwnerUserId { get; set; }
+	
+	        /// <summary>
+	        /// 考勤组关联的班次列表
+	        /// </summary>
+	        [XmlArray("shift_ids")]
+	        [XmlArrayItem("number")]
+	        public List<long> ShiftIds { get; set; }
 	
 	        /// <summary>
 	        /// 固定值，轮班制

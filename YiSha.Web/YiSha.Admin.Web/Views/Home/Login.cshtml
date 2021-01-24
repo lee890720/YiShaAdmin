@@ -55,13 +55,13 @@
                 $.removeCookie("UserToken", { path: '/' });
             }
         }
-        $("#rememberMe").click(function () {
-            if ($(this).prop("checked")) {
-                $.cookie('RememberMe', 1, { expires: 30, path: '/' });
-            }
-        });
+                $("#rememberMe").click(function () {
+                    if ($(this).prop("checked")) {
+                        $.cookie('RememberMe', 1, { expires: 30, path: '/' });
+                    }
+                });
 
-        $("#imgCaptchaCode").click(function () {
+                $("#imgCaptchaCode").click(function () {
             $(this).attr("src", '@Url.Content("~/Home/GetCaptchaImage")' + '?t=' + new Date().getTime());
         });
 

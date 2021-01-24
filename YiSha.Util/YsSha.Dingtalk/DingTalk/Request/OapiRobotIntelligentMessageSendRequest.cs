@@ -12,6 +12,11 @@ namespace DingTalk.Api.Request
     public class OapiRobotIntelligentMessageSendRequest : BaseDingTalkRequest<DingTalk.Api.Response.OapiRobotIntelligentMessageSendResponse>
     {
         /// <summary>
+        /// at人的unionId列表
+        /// </summary>
+        public string AtUnionIds { get; set; }
+
+        /// <summary>
         /// 申请到的消息模板唯一标识符
         /// </summary>
         public string MsgKey { get; set; }
@@ -46,6 +51,7 @@ namespace DingTalk.Api.Request
         public override IDictionary<string, string> GetParameters()
         {
             TopDictionary parameters = new TopDictionary();
+            parameters.Add("at_union_ids", this.AtUnionIds);
             parameters.Add("msg_key", this.MsgKey);
             parameters.Add("msg_param", this.MsgParam);
             parameters.Add("open_conversation_id", this.OpenConversationId);
@@ -59,6 +65,7 @@ namespace DingTalk.Api.Request
 
         public override void Validate()
         {
+            RequestValidator.ValidateMaxListSize("at_union_ids", this.AtUnionIds, 999);
             RequestValidator.ValidateRequired("msg_key", this.MsgKey);
             RequestValidator.ValidateRequired("msg_param", this.MsgParam);
             RequestValidator.ValidateRequired("open_conversation_id", this.OpenConversationId);

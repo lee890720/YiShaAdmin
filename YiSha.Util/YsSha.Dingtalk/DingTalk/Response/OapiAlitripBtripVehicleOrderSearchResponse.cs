@@ -119,6 +119,12 @@ public class OpenVehicleOrderRsDomain : TopObject
 	        public string ApplyShowId { get; set; }
 	
 	        /// <summary>
+	        /// 申请单名称
+	        /// </summary>
+	        [XmlElement("btrip_title")]
+	        public string BtripTitle { get; set; }
+	
+	        /// <summary>
 	        /// 用车原因：TRAVEL: 差旅, TRAFFIC: 市内交通, WORK: 加班, OTHER: 其它
 	        /// </summary>
 	        [XmlElement("business_category")]
@@ -294,10 +300,22 @@ public class OpenVehicleOrderRsDomain : TopObject
 	        public string PublishTime { get; set; }
 	
 	        /// <summary>
+	        /// 真实出发地
+	        /// </summary>
+	        [XmlElement("real_from_address")]
+	        public string RealFromAddress { get; set; }
+	
+	        /// <summary>
 	        /// 实际出发城市
 	        /// </summary>
 	        [XmlElement("real_from_city_name")]
 	        public string RealFromCityName { get; set; }
+	
+	        /// <summary>
+	        /// 真实到达地
+	        /// </summary>
+	        [XmlElement("real_to_address")]
+	        public string RealToAddress { get; set; }
 	
 	        /// <summary>
 	        /// 实际到达城市
@@ -316,6 +334,12 @@ public class OpenVehicleOrderRsDomain : TopObject
 	        /// </summary>
 	        [XmlElement("taken_time")]
 	        public string TakenTime { get; set; }
+	
+	        /// <summary>
+	        /// 第三方申请单ID
+	        /// </summary>
+	        [XmlElement("thirdpart_apply_id")]
+	        public string ThirdpartApplyId { get; set; }
 	
 	        /// <summary>
 	        /// 第三方行程id

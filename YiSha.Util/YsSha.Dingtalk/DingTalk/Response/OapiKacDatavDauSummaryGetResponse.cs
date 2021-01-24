@@ -42,6 +42,12 @@ public class DauSummaryResponseDomain : TopObject
 	        public long ActivatedCount { get; set; }
 	
 	        /// <summary>
+	        /// 钉钉app的登录用户
+	        /// </summary>
+	        [XmlElement("app_active_users")]
+	        public long AppActiveUsers { get; set; }
+	
+	        /// <summary>
 	        /// 聊天用户数
 	        /// </summary>
 	        [XmlElement("chat_user_count")]
@@ -58,6 +64,12 @@ public class DauSummaryResponseDomain : TopObject
 	        /// </summary>
 	        [XmlElement("daily_active_users")]
 	        public long DailyActiveUsers { get; set; }
+	
+	        /// <summary>
+	        /// 钉钉pc端的登录用户
+	        /// </summary>
+	        [XmlElement("pc_active_users")]
+	        public long PcActiveUsers { get; set; }
 }
 
     }

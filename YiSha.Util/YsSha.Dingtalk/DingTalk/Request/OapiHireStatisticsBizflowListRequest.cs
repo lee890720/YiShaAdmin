@@ -17,7 +17,7 @@ namespace DingTalk.Api.Request
         public string Cursor { get; set; }
 
         /// <summary>
-        /// 分页大小，最大1000
+        /// 分页大小，最大200
         /// </summary>
         public Nullable<long> Size { get; set; }
 
@@ -48,6 +48,7 @@ namespace DingTalk.Api.Request
         public override void Validate()
         {
             RequestValidator.ValidateRequired("size", this.Size);
+            RequestValidator.ValidateMaxValue("size", this.Size, 200);
         }
 
         #endregion

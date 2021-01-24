@@ -201,6 +201,32 @@ public class TopGroupManageRolePermissionVoDomain : TopObject
 }
 
 	/// <summary>
+/// TopWifiVoDomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class TopWifiVoDomain : TopObject
+{
+	        /// <summary>
+	        /// 企业corpid
+	        /// </summary>
+	        [XmlElement("corp_id")]
+	        public string CorpId { get; set; }
+	
+	        /// <summary>
+	        /// mac地址
+	        /// </summary>
+	        [XmlElement("mac_addr")]
+	        public string MacAddr { get; set; }
+	
+	        /// <summary>
+	        /// wifi的ssid
+	        /// </summary>
+	        [XmlElement("ssid")]
+	        public string Ssid { get; set; }
+}
+
+	/// <summary>
 /// TopGroupVoDomain Data Structure.
 /// </summary>
 [Serializable]
@@ -224,6 +250,12 @@ public class TopGroupVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("default_class_id")]
 	        public Nullable<long> DefaultClassId { get; set; }
+	
+	        /// <summary>
+	        /// 未排班时是否禁止员工打卡
+	        /// </summary>
+	        [XmlElement("disable_check_without_schedule")]
+	        public Nullable<bool> DisableCheckWithoutSchedule { get; set; }
 	
 	        /// <summary>
 	        /// 是否开启拍照打卡
@@ -260,6 +292,19 @@ public class TopGroupVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("enable_outside_check")]
 	        public Nullable<bool> EnableOutsideCheck { get; set; }
+	
+	        /// <summary>
+	        /// 自由工时考勤组考勤开始时间与当天0点偏移分钟数（如：240表示4:00）
+	        /// </summary>
+	        [XmlElement("freecheck_day_start_min_offset")]
+	        public Nullable<long> FreecheckDayStartMinOffset { get; set; }
+	
+	        /// <summary>
+	        /// 自由工时考勤组工作日（1表示周一，0表示周日）
+	        /// </summary>
+	        [XmlArray("freecheck_work_days")]
+	        [XmlArrayItem("number")]
+	        public List<string> FreecheckWorkDays { get; set; }
 	
 	        /// <summary>
 	        /// 考勤组id
@@ -342,6 +387,13 @@ public class TopGroupVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("type")]
 	        public string Type { get; set; }
+	
+	        /// <summary>
+	        /// 考勤wifi打卡
+	        /// </summary>
+	        [XmlArray("wifis")]
+	        [XmlArrayItem("top_wifi_vo")]
+	        public List<TopWifiVoDomain> Wifis { get; set; }
 	
 	        /// <summary>
 	        /// 周班次列表（固定班制必填，0表示休息）

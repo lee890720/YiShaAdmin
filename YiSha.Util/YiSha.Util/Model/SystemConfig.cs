@@ -57,5 +57,10 @@ namespace YiSha.Util.Model
 
         public string CacheProvider { get; set; }
         public string RedisConnectionString { get; set; }
+        public string CorpId { get; set; }
+        public string AgentId { get; set; }
+        public string AppKey { get; set; }
+        public string AppSecret { get; set; }
     }
 }
+

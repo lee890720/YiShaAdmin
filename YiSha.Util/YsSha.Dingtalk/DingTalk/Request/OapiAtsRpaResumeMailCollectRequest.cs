@@ -86,6 +86,18 @@ public class MailContentDomain : TopObject
 	        public string MailAddress { get; set; }
 	
 	        /// <summary>
+	        /// 邮件id
+	        /// </summary>
+	        [XmlElement("mail_id")]
+	        public string MailId { get; set; }
+	
+	        /// <summary>
+	        /// 收件时间，时间戳毫秒
+	        /// </summary>
+	        [XmlElement("received_time")]
+	        public Nullable<long> ReceivedTime { get; set; }
+	
+	        /// <summary>
 	        /// 邮件标题，可选
 	        /// </summary>
 	        [XmlElement("title")]
@@ -475,6 +487,12 @@ public class CollResumeMailParamDomain : TopObject
 	        [XmlArray("matched_jobs")]
 	        [XmlArrayItem("string")]
 	        public List<string> MatchedJobs { get; set; }
+	
+	        /// <summary>
+	        /// userId123
+	        /// </summary>
+	        [XmlElement("opt_user_id")]
+	        public string OptUserId { get; set; }
 	
 	        /// <summary>
 	        /// 原始邮件信息，可选

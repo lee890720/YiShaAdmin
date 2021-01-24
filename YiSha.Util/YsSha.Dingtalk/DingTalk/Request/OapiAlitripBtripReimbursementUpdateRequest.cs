@@ -87,6 +87,12 @@ public class AuditlistDomain : TopObject
 public class OpenApiUpdateReimbursementRqDomain : TopObject
 {
 	        /// <summary>
+	        /// 申请单编号,如不做变更，请与创建报销单时保持一致
+	        /// </summary>
+	        [XmlElement("apply_flow_no")]
+	        public Nullable<long> ApplyFlowNo { get; set; }
+	
+	        /// <summary>
 	        /// 审批人列表
 	        /// </summary>
 	        [XmlArray("audit_list")]
@@ -110,6 +116,12 @@ public class OpenApiUpdateReimbursementRqDomain : TopObject
 	        /// </summary>
 	        [XmlElement("operate_time")]
 	        public Nullable<DateTime> OperateTime { get; set; }
+	
+	        /// <summary>
+	        /// 关联的报销订单id列表,<订单id:类型(机、酒、火、用车)>如不做变更，请与创建报销单时保持一致
+	        /// </summary>
+	        [XmlElement("order_ids")]
+	        public string OrderIds { get; set; }
 	
 	        /// <summary>
 	        /// 审批状态

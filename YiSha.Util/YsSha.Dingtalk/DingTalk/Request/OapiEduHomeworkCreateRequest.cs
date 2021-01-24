@@ -33,6 +33,16 @@ namespace DingTalk.Api.Request
         public string HwContent { get; set; }
 
         /// <summary>
+        /// 截止时间
+        /// </summary>
+        public Nullable<long> HwDeadline { get; set; }
+
+        /// <summary>
+        /// 是否开启截止时间
+        /// </summary>
+        public string HwDeadlineOpen { get; set; }
+
+        /// <summary>
         /// 作业视频
         /// </summary>
         public string HwMedia { get; set; }
@@ -46,6 +56,11 @@ namespace DingTalk.Api.Request
         /// 作业标题
         /// </summary>
         public string HwTitle { get; set; }
+
+        /// <summary>
+        /// 作业类型
+        /// </summary>
+        public string HwType { get; set; }
 
         /// <summary>
         /// 作业录音
@@ -120,9 +135,12 @@ namespace DingTalk.Api.Request
             parameters.Add("biz_code", this.BizCode);
             parameters.Add("course_name", this.CourseName);
             parameters.Add("hw_content", this.HwContent);
+            parameters.Add("hw_deadline", this.HwDeadline);
+            parameters.Add("hw_deadline_open", this.HwDeadlineOpen);
             parameters.Add("hw_media", this.HwMedia);
             parameters.Add("hw_photo", this.HwPhoto);
             parameters.Add("hw_title", this.HwTitle);
+            parameters.Add("hw_type", this.HwType);
             parameters.Add("hw_video", this.HwVideo);
             parameters.Add("identifier", this.Identifier);
             parameters.Add("scheduled_release", this.ScheduledRelease);

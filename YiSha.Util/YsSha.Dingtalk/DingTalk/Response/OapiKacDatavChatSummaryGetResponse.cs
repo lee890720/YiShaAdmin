@@ -60,6 +60,18 @@ public class ImSummaryResponseDomain : TopObject
 	        public long GroupCount { get; set; }
 	
 	        /// <summary>
+	        /// 群聊消息数
+	        /// </summary>
+	        [XmlElement("group_message_count")]
+	        public long GroupMessageCount { get; set; }
+	
+	        /// <summary>
+	        /// 人均发送消息数
+	        /// </summary>
+	        [XmlElement("message_avg_count")]
+	        public string MessageAvgCount { get; set; }
+	
+	        /// <summary>
 	        /// 消息数
 	        /// </summary>
 	        [XmlElement("message_total_count")]
@@ -76,6 +88,12 @@ public class ImSummaryResponseDomain : TopObject
 	        /// </summary>
 	        [XmlElement("new_group_count")]
 	        public long NewGroupCount { get; set; }
+	
+	        /// <summary>
+	        /// 单聊消息数
+	        /// </summary>
+	        [XmlElement("single_message_count")]
+	        public long SingleMessageCount { get; set; }
 }
 
     }

@@ -91,6 +91,18 @@ public class MessageDTODomain : TopObject
 	        public string MessageId { get; set; }
 	
 	        /// <summary>
+	        /// 小二serviceId，或者会员的cmsId
+	        /// </summary>
+	        [XmlElement("sender_id")]
+	        public string SenderId { get; set; }
+	
+	        /// <summary>
+	        /// 4，小二；1，会员
+	        /// </summary>
+	        [XmlElement("sender_type")]
+	        public string SenderType { get; set; }
+	
+	        /// <summary>
 	        /// 会话来源
 	        /// </summary>
 	        [XmlElement("session_source")]

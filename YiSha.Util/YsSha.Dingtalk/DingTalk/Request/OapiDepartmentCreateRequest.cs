@@ -32,6 +32,11 @@ namespace DingTalk.Api.Request
         public string DeptPermits { get; set; }
 
         /// <summary>
+        /// 自定义部门id, 必须大于1且小于9223372036854775807
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// 部门名称。长度限制为1~64个字符。不允许包含字符‘-’‘，’以及‘,’
         /// </summary>
         public string Name { get; set; }
@@ -110,6 +115,7 @@ namespace DingTalk.Api.Request
             parameters.Add("deptHiding", this.DeptHiding);
             parameters.Add("deptPerimits", this.DeptPerimits);
             parameters.Add("deptPermits", this.DeptPermits);
+            parameters.Add("id", this.Id);
             parameters.Add("name", this.Name);
             parameters.Add("order", this.Order);
             parameters.Add("outerDept", this.OuterDept);

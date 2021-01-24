@@ -82,6 +82,11 @@ namespace DingTalk.Api.Request
         public string Position { get; set; }
 
         /// <summary>
+        /// 实际是Map的序列化字符串
+        /// </summary>
+        public string PositionInDepts { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; }
@@ -130,6 +135,7 @@ namespace DingTalk.Api.Request
             parameters.Add("orderInDepts", this.OrderInDepts);
             parameters.Add("orgEmail", this.OrgEmail);
             parameters.Add("position", this.Position);
+            parameters.Add("positionInDepts", this.PositionInDepts);
             parameters.Add("remark", this.Remark);
             parameters.Add("tel", this.Tel);
             parameters.Add("userid", this.Userid);

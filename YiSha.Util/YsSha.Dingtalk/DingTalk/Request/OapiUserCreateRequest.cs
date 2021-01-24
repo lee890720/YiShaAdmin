@@ -72,6 +72,11 @@ namespace DingTalk.Api.Request
         public string Position { get; set; }
 
         /// <summary>
+        /// 在对应的部门中的职位信息, Map结构的json字符串, key是部门的Id, value是人员在这个部门的职位
+        /// </summary>
+        public string PositionInDepts { get; set; }
+
+        /// <summary>
         /// 备注，长度为0~1000个字符
         /// </summary>
         public string Remark { get; set; }
@@ -118,6 +123,7 @@ namespace DingTalk.Api.Request
             parameters.Add("orderInDepts", this.OrderInDepts);
             parameters.Add("orgEmail", this.OrgEmail);
             parameters.Add("position", this.Position);
+            parameters.Add("positionInDepts", this.PositionInDepts);
             parameters.Add("remark", this.Remark);
             parameters.Add("tel", this.Tel);
             parameters.Add("userid", this.Userid);

@@ -55,6 +55,12 @@ namespace DingTalk.Api.Request
 public class OpenSearchRqDomain : TopObject
 {
 	        /// <summary>
+	        /// false:未报销的申请单
+	        /// </summary>
+	        [XmlElement("all_apply")]
+	        public Nullable<bool> AllApply { get; set; }
+	
+	        /// <summary>
 	        /// 企业id
 	        /// </summary>
 	        [XmlElement("corpid")]
@@ -77,6 +83,12 @@ public class OpenSearchRqDomain : TopObject
 	        /// </summary>
 	        [XmlElement("gmt_modified")]
 	        public Nullable<DateTime> GmtModified { get; set; }
+	
+	        /// <summary>
+	        /// true:商旅申请单
+	        /// </summary>
+	        [XmlElement("only_shang_lv_apply")]
+	        public Nullable<bool> OnlyShangLvApply { get; set; }
 	
 	        /// <summary>
 	        /// 页数，从1开始

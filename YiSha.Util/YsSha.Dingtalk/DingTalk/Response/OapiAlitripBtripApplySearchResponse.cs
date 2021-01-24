@@ -224,6 +224,12 @@ public class OpenApplyRsDomain : TopObject
 	        public string Deptid { get; set; }
 	
 	        /// <summary>
+	        /// 流程编码
+	        /// </summary>
+	        [XmlElement("flow_code")]
+	        public string FlowCode { get; set; }
+	
+	        /// <summary>
 	        /// 创建时间
 	        /// </summary>
 	        [XmlElement("gmt_create")]

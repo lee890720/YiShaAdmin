@@ -26,8 +26,8 @@ namespace DingTalk.Api.Response
         /// 结果集
         /// </summary>
         [XmlArray("result")]
-        [XmlArrayItem("field_meta_info")]
-        public List<FieldMetaInfoDomain> Result { get; set; }
+        [XmlArrayItem("group_meta_info")]
+        public List<GroupMetaInfoDomain> Result { get; set; }
 
         /// <summary>
         /// 成功标记
@@ -65,6 +65,33 @@ public class FieldMetaInfoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("option_text")]
 	        public string OptionText { get; set; }
+}
+
+	/// <summary>
+/// GroupMetaInfoDomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class GroupMetaInfoDomain : TopObject
+{
+	        /// <summary>
+	        /// 组里面的字段集合
+	        /// </summary>
+	        [XmlArray("field_list")]
+	        [XmlArrayItem("field_meta_info")]
+	        public List<FieldMetaInfoDomain> FieldList { get; set; }
+	
+	        /// <summary>
+	        /// 字段组ID
+	        /// </summary>
+	        [XmlElement("group_id")]
+	        public string GroupId { get; set; }
+	
+	        /// <summary>
+	        /// 是否支持明细
+	        /// </summary>
+	        [XmlElement("has_detail")]
+	        public bool HasDetail { get; set; }
 }
 
     }

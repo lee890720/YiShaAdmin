@@ -17,6 +17,11 @@ namespace DingTalk.Api.Request
         public string BizCode { get; set; }
 
         /// <summary>
+        /// 测评结论
+        /// </summary>
+        public string Conclusion { get; set; }
+
+        /// <summary>
         /// 请求扩展字段
         /// </summary>
         public string ExtData { get; set; }
@@ -57,6 +62,7 @@ namespace DingTalk.Api.Request
         {
             TopDictionary parameters = new TopDictionary();
             parameters.Add("biz_code", this.BizCode);
+            parameters.Add("conclusion", this.Conclusion);
             parameters.Add("ext_data", this.ExtData);
             parameters.Add("outer_evaluate_id", this.OuterEvaluateId);
             parameters.Add("report_download_url", this.ReportDownloadUrl);
@@ -72,6 +78,7 @@ namespace DingTalk.Api.Request
         public override void Validate()
         {
             RequestValidator.ValidateRequired("biz_code", this.BizCode);
+            RequestValidator.ValidateRequired("conclusion", this.Conclusion);
             RequestValidator.ValidateRequired("ext_data", this.ExtData);
             RequestValidator.ValidateRequired("outer_evaluate_id", this.OuterEvaluateId);
             RequestValidator.ValidateRequired("report_download_url", this.ReportDownloadUrl);

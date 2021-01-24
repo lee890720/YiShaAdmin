@@ -66,6 +66,12 @@ public class OpenEduUserDetailDomain : TopObject
 	        public string Role { get; set; }
 	
 	        /// <summary>
+	        /// unionid
+	        /// </summary>
+	        [XmlElement("unionid")]
+	        public string Unionid { get; set; }
+	
+	        /// <summary>
 	        /// 人员id
 	        /// </summary>
 	        [XmlElement("userid")]

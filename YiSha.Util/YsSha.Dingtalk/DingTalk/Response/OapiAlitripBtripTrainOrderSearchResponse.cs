@@ -183,6 +183,12 @@ public class OpenTrainOrderRsDomain : TopObject
 	        public string ArrTime { get; set; }
 	
 	        /// <summary>
+	        /// 申请单名称
+	        /// </summary>
+	        [XmlElement("btrip_title")]
+	        public string BtripTitle { get; set; }
+	
+	        /// <summary>
 	        /// 联系人名称
 	        /// </summary>
 	        [XmlElement("contact_name")]
@@ -290,6 +296,12 @@ public class OpenTrainOrderRsDomain : TopObject
 	        /// </summary>
 	        [XmlElement("status")]
 	        public long Status { get; set; }
+	
+	        /// <summary>
+	        /// 第三方申请单ID
+	        /// </summary>
+	        [XmlElement("thirdpart_apply_id")]
+	        public string ThirdpartApplyId { get; set; }
 	
 	        /// <summary>
 	        /// 第三方行程id

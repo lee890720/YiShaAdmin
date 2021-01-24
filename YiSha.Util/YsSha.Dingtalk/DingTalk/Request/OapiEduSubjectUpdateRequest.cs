@@ -12,19 +12,24 @@ namespace DingTalk.Api.Request
     public class OapiEduSubjectUpdateRequest : BaseDingTalkRequest<DingTalk.Api.Response.OapiEduSubjectUpdateResponse>
     {
         /// <summary>
+        /// 操作人userid
+        /// </summary>
+        public string OperatorUserid { get; set; }
+
+        /// <summary>
+        /// 学段编码
+        /// </summary>
+        public string PeriodCode { get; set; }
+
+        /// <summary>
         /// 学科编码
         /// </summary>
-        public string Code { get; set; }
+        public string SubjectCode { get; set; }
 
         /// <summary>
         /// 学科名称
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 操作人userid
-        /// </summary>
-        public string OperatorUserid { get; set; }
+        public string SubjectName { get; set; }
 
         #region IDingTalkRequest Members
 
@@ -41,9 +46,10 @@ namespace DingTalk.Api.Request
         public override IDictionary<string, string> GetParameters()
         {
             TopDictionary parameters = new TopDictionary();
-            parameters.Add("code", this.Code);
-            parameters.Add("name", this.Name);
             parameters.Add("operator_userid", this.OperatorUserid);
+            parameters.Add("period_code", this.PeriodCode);
+            parameters.Add("subject_code", this.SubjectCode);
+            parameters.Add("subject_name", this.SubjectName);
             if (this.otherParams != null)
             {
                 parameters.AddAll(this.otherParams);
@@ -53,9 +59,10 @@ namespace DingTalk.Api.Request
 
         public override void Validate()
         {
-            RequestValidator.ValidateRequired("code", this.Code);
-            RequestValidator.ValidateRequired("name", this.Name);
             RequestValidator.ValidateRequired("operator_userid", this.OperatorUserid);
+            RequestValidator.ValidateRequired("period_code", this.PeriodCode);
+            RequestValidator.ValidateRequired("subject_code", this.SubjectCode);
+            RequestValidator.ValidateRequired("subject_name", this.SubjectName);
         }
 
         #endregion

@@ -81,6 +81,12 @@ public class OpenIndustryEmpDomain : TopObject
 	        public List<OpenRoleDomain> Roles { get; set; }
 	
 	        /// <summary>
+	        /// 钉钉唯一标示
+	        /// </summary>
+	        [XmlElement("unionid")]
+	        public string Unionid { get; set; }
+	
+	        /// <summary>
 	        /// 员工id
 	        /// </summary>
 	        [XmlElement("userid")]

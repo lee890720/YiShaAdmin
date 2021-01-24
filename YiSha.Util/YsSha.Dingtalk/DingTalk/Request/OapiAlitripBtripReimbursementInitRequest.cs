@@ -150,6 +150,12 @@ public class OpenApiNewReimbursementRqDomain : TopObject
 	        public OpenUserInfoDomain Operator { get; set; }
 	
 	        /// <summary>
+	        /// 关联的报销订单id列表,<订单id:类型(机、酒、火、用车)>
+	        /// </summary>
+	        [XmlElement("order_ids")]
+	        public string OrderIds { get; set; }
+	
+	        /// <summary>
 	        /// 报销金额
 	        /// </summary>
 	        [XmlElement("pay_amount")]

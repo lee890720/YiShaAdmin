@@ -69,6 +69,12 @@ public class GroupLiveStatisticsDomain : TopObject
 	        public List<GroupliveviewersDomain> GroupLiveViewers { get; set; }
 	
 	        /// <summary>
+	        /// 直播总时长
+	        /// </summary>
+	        [XmlElement("live_duration")]
+	        public long LiveDuration { get; set; }
+	
+	        /// <summary>
 	        /// 消息
 	        /// </summary>
 	        [XmlElement("message_count")]
@@ -85,6 +91,18 @@ public class GroupLiveStatisticsDomain : TopObject
 	        /// </summary>
 	        [XmlElement("pv")]
 	        public long Pv { get; set; }
+	
+	        /// <summary>
+	        /// 开始时间
+	        /// </summary>
+	        [XmlElement("start_sime")]
+	        public long StartSime { get; set; }
+	
+	        /// <summary>
+	        /// 直播标题
+	        /// </summary>
+	        [XmlElement("title")]
+	        public string Title { get; set; }
 	
 	        /// <summary>
 	        /// 未看数

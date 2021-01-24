@@ -37,7 +37,7 @@ namespace DingTalk.Api.Request
         public Nullable<long> ParticipantType { get; set; }
 
         /// <summary>
-        /// student：学生、teacher：老师（注意：授课老师不支持移除）
+        /// student：学生、guardian: 监护人、teacher：老师（注意：授课老师不支持移除）
         /// </summary>
         public string Role { get; set; }
 

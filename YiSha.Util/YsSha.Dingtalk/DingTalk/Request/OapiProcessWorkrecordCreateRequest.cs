@@ -86,11 +86,29 @@ public class SaveFakeProcessInstanceRequestDomain : TopObject
 	        public Nullable<long> Agentid { get; set; }
 	
 	        /// <summary>
+	        /// 流程实例业务动作
+	        /// </summary>
+	        [XmlElement("biz_action")]
+	        public string BizAction { get; set; }
+	
+	        /// <summary>
+	        /// 审批自定义数据
+	        /// </summary>
+	        [XmlElement("custom_data")]
+	        public string CustomData { get; set; }
+	
+	        /// <summary>
 	        /// 表单参数列表
 	        /// </summary>
 	        [XmlArray("form_component_values")]
 	        [XmlArrayItem("form_component_value_vo")]
 	        public List<FormComponentValueVoDomain> FormComponentValues { get; set; }
+	
+	        /// <summary>
+	        /// 流程实例主单instId
+	        /// </summary>
+	        [XmlElement("main_instance_id")]
+	        public string MainInstanceId { get; set; }
 	
 	        /// <summary>
 	        /// 审批发起人
@@ -103,6 +121,12 @@ public class SaveFakeProcessInstanceRequestDomain : TopObject
 	        /// </summary>
 	        [XmlElement("process_code")]
 	        public string ProcessCode { get; set; }
+	
+	        /// <summary>
+	        /// 审批单评论
+	        /// </summary>
+	        [XmlElement("remark")]
+	        public string Remark { get; set; }
 	
 	        /// <summary>
 	        /// 实例标题

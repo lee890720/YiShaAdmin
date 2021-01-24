@@ -165,6 +165,12 @@ public class OpenHotelOrderRsDomain : TopObject
 	        public long ApplyId { get; set; }
 	
 	        /// <summary>
+	        /// 申请单名称
+	        /// </summary>
+	        [XmlElement("btrip_title")]
+	        public string BtripTitle { get; set; }
+	
+	        /// <summary>
 	        /// 入住时间
 	        /// </summary>
 	        [XmlElement("check_in")]
@@ -302,6 +308,12 @@ public class OpenHotelOrderRsDomain : TopObject
 	        /// </summary>
 	        [XmlElement("room_type")]
 	        public string RoomType { get; set; }
+	
+	        /// <summary>
+	        /// 第三方申请单ID
+	        /// </summary>
+	        [XmlElement("thirdpart_apply_id")]
+	        public string ThirdpartApplyId { get; set; }
 	
 	        /// <summary>
 	        /// 第三方行程id

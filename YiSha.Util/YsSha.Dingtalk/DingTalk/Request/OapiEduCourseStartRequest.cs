@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Serialization;
 using System.Collections.Generic;
 using Top.Api.Util;
 using Top.Api;
@@ -21,6 +22,13 @@ namespace DingTalk.Api.Request
         /// </summary>
         public string OpUserId { get; set; }
 
+        /// <summary>
+        /// 开始课程的可选属性设定
+        /// </summary>
+        public string StartOption { get; set; }
+
+        public StartOptionDomain StartOption_ { set { this.StartOption = TopUtils.ObjectToJson(value); } } 
+
         #region IDingTalkRequest Members
 
         public override string GetApiName()
@@ -38,6 +46,7 @@ namespace DingTalk.Api.Request
             TopDictionary parameters = new TopDictionary();
             parameters.Add("course_code", this.CourseCode);
             parameters.Add("op_user_id", this.OpUserId);
+            parameters.Add("start_option", this.StartOption);
             if (this.otherParams != null)
             {
                 parameters.AddAll(this.otherParams);
@@ -50,6 +59,20 @@ namespace DingTalk.Api.Request
             RequestValidator.ValidateRequired("course_code", this.CourseCode);
             RequestValidator.ValidateRequired("op_user_id", this.OpUserId);
         }
+
+	/// <summary>
+/// StartOptionDomain Data Structure.
+/// </summary>
+[Serializable]
+
+public class StartOptionDomain : TopObject
+{
+	        /// <summary>
+	        /// 该课堂是否允许提前进入，时效最早为提前30分钟
+	        /// </summary>
+	        [XmlElement("b_allow_join_in_advance")]
+	        public Nullable<bool> BAllowJoinInAdvance { get; set; }
+}
 
         #endregion
     }

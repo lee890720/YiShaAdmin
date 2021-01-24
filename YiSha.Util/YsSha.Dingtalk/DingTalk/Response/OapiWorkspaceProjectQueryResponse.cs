@@ -131,6 +131,18 @@ public class OpenProjectDtoDomain : TopObject
 	        public string Logo { get; set; }
 	
 	        /// <summary>
+	        /// 成员数量
+	        /// </summary>
+	        [XmlElement("member_count")]
+	        public long MemberCount { get; set; }
+	
+	        /// <summary>
+	        /// 成员数量上限
+	        /// </summary>
+	        [XmlElement("member_limit")]
+	        public long MemberLimit { get; set; }
+	
+	        /// <summary>
 	        /// 组织名称
 	        /// </summary>
 	        [XmlElement("name")]

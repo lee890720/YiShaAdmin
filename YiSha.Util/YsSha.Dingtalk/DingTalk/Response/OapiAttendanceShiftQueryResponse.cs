@@ -98,6 +98,12 @@ public class TopShiftSettingVoDomain : TopObject
 public class TopPunchVoDomain : TopObject
 {
 	        /// <summary>
+	        /// 旷工早退/迟到的时长
+	        /// </summary>
+	        [XmlElement("absenteeism_late_minutes")]
+	        public string AbsenteeismLateMinutes { get; set; }
+	
+	        /// <summary>
 	        /// 是否跨天
 	        /// </summary>
 	        [XmlElement("across")]
@@ -128,6 +134,13 @@ public class TopPunchVoDomain : TopObject
 	        public long EndMin { get; set; }
 	
 	        /// <summary>
+	        /// 当前卡点允许弹性调整范围
+	        /// </summary>
+	        [XmlArray("flex_minutes")]
+	        [XmlArrayItem("number")]
+	        public List<long> FlexMinutes { get; set; }
+	
+	        /// <summary>
 	        /// 是否免打卡
 	        /// </summary>
 	        [XmlElement("free_check")]
@@ -144,6 +157,12 @@ public class TopPunchVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("permit_minutes")]
 	        public long PermitMinutes { get; set; }
+	
+	        /// <summary>
+	        /// 严重早退/迟到的时长
+	        /// </summary>
+	        [XmlElement("serious_late_minutes")]
+	        public string SeriousLateMinutes { get; set; }
 }
 
 	/// <summary>
@@ -236,6 +255,12 @@ public class TopShiftVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("name")]
 	        public string Name { get; set; }
+	
+	        /// <summary>
+	        /// 班次负责人
+	        /// </summary>
+	        [XmlElement("owner")]
+	        public string Owner { get; set; }
 	
 	        /// <summary>
 	        /// 卡段

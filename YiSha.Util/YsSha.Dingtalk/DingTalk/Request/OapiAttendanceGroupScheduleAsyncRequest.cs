@@ -58,7 +58,7 @@ namespace DingTalk.Api.Request
         {
             RequestValidator.ValidateRequired("group_id", this.GroupId);
             RequestValidator.ValidateRequired("op_user_id", this.OpUserId);
-            RequestValidator.ValidateObjectMaxListSize("schedules", this.Schedules, 20);
+            RequestValidator.ValidateObjectMaxListSize("schedules", this.Schedules, 201);
         }
 
 	/// <summary>

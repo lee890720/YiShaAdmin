@@ -26,6 +26,16 @@ namespace DingTalk.Api.Request
         /// </summary>
         public Nullable<long> PageSize { get; set; }
 
+        /// <summary>
+        /// 服务商组织 id，自建应用可以传入
+        /// </summary>
+        public string ProviderCorpid { get; set; }
+
+        /// <summary>
+        /// 查询条件
+        /// </summary>
+        public string QueryDsl { get; set; }
+
         #region IDingTalkRequest Members
 
         public override string GetApiName()
@@ -44,6 +54,8 @@ namespace DingTalk.Api.Request
             parameters.Add("current_operator_userid", this.CurrentOperatorUserid);
             parameters.Add("cursor", this.Cursor);
             parameters.Add("page_size", this.PageSize);
+            parameters.Add("provider_corpid", this.ProviderCorpid);
+            parameters.Add("query_dsl", this.QueryDsl);
             if (this.otherParams != null)
             {
                 parameters.AddAll(this.otherParams);

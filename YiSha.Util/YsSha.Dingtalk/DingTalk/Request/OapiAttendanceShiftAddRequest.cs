@@ -68,22 +68,35 @@ public class TopAtTimeVoDomain : TopObject
 	        public Nullable<long> Across { get; set; }
 	
 	        /// <summary>
+	        /// 允许的最早提前打卡时间，分钟为单位
+	        /// </summary>
+	        [XmlElement("begin_min")]
+	        public Nullable<long> BeginMin { get; set; }
+	
+	        /// <summary>
 	        /// check时间
 	        /// </summary>
 	        [XmlElement("check_time")]
 	        public Nullable<DateTime> CheckTime { get; set; }
 	
 	        /// <summary>
-	        /// 类型
+	        /// 类型(OnDuty上班，OffDuty下班)
 	        /// </summary>
 	        [XmlElement("check_type")]
 	        public string CheckType { get; set; }
 	
 	        /// <summary>
-	        /// 调整时间
+	        /// 允许的最玩打卡时间，分钟为单位（-1表示不限制）
 	        /// </summary>
 	        [XmlElement("end_min")]
 	        public Nullable<long> EndMin { get; set; }
+	
+	        /// <summary>
+	        /// 当前卡点允许弹性调整范围
+	        /// </summary>
+	        [XmlArray("flex_minutes")]
+	        [XmlArrayItem("number")]
+	        public List<string> FlexMinutes { get; set; }
 	
 	        /// <summary>
 	        /// 是否免打卡
@@ -133,6 +146,18 @@ public class TopAtClassSettingVoDomain : TopObject
 	        public string CorpId { get; set; }
 	
 	        /// <summary>
+	        /// 固定时长弹性班次设置的工作时长
+	        /// </summary>
+	        [XmlElement("demand_work_time_minutes")]
+	        public Nullable<long> DemandWorkTimeMinutes { get; set; }
+	
+	        /// <summary>
+	        /// 班次设置扩展字段（非临时班次无需填写）
+	        /// </summary>
+	        [XmlElement("extras")]
+	        public string Extras { get; set; }
+	
+	        /// <summary>
 	        /// 是否删除
 	        /// </summary>
 	        [XmlElement("is_deleted")]
@@ -161,6 +186,12 @@ public class TopAtClassSettingVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("serious_late_minutes")]
 	        public Nullable<long> SeriousLateMinutes { get; set; }
+	
+	        /// <summary>
+	        /// 班次tags（非临时班次无需填写）
+	        /// </summary>
+	        [XmlElement("tags")]
+	        public string Tags { get; set; }
 }
 
 	/// <summary>
@@ -206,6 +237,12 @@ public class TopAtClassVoDomain : TopObject
 	        [XmlArray("sections")]
 	        [XmlArrayItem("top_at_section_vo")]
 	        public List<TopAtSectionVoDomain> Sections { get; set; }
+	
+	        /// <summary>
+	        /// 高级排班绑定服务id（非临时班次无需填写）
+	        /// </summary>
+	        [XmlElement("service_id")]
+	        public Nullable<long> ServiceId { get; set; }
 	
 	        /// <summary>
 	        /// 设置

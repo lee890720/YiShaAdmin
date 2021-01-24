@@ -42,6 +42,18 @@ namespace DingTalk.Api.Response
 public class ObjectDataCreateDtoDomain : TopObject
 {
 	        /// <summary>
+	        /// 联系人用户ID
+	        /// </summary>
+	        [XmlElement("contact_unionid")]
+	        public string ContactUnionid { get; set; }
+	
+	        /// <summary>
+	        /// 联系人通讯录员工ID
+	        /// </summary>
+	        [XmlElement("contact_userid")]
+	        public string ContactUserid { get; set; }
+	
+	        /// <summary>
 	        /// 联系人数据id
 	        /// </summary>
 	        [XmlElement("instance_id")]

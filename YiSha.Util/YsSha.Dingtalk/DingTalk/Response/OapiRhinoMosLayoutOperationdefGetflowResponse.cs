@@ -129,6 +129,12 @@ public class WorkUnitDtoDomain : TopObject
 	        public List<DeviceAssignDtoDomain> DeviceAssigns { get; set; }
 	
 	        /// <summary>
+	        /// 扩展属性
+	        /// </summary>
+	        [XmlElement("ext")]
+	        public string Ext { get; set; }
+	
+	        /// <summary>
 	        /// 人员分配列表
 	        /// </summary>
 	        [XmlArray("worker_assigns")]

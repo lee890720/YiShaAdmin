@@ -48,6 +48,12 @@ public class OtoMessageSendTopResponseDomain : TopObject
 	        public string ReadStatus { get; set; }
 	
 	        /// <summary>
+	        /// 消息已读时间戳，单位：秒
+	        /// </summary>
+	        [XmlElement("read_timestamp")]
+	        public long ReadTimestamp { get; set; }
+	
+	        /// <summary>
 	        /// 发送结果码，只有SUCCESS为成功
 	        /// </summary>
 	        [XmlElement("send_status")]

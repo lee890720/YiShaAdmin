@@ -207,6 +207,19 @@ public class AtGroupForTopVoDomain : TopObject
 	        public List<string> DeptNameList { get; set; }
 	
 	        /// <summary>
+	        /// 自由工时考勤组考勤开始时间与当天0点偏移分钟数（如：240表示4:00）
+	        /// </summary>
+	        [XmlElement("freecheck_day_start_min_offset")]
+	        public long FreecheckDayStartMinOffset { get; set; }
+	
+	        /// <summary>
+	        /// 自由工时考勤组工作日（1表示周一，0表示周日）
+	        /// </summary>
+	        [XmlArray("freecheck_work_days")]
+	        [XmlArrayItem("number")]
+	        public List<long> FreecheckWorkDays { get; set; }
+	
+	        /// <summary>
 	        /// 考勤组id
 	        /// </summary>
 	        [XmlElement("group_id")]

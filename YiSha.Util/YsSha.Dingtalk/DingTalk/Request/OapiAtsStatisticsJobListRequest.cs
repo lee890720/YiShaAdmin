@@ -22,7 +22,7 @@ namespace DingTalk.Api.Request
         public string Cursor { get; set; }
 
         /// <summary>
-        /// 分页大小
+        /// 分页大小，最大200
         /// </summary>
         public Nullable<long> Size { get; set; }
 
@@ -55,6 +55,7 @@ namespace DingTalk.Api.Request
         {
             RequestValidator.ValidateRequired("biz_code", this.BizCode);
             RequestValidator.ValidateRequired("size", this.Size);
+            RequestValidator.ValidateMaxValue("size", this.Size, 200);
         }
 
         #endregion

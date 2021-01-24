@@ -164,6 +164,12 @@ public class FormComponentPropVoDomain : TopObject
 	        public string DurationLabel { get; set; }
 	
 	        /// <summary>
+	        /// 时间格式
+	        /// </summary>
+	        [XmlElement("format")]
+	        public string Format { get; set; }
+	
+	        /// <summary>
 	        /// id
 	        /// </summary>
 	        [XmlElement("id")]
@@ -192,6 +198,13 @@ public class FormComponentPropVoDomain : TopObject
 	        /// </summary>
 	        [XmlElement("not_upper")]
 	        public string NotUpper { get; set; }
+	
+	        /// <summary>
+	        /// 选项列表
+	        /// </summary>
+	        [XmlArray("options")]
+	        [XmlArrayItem("string")]
+	        public List<string> Options { get; set; }
 	
 	        /// <summary>
 	        /// 必填

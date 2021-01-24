@@ -92,6 +92,18 @@ public class FormComponentPropVoDomain : TopObject
 	        public string ActionName { get; set; }
 	
 	        /// <summary>
+	        /// 套件别名
+	        /// </summary>
+	        [XmlElement("biz_alias")]
+	        public string BizAlias { get; set; }
+	
+	        /// <summary>
+	        /// 套件类型
+	        /// </summary>
+	        [XmlElement("biz_type")]
+	        public string BizType { get; set; }
+	
+	        /// <summary>
 	        /// 内部联系人choice，1表示多选，0表示单选
 	        /// </summary>
 	        [XmlElement("choice")]
@@ -269,6 +281,12 @@ public class ProcessConfigDomain : TopObject
 	        public Nullable<bool> DisableStopProcessButton { get; set; }
 	
 	        /// <summary>
+	        /// 假流程模板编辑url
+	        /// </summary>
+	        [XmlElement("fake_template_edit_url")]
+	        public string FakeTemplateEditUrl { get; set; }
+	
+	        /// <summary>
 	        /// 设置模板是否隐藏，true表示隐藏
 	        /// </summary>
 	        [XmlElement("hidden")]
@@ -295,10 +313,28 @@ public class SaveProcessRequestDomain : TopObject
 	        public Nullable<long> Agentid { get; set; }
 	
 	        /// <summary>
+	        /// 发起审批移动端链接
+	        /// </summary>
+	        [XmlElement("create_instance_mobile_url")]
+	        public string CreateInstanceMobileUrl { get; set; }
+	
+	        /// <summary>
+	        /// 发起审批pc链接
+	        /// </summary>
+	        [XmlElement("create_instance_pc_url")]
+	        public string CreateInstancePcUrl { get; set; }
+	
+	        /// <summary>
 	        /// 审批模板描述
 	        /// </summary>
 	        [XmlElement("description")]
 	        public string Description { get; set; }
+	
+	        /// <summary>
+	        /// 分组id
+	        /// </summary>
+	        [XmlElement("dir_id")]
+	        public string DirId { get; set; }
 	
 	        /// <summary>
 	        /// 废弃，请使用process_config.disable_form_edit字段
@@ -332,10 +368,22 @@ public class SaveProcessRequestDomain : TopObject
 	        public Nullable<bool> Hidden { get; set; }
 	
 	        /// <summary>
+	        /// icon
+	        /// </summary>
+	        [XmlElement("icon")]
+	        public string Icon { get; set; }
+	
+	        /// <summary>
 	        /// 审批模板名称
 	        /// </summary>
 	        [XmlElement("name")]
 	        public string Name { get; set; }
+	
+	        /// <summary>
+	        /// 原分组id
+	        /// </summary>
+	        [XmlElement("origin_dir_id")]
+	        public string OriginDirId { get; set; }
 	
 	        /// <summary>
 	        /// 审批模板唯一码
